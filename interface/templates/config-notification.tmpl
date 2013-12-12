@@ -1,0 +1,360 @@
+#import autosub
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+
+    <script type="text/javascript">
+    <!--
+        autosubRoot = "$autosub.WEBROOT";
+    //-->
+	</script>
+
+<form method="post" action="$autosub.WEBROOT/config/saveNotification">
+
+<div class="page-header"><h1>Configuration <small>Notifications</small></h1></div>
+<div class="well well-small" align="center">
+
+	<hr>
+
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/email.png" width="25px" height="24px" alt="" /> <b>Mail</b></td>
+			<td class="pull-right"><select name="notifymail" id="notifymail" class="enabler">
+				#if $autosub.NOTIFYMAIL
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Send notifications via Email.</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifymail">	
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What mail server would you like to use?">Server</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="mailsrv" id="mailsrv" value="$autosub.MAILSRV" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="From which address will the notification be sent?">From</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="mailfromaddr" id="mailfromaddr" value="$autosub.MAILFROMADDR" /></td>
+		
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="To which address will the notification be sent?">To</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="mailtoaddr" id="mailtoaddr" value="$autosub.MAILTOADDR" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is your username on this server?">Username</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="mailusername" id="mailusername" value="$autosub.MAILUSERNAME" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the password belonging to this username?">Password</a></td>
+			<td class="pull-right"><input type="password" class="input-xxlarge" name="mailpassword" id="mailpassword" value="$autosub.MAILPASSWORD" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What should the subject be? (the download subtitle file will be added at the end of the subject)">Subject</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="mailsubject" id="mailsubject" value="$autosub.MAILSUBJECT" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the encryption method?">Encryption</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="mailencryption" id="mailencryption" value="$autosub.MAILENCRYPTION" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What Auth Mechanism should be used? (Don't change this if you don't know what you are doing!)">Authentication</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="mailauth" id="mailauth" value="$autosub.MAILAUTH" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testMail-result">Click below to test Mail.</span><br>
+				<input type="button" class="btn" value="Test Mail" id="testMail" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+	
+	<hr>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/twitter.png" width="25px" height="24px" alt="" /> <b><a href="https://twitter.com/" target="_blank">Twitter</a></b></td>
+			<td class="pull-right"><select name="notifytwitter" id="notifytwitter" class="enabler">
+				#if $autosub.NOTIFYTWITTER
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Post notifications on Twitter.</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifytwitter">	
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the key for Twitter?">Key</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="twitterkey" id="twitterkey" value="$autosub.TWITTERKEY" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the secret code for Twitter?">Secret</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="twittersecret" id="twittersecret" value="$autosub.TWITTERSECRET" /></td>
+		</tr>
+
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testTwitter-result">Click below to test Twitter.</span><br>
+				<input type="button" value="Register Twitter" onClick="parent.location='/config/regTwitter'" class="btn" /> <input type="button" class="btn" value="Test Twitter" id="testTwitter" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+	
+	<hr> 
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">		
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/pushalot.png" width="25px" height="24px" alt="" /> <b><a href="https://pushalot.com/" target="_blank">Pushalot</a></b></td>
+			<td class="pull-right"><select name="notifypushalot" id="notifypushalot" class="enabler">
+				#if $autosub.NOTIFYPUSHALOT
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Notifier for Windows Phone and Windows 8.</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifypushalot">		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the API key for Pushalot?">API</a></td>
+			<td align="right"><input type="text" class="input-xxlarge" name="pushalotapi" id="pushalotapi" value="$autosub.PUSHALOTAPI" /></td>
+		</tr>
+
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testPushalot-result">Click below to test Pushalot.</span><br>
+				<input type="button" class="btn" value="Test Pushalot" id="testPushalot" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+
+	<hr>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">			
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/nma.png" width="25px" height="24px" alt="" /> <b><a href="https://www.notifymyandroid.com/" target="_blank">Notify My Android</a></b></td>
+			<td class="pull-right"><select name="notifynma" id="notifynma" class="enabler">
+				#if $autosub.NOTIFYNMA
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Notification system for Android users.</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifynma">
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the API key for NMA?">API</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="nmaapi" id="nmaapi" value="$autosub.NMAAPI" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What priority should be used to send the notification? Default is Normal.">Priority</a></td>
+			<td class="pull-right">
+				#set priormapper = {-2 : 'Very Low', -1 : 'Moderate', 0 : 'Normal', 1 : 'High', 2 : 'Emergency'}
+				<select name="nmapriority" id="nmapriority">
+				#for $prior in $range(-2, 3, 1):
+					#if $prior == $autosub.NMAPRIORITY
+						<option value="$prior" selected="selected">$priormapper[$prior]</option>
+					#else
+						<option value="$prior">$priormapper[$prior]</option>
+					#end if
+				#end for
+				</select>
+			</td>
+		</tr>
+
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testNotifyMyAndroid-result">Click below to test Notify My Android.</span><br>
+				<input type="button" class="btn" value="Test Notify My Android" id="testNotifyMyAndroid" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+	
+	<hr>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/pushover.png" width="25px" height="24px" alt="" /> <b><a href="https://pushover.net/" target="_blank">Pushover</a></b></td>
+			<td class="pull-right"><select name="notifypushover" id="notifypushover" class="enabler">
+				#if $autosub.NOTIFYPUSHOVER
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Pushover is a platform for iPhone and Android users.</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifypushover">
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the API key for Pushover?">API</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="pushoverapi" id="pushoverapi" value="$autosub.PUSHOVERAPI" /></td>
+		</tr>
+
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testPushover-result">Click below to test Pushover.</span><br>
+				<input type="button" class="btn" value="Test Pushover" id="testPushover" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+	
+	<hr>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">		
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/growl.png" width="25px" height="24px" alt="" /> <b><a href="http://www.growl.info" target="_blank">Growl</a></b></td>
+			<td class="pull-right"><select name="notifygrowl" id="notifygrowl" class="enabler">
+				#if $autosub.NOTIFYGROWL
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Notifier for OSX and Windows.</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifygrowl">		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the address of the Growl server?">Host</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="growlhost" id="growlhost" value="$autosub.GROWLHOST" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What port should we use?">Port</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="growlport" id="growlport" value="$autosub.GROWLPORT" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the password?">Pass</a></td>
+			<td class="pull-right"><input type="password" class="input-xxlarge" name="growlpass" id="growlpass" value="$autosub.GROWLPASS" /></td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">
+				<div class="alert alert-info" align="center">
+					<strong>Reminder!</strong> You always have to test Growl, otherwise the application will not register.
+				</div>
+			</td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testGrowl-result">Click below to test Growl.</span><br>
+				<input type="button" class="btn" value="Test Growl" id="testGrowl" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+		
+	<hr>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">		
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/prowl.png" width="25px" height="24px" alt="" /> <b><a href="http://www.prowlapp.com/" target="_blank">Prowl</a></b></td>
+			<td class="pull-right"><select name="notifyprowl" id="notifyprowl" class="enabler">
+				#if $autosub.NOTIFYPROWL
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Prowl is the Growl client for iPhone users.</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifyprowl">		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is the API key for Prowl?">API</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="prowlapi" id="prowlapi" value="$autosub.PROWLAPI" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What priority should be used to send the notification? Default is Normal">Priority</a></td>
+			<td class="pull-right">
+				#set priormapper = {-2 : 'Very Low', -1 : 'Moderate', 0 : 'Normal', 1 : 'High', 2 : 'Emergency'}
+				<select name="prowlpriority" id="prowlpriority">
+				#for $prior in $range(-2, 3, 1):
+					#if $prior == $autosub.PROWLPRIORITY
+						<option value="$prior" selected="selected">$priormapper[$prior]</option>
+					#else
+						<option value="$prior">$priormapper[$prior]</option>
+					#end if
+				#end for
+				</select>
+			</td>
+		</tr>
+
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testProwl-result">Click below to test Prowl.</span><br>
+				<input type="button" class="btn" value="Test Prowl" id="testProwl" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+	
+	<hr>
+	
+</div>
+<input type="submit" value="Save Changes" class="btn btn-primary" />
+</form>
+
+<div style="position: fixed; bottom: 10px; right: 20px;"><a href="#top"><i class="icon-arrow-up"></i></a></div>
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")
