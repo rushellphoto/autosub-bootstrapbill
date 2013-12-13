@@ -42,9 +42,11 @@ def getHTMLTags(url, tagSearch):
          errorcode = resp.getcode()
     except urllib2.HTTPError, e:
          errorcode = e.getcode()
+         log.error("downloadSubs.getHTMLTags: The server returned the error %s for request %s" % (errorcode, url))  
+         return False       
     if errorcode == 200:
-        log.debug("downloadSubs.getHTMLTags: HTTP Code: 200: OK!")
-    
+        log.debug("downloadSubs.downloadSubs.getHTMLTags: HTTP Code: 200: OK!")
+            
     html = resp.read()
     link_pat = SoupStrainer(tagSearch)
     tags = BeautifulSoup(html, parseOnlyThese=link_pat)
@@ -55,7 +57,7 @@ def getHTMLTags(url, tagSearch):
 
 def getHTMLTagAttrib(url, tagToSearch, attrib):
     tags = getHTMLTags(url, tagToSearch)
-    if len(tags) != 1:
+    if not tags or len(tags) != 1:
         log.error("downloadSubs.getHTMLTagAttrib: More than one HTML tag %s was found for %s" % (tagToSearch, url))
         return None
     for tag in tags:
@@ -133,7 +135,7 @@ def undertexter(subSeekerLink):
 def podnapisi(subSeekerLink):
     baseLink = 'http://www.podnapisi.net/'
     tags_first = getHTMLTags(subSeekerLink, 'a')
-    if len(tags_first) == 0:
+    if not tags_first or len(tags_first) == 0:
         return None
     for tag in tags_first:
         url = tag['href'].strip('/')
@@ -141,7 +143,7 @@ def podnapisi(subSeekerLink):
         if re.match(urljoin(baseLink, 'ppodnapisi/podnapis/i'), url):
             linkToPodnapisi = url
             tags_second = getHTMLTags(linkToPodnapisi, 'a')
-            if len(tags_second) == 0:
+            if not tags_second or len(tags_second) == 0:
                 return None
             for tag in tags_second:
                 if tag.has_key('href'):
@@ -152,17 +154,17 @@ def podnapisi(subSeekerLink):
                         subtitleFile = unzip(zipUrl)
                         return subtitleFile
 
-            log.error("Podnapisi: Something went wrong while retrieving download link")
-            log.debug("Podnapisi: No hrefs were found in the Podnapisi HTML page for %s" % subSeekerLink)
+            log.error("downloadSubs.Podnapisi: Something went wrong while retrieving download link")
+            log.debug("downloadSubs.Podnapisi: No hrefs were found in the Podnapisi HTML page for %s" % subSeekerLink)
             return None
-    log.error("Podnapisi: Something went wrong while retrieving download link")
-    log.debug("Podnapisi: Couldnt find the Subseeker link to the Podnapisi page for %s" % subSeekerLink)
+    log.error("downloadSubs.Podnapisi: Something went wrong while retrieving download link")
+    log.debug("downloadSubs.Podnapisi: Couldnt find the Subseeker link to the Podnapisi page for %s" % subSeekerLink)
     return None
     
 def subscene(subSeekerLink):
     baseLink = 'http://subscene.com/'
     tags_first = getHTMLTags(subSeekerLink, 'a')
-    if len(tags_first) == 0:
+    if not tags_first or len(tags_first) == 0:
         return None
     for tag in tags_first:
         url = tag['href'].strip('/')
@@ -170,7 +172,7 @@ def subscene(subSeekerLink):
         if re.match(urljoin(baseLink, 'subtitles'), url):
             linkToSubscene = url
             tags_second = getHTMLTags(linkToSubscene, 'a')
-            if len(tags_second) == 0:
+            if not tags_second or len(tags_second) == 0:
                 return None
             for tag in tags_second:
                 if tag.has_key('href'):
@@ -181,11 +183,11 @@ def subscene(subSeekerLink):
                         subtitleFile = unzip(zipUrl)
                         return subtitleFile
 
-            log.error("Subscene: Something went wrong while retrieving download link")
-            log.debug("Subscene: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
+            log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
+            log.debug("downloadSubs.Subscene: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
             return None
-    log.error("Subscene: Something went wrong while retrieving download link")
-    log.debug("Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
+    log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
+    log.debug("downloadSubs.Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
     return None
         
 def DownloadSub(downloadDict):    
