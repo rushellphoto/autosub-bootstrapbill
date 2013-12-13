@@ -444,156 +444,156 @@ def ReadConfig(configfile):
 
     # Deleted example ID hash
     autosub.NAMEMAPPING = {
-            "Against the Wall" :"1836237"
-            "alcatraz" :"1728102"
-            "almost human" :"2654580"
-            "alphas" :"1183865"
-            "american dad" :"0397306"
-            "american horror story" :"1844624"
-            "appropriate adult" :"1831575"
-            "Are You There Chelsea" :"1826989"
-            "atlantis" :"2705602"
-            "Bates Motel" :"2188671"
-            "beauty and the beast" :"2193041"
-            "beauty and the beast 2012" :"2193041"
-            "betrayal" :"2751074"
-            "blue bloods" :"1595859"
-            "bob's burgers" :"1561755"
-            "bobs burgers" :"1561755"
-            "Body of Proof" :"1587669"
-            "borgen" :"1526318"
-            "breakout kings" :"1590961"
-            "Castle (2009)" :"1219024"
-            "castle 2009" :"1219024"
-            "charlie's angels 2011" :"1760943"
-            "Charlies Angels 2011" :"1760943"
-            "chicago fire" : "2261391"
-            "chicago fire (2012)" : "2261391"
-            "Common Law 2012" :"1771072"
-            "covert affairs" :"1495708"
-            "criminal minds" :"0452046"
-            "csi" :"0247082"
-            "csi crime scene investigation" :"0247082"
-            "Csi Miami" :"0313043"
-            "csi new york" :"0395843"
-            "csi ny" :"0395843"
-            "Da Vinci's Demons" :"2094262"
-            "Dallas 2012" :"1723760"
-            "desperate housewives" :"0410975"
-            "don't trust the b---- in apartment 23" :"1819509"
-            "dont trust the bitch in apartment 23" :"1819509"
-            "dracula" :"2296682"
-            "dracula (2013)" :"2296682"
-            "DreamWorks Dragons: Riders of Berk" :"2325846"
-            "eastbound & down" :"0866442"
-            "eastbound and down" :"0866442"
-            "emily owens m d" :"2290339"
-            "Falling skies" :"1462059"
-            "Femme Fatales" :"1841108"
-            "Franklin and Bash" :"1600199"
-            "Free Agents" :"1839481"
-            "Free Agents Us" :"1839481"
-            "fringe" :"1119644"
-            "Grey's Anatomy" :"0413573"
-            "Greys Anatomy" :"0413573"
-            "grimm" :"1830617"
-            "harry's law" :"1582453"
-            "Harrys Law" :"1582453"
-            "haven" :"1519931"
-            "Hawaii Five 0" :"1600194"
-            "Hawaii Five 0 2010" :"1600194"
-            "Hawaii Five-0" :"1600194"
-            "hawaii five-0 2010" :"1600194"
-            "hello ladies" :"2378794"
-            "homeland" :"1796960"
-            "hostages" :"2647258"
-            "house of cards 2013" :"1856010"
-            "king" :"1804880"
-            "Last Man Standing" :"1828327"
-            "Last Man Standing Us" :"1828327"
-            "law and order svu" :"0203259"
-            "law and order uk" :"1166893"
-            "luck" :"1578887"
-            "luther" :"1474684"
-            "Man Up" :"1828238"
-            "marvel's agents of s h i e l d" :"2364582"
-            "marvels agents of s h i e l d" :"2364582"
-            "masters of sex" :"2137109"
-            "Melissa And Joey" :"1597420"
-            "Merlin" :"1199099"
-            "Merlin 2008" :"1199099"
-            "Mike and Molly" :"1608180"
-            "missing 2012" :"1828246"
-            "mockingbird lane" :"2130271"
-            "modern family" :"1442437"
-            "Mr Sunshine" :"1583638"
-            "nashville" :"2281375"
-            "nashville 2012" :"2281375"
-            "ncis" :"0364845"
-            "Ncis Los Angeles" :"1378167"
-            "Necessary Roughness" :"1657505"
-            "new tricks" :"0362357"
-            "nip tuck" :"0361217"
-            "nip-tuck" :"0361217"
-            "once upon a time" :"1843230"
-            "once upon a time 2011" :"1843230"
-            "once upon a time in wonderland" :"2802008"
-            "person of interest" :"1839578"
-            "played" :"2886812"
-            "Prime Suspect Us" :"1582456"
-            "primeval new world" :"2295953"
-            "ray donovan" :"2249007"
-            "reign 2013" :"2710394"
-            "Revolution" :"2070791"
-            "Revolution 2012" :"2070791"
-            "Rizzoli And Isles" :"1551632"
-            "Scandal" :"1837576"
-            "scandal (2012)" :"1837576"
-            "Scandal 2012" :"1837576"
-            "Scandal US" :"1837576"
-            "scott and bailey" :"1843678"
-            "sean saves the world" :"2715776"
-            "Shameless Us" :"1586680"
-            "silent witness" :"0115355"
-            "Sinbad" :"1979918"
-            "sleepy hollow" :"2647544"
-            "Spartacus" :"1442449"
-            "Spartacus Blood And Sand" :"1442449"
-            "Spartacus Gods Of The Arena" :"1758429"
-            "spartacus vengeance" :"1442449"
-            "star wars the clone wars" :"0458290"
-            "suburgatory" :"1741256"
-            "suits" :"1632701"
-            "super fun night" :"2298477"
-            "the biggest loser" :"0429318"
-            "the blacklist" :"2741602"
-            "the client list" :"2022170"
-            "the closer" :"0458253"
-            "the gadget show" :"0830851"
-            "The Kennedys" :"1567215"
-            "the killing (2011)" :"1637727"
-            "The La Complex" :"1794147"
-            "The Legend Of Korra" :"1695360"
-            "the lying game" :"1798274"
-            "the mentalist" :"1196946"
-            "the newsroom (2012)" :"1870479"
-            "the newsroom 2012" :"1870479"
-            "the o c" :"0362359"
-            "the office us" :"0386676"
-            "the originals" :"2632424"
-            "the protector" :"1836417"
-            "The River" :"1836195"
-            "the tomorrow people us" :"2660734"
-            "the wrong mans" :"2603596"
-            "thundercats 2011" :"1666278"
-            "Touch" :"1821681"
-            "trophy wife" :"2400736"
-            "unforgettable" :"1842530"
-            "untouchables-the venture bros" :"0417373"
-            "Up All Night 2011" :"1843323"
-            "utopia" :"2384811"
-            "Vegas" :"2262383"
-            "white collar" :"1358522"
+            "Against the Wall" :"1836237",
+            "alcatraz" :"1728102",
+            "almost human" :"2654580",
+            "alphas" :"1183865",
+            "american dad" :"0397306",
+            "american horror story" :"1844624",
+            "appropriate adult" :"1831575",
+            "Are You There Chelsea" :"1826989",
+            "atlantis" :"2705602",
+            "Bates Motel" :"2188671",
+            "beauty and the beast" :"2193041",
+            "beauty and the beast 2012" :"2193041",
+            "betrayal" :"2751074",
+            "blue bloods" :"1595859",
+            "bob's burgers" :"1561755",
+            "bobs burgers" :"1561755",
+            "Body of Proof" :"1587669",
+            "borgen" :"1526318",
+            "breakout kings" :"1590961",
+            "Castle (2009)" :"1219024",
+            "castle 2009" :"1219024",
+            "charlie's angels 2011" :"1760943",
+            "Charlies Angels 2011" :"1760943",
+            "chicago fire" : "2261391",
+            "chicago fire (2012)" : "2261391",
+            "Common Law 2012" :"1771072",
+            "covert affairs" :"1495708",
+            "criminal minds" :"0452046",
+            "csi" :"0247082",
+            "csi crime scene investigation" :"0247082",
+            "Csi Miami" :"0313043",
+            "csi new york" :"0395843",
+            "csi ny" :"0395843",
+            "Da Vinci's Demons" :"2094262",
+            "Dallas 2012" :"1723760",
+            "desperate housewives" :"0410975",
+            "don't trust the b---- in apartment 23" :"1819509",
+            "dont trust the bitch in apartment 23" :"1819509",
+            "dracula" :"2296682",
+            "dracula (2013)" :"2296682",
+            "DreamWorks Dragons: Riders of Berk" :"2325846",
+            "eastbound & down" :"0866442",
+            "eastbound and down" :"0866442",
+            "emily owens m d" :"2290339",
+            "Falling skies" :"1462059",
+            "Femme Fatales" :"1841108",
+            "Franklin and Bash" :"1600199",
+            "Free Agents" :"1839481",
+            "Free Agents Us" :"1839481",
+            "fringe" :"1119644",
+            "Grey's Anatomy" :"0413573",
+            "Greys Anatomy" :"0413573",
+            "grimm" :"1830617",
+            "harry's law" :"1582453",
+            "Harrys Law" :"1582453",
+            "haven" :"1519931",
+            "Hawaii Five 0" :"1600194",
+            "Hawaii Five 0 2010" :"1600194",
+            "Hawaii Five-0" :"1600194",
+            "hawaii five-0 2010" :"1600194",
+            "hello ladies" :"2378794",
+            "homeland" :"1796960",
+            "hostages" :"2647258",
+            "house of cards 2013" :"1856010",
+            "king" :"1804880",
+            "Last Man Standing" :"1828327",
+            "Last Man Standing Us" :"1828327",
+            "law and order svu" :"0203259",
+            "law and order uk" :"1166893",
+            "luck" :"1578887",
+            "luther" :"1474684",
+            "Man Up" :"1828238",
+            "marvel's agents of s h i e l d" :"2364582",
+            "marvels agents of s h i e l d" :"2364582",
+            "masters of sex" :"2137109",
+            "Melissa And Joey" :"1597420",
+            "Merlin" :"1199099",
+            "Merlin 2008" :"1199099",
+            "Mike and Molly" :"1608180",
+            "missing 2012" :"1828246",
+            "mockingbird lane" :"2130271",
+            "modern family" :"1442437",
+            "Mr Sunshine" :"1583638",
+            "nashville" :"2281375",
+            "nashville 2012" :"2281375",
+            "ncis" :"0364845",
+            "Ncis Los Angeles" :"1378167",
+            "Necessary Roughness" :"1657505",
+            "new tricks" :"0362357",
+            "nip tuck" :"0361217",
+            "nip-tuck" :"0361217",
+            "once upon a time" :"1843230",
+            "once upon a time 2011" :"1843230",
+            "once upon a time in wonderland" :"2802008",
+            "person of interest" :"1839578",
+            "played" :"2886812",
+            "Prime Suspect Us" :"1582456",
+            "primeval new world" :"2295953",
+            "ray donovan" :"2249007",
+            "reign 2013" :"2710394",
+            "Revolution" :"2070791",
+            "Revolution 2012" :"2070791",
+            "Rizzoli And Isles" :"1551632",
+            "Scandal" :"1837576",
+            "scandal (2012)" :"1837576",
+            "Scandal 2012" :"1837576",
+            "Scandal US" :"1837576",
+            "scott and bailey" :"1843678",
+            "sean saves the world" :"2715776",
+            "Shameless Us" :"1586680",
+            "silent witness" :"0115355",
+            "Sinbad" :"1979918",
+            "sleepy hollow" :"2647544",
+            "Spartacus" :"1442449",
+            "Spartacus Blood And Sand" :"1442449",
+            "Spartacus Gods Of The Arena" :"1758429",
+            "spartacus vengeance" :"1442449",
+            "star wars the clone wars" :"0458290",
+            "suburgatory" :"1741256",
+            "suits" :"1632701",
+            "super fun night" :"2298477",
+            "the biggest loser" :"0429318",
+            "the blacklist" :"2741602",
+            "the client list" :"2022170",
+            "the closer" :"0458253",
+            "the gadget show" :"0830851",
+            "The Kennedys" :"1567215",
+            "the killing (2011)" :"1637727",
+            "The La Complex" :"1794147",
+            "The Legend Of Korra" :"1695360",
+            "the lying game" :"1798274",
+            "the mentalist" :"1196946",
+            "the newsroom (2012)" :"1870479",
+            "the newsroom 2012" :"1870479",
+            "the o c" :"0362359",
+            "the office us" :"0386676",
+            "the originals" :"2632424",
+            "the protector" :"1836417",
+            "The River" :"1836195",
+            "the tomorrow people us" :"2660734",
+            "the wrong mans" :"2603596",
+            "thundercats 2011" :"1666278",
+            "Touch" :"1821681",
+            "trophy wife" :"2400736",
+            "unforgettable" :"1842530",
+            "untouchables-the venture bros" :"0417373",
+            "Up All Night 2011" :"1843323",
+            "utopia" :"2384811",
+            "Vegas" :"2262383",
+            "white collar" :"1358522",
             "xiii the series 2011" :"1713938"
     }
     
