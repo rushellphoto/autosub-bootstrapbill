@@ -161,9 +161,13 @@ def getSubLink(showid, lang, releaseDetails):
         website = website.lower()      
         if not website in ['opensubtitles.org', 'undertexter.se', 'subscene.com', 'podnapisi.net']:
             continue       
-         
+        
+        tmpDict = ProcessFilename(release, '')
+        if not tmptDict:
+            continue
+        
         # Scoredict is a dictionary with a download link and its match score. This will be used to determine the best match (the highest matchscore)
-        scoredict[sub.getElementsByTagName('url')[0].firstChild.data] = autosub.Helpers.scoreMatch(ProcessFilename(release, ''), release, quality, releasegrp, source, codec)
+        scoredict[sub.getElementsByTagName('url')[0].firstChild.data] = autosub.Helpers.scoreMatch(tmpDict, release, quality, releasegrp, source, codec)
         
         # Releasedict is a dictionary with the release name, used for the lastdownload database
         releasedict[sub.getElementsByTagName('url')[0].firstChild.data] = release
