@@ -151,18 +151,13 @@ def podnapisi(subSeekerLink):
                         zipUrl = urljoin(baseLink,url)
                         subtitleFile = unzip(zipUrl)
                         return subtitleFile
-                    else:
-                        log.error("Podnapisi: Something went wrong while retrieving download link")
-                        log.debug("Podnapisi: Couldnt find the download link on the Subscene page for %s" % subSeekerLink)
-                        return None
-                else:
-                    log.error("Podnapisi: Something went wrong while retrieving download link")
-                    log.debug("Podnapisi: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
-                    return None
-        else:
+
             log.error("Podnapisi: Something went wrong while retrieving download link")
-            log.debug("Podnapisi: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink) 
+            log.debug("Podnapisi: No hrefs were found in the Podnapisi HTML page for %s" % subSeekerLink)
             return None
+    log.error("Podnapisi: Something went wrong while retrieving download link")
+    log.debug("Podnapisi: Couldnt find the Subseeker link to the Podnapisi page for %s" % subSeekerLink)
+    return None
     
 def subscene(subSeekerLink):
     baseLink = 'http://subscene.com/'
@@ -185,18 +180,13 @@ def subscene(subSeekerLink):
                         zipUrl = urljoin(baseLink, url)
                         subtitleFile = unzip(zipUrl)
                         return subtitleFile
-                    else:
-                        log.error("Subscene: Something went wrong while retrieving download link")
-                        log.debug("Subscene: Couldnt find the download link on the Subscene page for %s" % subSeekerLink)
-                        return None
-                else:
-                    log.error("Subscene: Something went wrong while retrieving download link")
-                    log.debug("Subscene: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
-                    return None
-        else:
+
             log.error("Subscene: Something went wrong while retrieving download link")
-            log.debug("Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink) 
+            log.debug("Subscene: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
             return None
+    log.error("Subscene: Something went wrong while retrieving download link")
+    log.debug("Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
+    return None
         
 def DownloadSub(downloadDict):    
 
