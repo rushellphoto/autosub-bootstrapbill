@@ -130,7 +130,7 @@ def Initialize():
     
     WANTEDQUEUE = []
 
-    APIKEY = "004c76c9eedfbf2061f7538e0cdc189173af81c5"
+    APIKEY = "24430affe80bea1edf0e8413c3abf372a64afff2"
     TIMEOUT = 300 #default http timeout
     
     if CONFIGFILE==None:
