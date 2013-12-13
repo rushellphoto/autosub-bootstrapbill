@@ -209,7 +209,6 @@ def nameMapping(showName):
         return autosub.USERNAMEMAPPINGUPPER[showName.upper()]
     elif showName.upper() in autosub.NAMEMAPPINGUPPER.keys():
         log.debug("nameMapping: found match for %s" % showName)
-        quit()
         return autosub.NAMEMAPPINGUPPER[showName.upper()]
 
 def SkipShow(showName, season, episode):
