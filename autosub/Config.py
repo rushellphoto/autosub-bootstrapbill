@@ -867,7 +867,7 @@ def checkForRestart():
         return False
 
 
-def WriteConfig(configsection):
+def WriteConfig(configsection=None):
     """
     Save all settings to the config file.
     Return message about the write.
