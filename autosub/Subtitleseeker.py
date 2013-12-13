@@ -163,7 +163,7 @@ def getSubLink(showid, lang, releaseDetails):
             continue       
         
         tmpDict = ProcessFilename(release, '')
-        if not tmptDict:
+        if not tmpDict:
             continue
         
         # Scoredict is a dictionary with a download link and its match score. This will be used to determine the best match (the highest matchscore)
