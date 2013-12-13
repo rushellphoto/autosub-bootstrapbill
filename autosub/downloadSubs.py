@@ -101,12 +101,15 @@ def openSubtitles(subSeekerLink):
         html = getHTML(link)
         id = None
         # capture dead links
-        if html.find("msg error"):
-            # get alternate link       
-            r = re.search('http://www.opensubtitles.org/en/subtitles/(\d*)/', html).group(1)
-            if r:
-                id = r
-            else: return None
+        if not html.find("msg error") == -1:
+            # get alternate link
+            #log.debug("HTML: %s" % html)
+            try:
+                r = re.search('http://www.opensubtitles.org/en/subtitles/(\d*)/', html).group(1)
+                if r:
+                    id = r
+            except:
+                return None
         else:
             id = link.split('/')[4].encode('utf8')
         zipUrl = openSubLink + id
