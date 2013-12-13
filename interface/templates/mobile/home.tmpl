@@ -59,11 +59,11 @@
 								</b></td>
 								<td align="center" width="50px">
 							#for lang in $var['lang']
-							#if lang == "nl"
-								<img src="$autosub.WEBROOT/images/nl.png" alt="nl">
+							#if lang == "Dutch"
+								<img src="$autosub.WEBROOT/images/Dutch.png" alt="nl">
 							#end if
-							#if lang == "en"
-								<img src="$autosub.WEBROOT/images/en.png" alt="en">
+							#if lang == "English"
+								<img src="$autosub.WEBROOT/images/English.png" alt="en">
 							#end if
 							#end for
 								</td>
@@ -113,18 +113,7 @@
 					<div data-role="collapsible" align="center">
 					<h3>INFORMATION</h3>
 					<p>
-						<table border="0px" cellspacing="0px" cellpadding="0px">
-							<tr>
-								<td>NEXT RSSCHECK</td> 
-								<td>
-									#try
-									  &nbsp;@&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKRSS.interval - ($time.time() - $autosub.CHECKRSS.lastrun) ))) <br>
-									#except
-									  &nbsp;@&nbsp;Please wait... <br>
-									#end try
-								</td>
-							</tr>
-							
+						<table border="0px" cellspacing="0px" cellpadding="0px">					
 							<tr>
 								<td>NEXT SCANDISK</td>
 								<td>
@@ -155,7 +144,7 @@
 			</div>
 			  <div data-role="footer" data-theme="b">
             <div class="ui-bar" align="center">
-				$autosubversion.upper() - API CALLS LEFT: $autosub.APICALLS</div>
+				AUTO-SUB BOOTSTRAP BILL $autosubversion.upper()</div>
 			</div>
 		</div>
 	</body>
