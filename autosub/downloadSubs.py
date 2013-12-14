@@ -6,7 +6,6 @@
 #
 import logging
 
-import urllib
 import urllib2
 from library.beautifulsoup import BeautifulSoup, SoupStrainer
 from zipfile import ZipFile
@@ -38,12 +37,12 @@ def getHTML(url):
     
 def getHTMLTags(url, tagSearch):
     try:
-         resp = urllib2.urlopen(url)
-         errorcode = resp.getcode()
+        resp = urllib2.urlopen(url)
+        errorcode = resp.getcode()
     except urllib2.HTTPError, e:
-         errorcode = e.getcode()
-         log.error("downloadSubs.getHTMLTags: The server returned the error %s for request %s" % (errorcode, url))  
-         return False       
+        errorcode = e.getcode()
+        log.error("downloadSubs.getHTMLTags: The server returned the error %s for request %s" % (errorcode, url))  
+        return False       
     if errorcode == 200:
         log.debug("downloadSubs.downloadSubs.getHTMLTags: HTTP Code: 200: OK!")
             
@@ -85,9 +84,9 @@ def unzip(url):
         # sometimes .nfo files are in the zip container
         tmpname = name.lower()
         if tmpname.endswith('srt'):
-            file = StringIO(zipfile.open(name).read())
+            subtitleFile = StringIO(zipfile.open(name).read())
             log.debug("downloadSubs.unzip: Retrieving zip file for %s was succesful" % url )
-            return file
+            return subtitleFile
         else: 
             log.error("downloadSubs.unzip: No subtitle files was found in the zip archive for %s" % url)
             log.error("downloadSubs.unzip: Subtitle with different extention than .srt?")
@@ -101,7 +100,7 @@ def openSubtitles(subSeekerLink):
     link = getHTMLTagAttrib(subSeekerLink, 'iframe', 'src')            
     if link:
         html = getHTML(link)
-        id = None
+        openID = None
         # capture dead links
         if not html.find("msg error") == -1:
             # get alternate link
@@ -109,12 +108,12 @@ def openSubtitles(subSeekerLink):
             try:
                 r = re.search('http://www.opensubtitles.org/en/subtitles/(\d*)/', html).group(1)
                 if r:
-                    id = r
+                    openID = r
             except:
                 return None
         else:
-            id = link.split('/')[4].encode('utf8')
-        zipUrl = openSubLink + id
+            openID = link.split('/')[4].encode('utf8')
+        zipUrl = openSubLink + openID
         subtitleFile = unzip(zipUrl)
         return subtitleFile
     else:
@@ -220,8 +219,8 @@ def DownloadSub(downloadDict):
             log.debug("downloadSubs: Scraper for Undertexter.se is chosen for subtitle %s" % destsrt)
             fileStringIO = undertexter(subSeekerLink)            
         elif website == 'subscene.com':    
-           log.debug("downloadSubs: Scraper for Subscene.com is chosen for subtitle %s" % destsrt)
-           fileStringIO = subscene(subSeekerLink)
+            log.debug("downloadSubs: Scraper for Subscene.com is chosen for subtitle %s" % destsrt)
+            fileStringIO = subscene(subSeekerLink)
         elif website == 'podnapisi.net':
             log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
             fileStringIO = podnapisi(subSeekerLink)
