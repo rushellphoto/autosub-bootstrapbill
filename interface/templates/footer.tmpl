@@ -1,0 +1,75 @@
+#import autosub
+#from autosub.version import autosubversion
+
+<br><br><br>
+
+      </div>
+
+    </div>
+		
+    <div id="footer">
+      <div class="container">
+        #if ($autosub.APICALLSRESETINT - ($time.time() - $autosub.APICALLSLASTRESET)) < 0
+		<p class="muted credit">AUTO-SUB BOOTSTRAP BILL $autosubversion.upper() // API RESET: AT NEXT API CALL</p>
+		#else
+		<p class="muted credit">AUTO-SUB BOOTSTRAP BILL $autosubversion.upper() // API RESET: $time.strftime('%H:%M:%S', $time.gmtime(($autosub.APICALLSRESETINT - ($time.time() - $autosub.APICALLSLASTRESET) )))</p>
+		#end if
+      </div>
+    </div>
+	
+	<!-- Auto-Sub Modal -->
+	<div id="DisplayMessage" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+			<h3 id="myModalLabel">
+#try:
+		$modalheader
+#except:
+		<!-- There is no header provided by the system -->
+#end try:			
+			</h3>
+		</div>
+		
+		<div class="modal-body">
+#try:
+		$message
+#except:
+		<!-- There is no message from the system -->
+#end try:
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		</div>
+	</div>
+
+    <script src="$autosub.WEBROOT/scripts/jquery.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-transition.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-alert.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-modal.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-dropdown.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-scrollspy.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-tab.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-tooltip.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-popover.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-button.js"></script>
+    <script src="$autosub.WEBROOT/scripts/bootstrap-collapse.js"></script>
+    <script src="$autosub.WEBROOT/scripts/jquery.dataTables.js"></script>
+	<script src="$autosub.WEBROOT/scripts/jquery.dataTables.rowGrouping.js"></script>
+
+#try:	
+#if $displaymessage == "Yes":
+    <script type="text/javascript">
+        jQuery(function ($) {
+        \$("#DisplayMessage").modal()
+        });
+    </script>
+#end if:
+#except:
+    <!-- There is no message from the system -->
+#end try:
+
+	<script src="$autosub.WEBROOT/scripts/autosub-custom.js"></script>
+	
+	</body>
+</html>

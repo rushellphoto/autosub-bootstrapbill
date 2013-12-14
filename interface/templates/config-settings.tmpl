@@ -1,0 +1,49 @@
+#import autosub
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+<form method="post" action="$autosub.WEBROOT/config/saveConfig">
+		
+		<div class="page-header"><h1>Configuration <small><a href="#general">General</a></small> <small><a href="#logfile">Logfile</a></small> <small><a href="#namemapping">Namemapping</a></small> <small><a href="#skipshow">Skipshow</a></small> <small><a href="#webserver">Webserver</a></small></h1></div>
+		<a id="general"></a>
+   		<div class="well well-small center well-header"><b>General</b> <a href="#" id="advanced-config" data-placement="right" data-toggle="tooltip" data-original-title="Toggle Advanced Settings"><span id="adv-conf-up"><i class="icon-chevron-up"></i></span><span id="adv-conf-down"><i class="icon-chevron-down"></i></span></a></div>
+		<div class="well well-small" align="center">
+		#include $os.path.join($autosub.PATH.encode(), "interface/templates/config-general.tmpl")		
+		</div>
+		<input type="submit" value="Save Changes" class="btn btn-primary" />
+		<a id="logfile"></a>
+		<hr>
+		
+		<div class="well well-small center well-header"><b>Logfile</b></div>
+		<div class="well well-small" align="center">
+		#include $os.path.join($autosub.PATH.encode(), "interface/templates/config-logfile.tmpl")
+		</div>
+		<input type="submit" value="Save Changes" class="btn btn-primary" />
+		<a id="namemapping"></a>
+		<hr>
+		
+   		<div class="well well-small center well-header"><b>Namemapping</b> <a data-placement="right" data-toggle="tooltip" data-original-title="This allows you to link a show to the IMDB.com number. This is the ID that you can see in the URL of the show. For example, www.imdb.com/title/tt2193021 will result in: Arrow = 2193021"><i class="icon-question-sign"></i></a></div>
+		<div class="well well-small" align="center">
+		<textarea rows="10" cols="75" name="usernamemapping" class="input-xxlarge">$autosub.Config.displayNamemapping</textarea>
+		</div>
+		<input type="submit" value="Save Changes" class="btn btn-primary" />
+		<a id="skipshow"></a>
+		<hr>
+		
+		<div class="well well-small center well-header"><b>Skipshow</b> <a data-placement="right" data-toggle="tooltip" data-original-title="This allows you to skip a Show. For example: Serie Name = 4,5 (This will skip season 4 and 5 of the provided show)."><i class="icon-question-sign"></i></a></div>
+		<div class="well well-small" align="center">
+		<textarea rows="10" cols="75" name="skipshow" class="input-xxlarge">$autosub.Config.displaySkipshow</textarea>
+		</div>
+		<input type="submit" value="Save Changes" class="btn btn-primary" />
+		<a id="webserver"></a>
+		<hr>
+		
+		<div class="well well-small center well-header"><b>Webserver</b></div>
+		<div class="well well-small" align="center">
+		#include $os.path.join($autosub.PATH.encode(), "interface/templates/config-webserver.tmpl")
+		</div>
+		<input type="submit" value="Save Changes" class="btn btn-primary" />
+
+</form>
+<div style="position: fixed; bottom: 10px; right: 20px;"><a href="#top"><i class="icon-arrow-up"></i></a></div>
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")
