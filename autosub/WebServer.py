@@ -374,20 +374,27 @@ class Home:
     @cherrypy.expose
     def runNow(self):
         #time.sleep is here to prevent a timing issue, where checksub is runned before scandisk
-        autosub.SCANDISK.runnow = True
-        time.sleep(5)
-        autosub.CHECKSUB.runnow = True
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
         if autosub.Helpers.CheckMobileDevice(useragent) and autosub.MOBILEAUTOSUB:
             tmpl = PageTemplate(file="interface/templates/mobile/message.tmpl")
-            
+
+        if not hasattr(autosub.CHECKSUB, 'runnow'):
+            tmpl.message = "Auto-Sub is already running, no need to rerun"
+            tmpl.displaymessage = "Yes"
+            tmpl.modalheader = "Information"
+            return str(tmpl)
+
+        autosub.SCANDISK.runnow = True
+        time.sleep(5)
+        autosub.CHECKSUB.runnow = True
+
         tmpl.message = "Auto-Sub is now checking for subtitles!"
         tmpl.displaymessage = "Yes"
         tmpl.modalheader = "Information"
-        
+
         return str(tmpl)
-    
+
     @cherrypy.expose
     def exitMini(self):
         if autosub.MOBILEAUTOSUB:
