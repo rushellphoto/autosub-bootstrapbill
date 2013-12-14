@@ -2,6 +2,11 @@
 
 $(document).ready(function () {
 
+	$('#wanted').dataTable({ "bLengthChange": true, "bPaginate": true})
+				.rowGrouping({bExpandableGrouping: false});
+
+	$('#downloaded').dataTable({ "bLengthChange": true, "bPaginate": true, "aaSorting": [[ 8, "desc" ]]});
+	
     $('#testMail').click(function () {
         $('#testMail-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Mail...</span>');
         var mailsrv = $("#mailsrv").val();

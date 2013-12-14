@@ -130,7 +130,8 @@ code {
 /* Wanted & Downloaded custom dropdown height */
 
 .nav-collapse.skipshow {
-	height: 10px;
+	margin-bottom: 15px;
+	height: 5px;
 	overflow: visible;
 }
 

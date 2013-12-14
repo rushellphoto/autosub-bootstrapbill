@@ -26,7 +26,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 		No data available at the moment.
 #end if		
 #if $len($autosub.WANTEDQUEUE) >= 1
-		<table class="table sortable">
+		<table id="wanted">
 			<thead>
 				<tr>
 					<th>Show name</th>
@@ -45,12 +45,13 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 
 #set $title_escaped = $cgi.escape($var['title'], True)
 		<tr>
+			<td>$var['title']</td>
 			<td>
 			
 			  <div class="nav-collapse skipshow">
 				  <ul class="nav">
 					<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>$var['title']</b></a>
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown">$var['season']</a>
 					  <ul class="dropdown-menu">
 						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/$var['season']">Skip season $var['season']</a></li>
 						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/0">Skip show</a></li>
@@ -60,7 +61,6 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
               </div>
 			
 			</td>
-			<td>$var['season']</td>
 			<td>$var['episode']</td>
 #if $type($var['source']) == UnicodeType:
 			<td>$var['source'].upper()</td>
@@ -100,10 +100,23 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 		</tr>
 #end for
 		</tbody>
+			<tfoot>
+				<tr>
+					<th>Show name</th>
+					<th>Season</th>
+					<th>Episode</th>
+					<th>Source</th>
+					<th>Quality</th>
+					<th>Codec</th>
+					<th>Group</th>
+					<th>Language</th>
+					<th>Time</th>
+				</tr>
+			</tfoot>
 		</table>
 
 #end if
-
+		<br>
 		</div>
 		
 		<hr>
@@ -123,7 +136,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #end if		
 #if $len($lastdownload) >= 1
     
-		<table class="table sortable">
+		<table id="downloaded">
 			<thead>
 				<tr>
 					<th>Show name</th>
@@ -140,20 +153,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 			<tbody>
 #for $var in $lastdownload
 			<tr>
-				<td>
-					
-				<div class="nav-collapse skipshow">
-				  <ul class="nav">
-					<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>$var['show_name']</b></a>
-					  <ul class="dropdown-menu">
-						<li><a>$var['subtitle'].upper()</a></li>
-					  </ul>
-					</li>
-				  </ul>
-				</div>
-				
-				</td>
+				<td><a data-placement="right" data-toggle="tooltip" data-original-title="$var['subtitle'].upper()">$var['show_name']</a></td>
 				<td>$var['season']</td>
 				<td>$var['episode']</td>
 #if $type($var['source']) == UnicodeType:
@@ -188,9 +188,22 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 			</tr>	
 #end for
 			</tbody>
+			<tfoot>
+				<tr>
+					<th>Show name</th>
+					<th>Season</th>
+					<th>Episode</th>
+					<th>Source</th>
+					<th>Quality</th>
+					<th>Codec</th>
+					<th>Group</th>
+					<th>Language</th>
+					<th>Time</th>
+				</tr>
+			</tfoot>
 		</table>
 #end if
-		
+		<br>
 		</div>
 	
 		<hr>

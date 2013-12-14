@@ -68,12 +68,7 @@ class lastDown():
         cursor.execute(self.query_get)
         Llist = cursor.fetchall()
         connection.close()
-        
-        #return the last 10 items
-        if len(Llist) > 9:
-            return Llist[len(Llist)-10:]
-        else:
-            return Llist
+        return Llist
 
     def setlastDown (self, **data):
         connection=sqlite3.connect(autosub.DBFILE)
