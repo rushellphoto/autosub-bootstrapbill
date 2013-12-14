@@ -279,7 +279,7 @@ def getShowid(show_name):
     
     #do we have enough api calls?
     if checkAPICallsTvdb(use=False): 
-       show_id = autosub.Subtitleseeker.getShowidApi(show_name)
+        show_id = autosub.Subtitleseeker.getShowidApi(show_name)
     else:
         log.warning("getShowid: Out of API calls")
         return None
