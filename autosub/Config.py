@@ -631,8 +631,8 @@ def SaveToConfig(section=None, variable=None, value=None):
         edited = True
 
     if edited:
-        with open(autosub.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
+        with open(autosub.CONFIGFILE, 'wb') as cfile:
+            cfg.write(cfile)
 
 
 def applynameMapping():
@@ -769,8 +769,8 @@ def saveConfigSection():
     cfg.set(section, "homelayoutfirst", autosub.HOMELAYOUTFIRST)
     cfg.set(section, "englishsubdelete", str(autosub.ENGLISHSUBDELETE))
     
-    with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as file:
-        cfg.write(file)
+    with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as cfile:
+        cfg.write(cfile)
 
 
 def saveLogfileSection():
@@ -796,8 +796,8 @@ def saveLogfileSection():
     cfg.set(section, "logsize", str(autosub.LOGSIZE))
     cfg.set(section, "lognum", str(autosub.LOGNUM))
 
-    with open(autosub.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
+    with open(autosub.CONFIGFILE, 'wb') as cfile:
+        cfg.write(cfile)
 
 
 def saveWebserverSection():
@@ -824,8 +824,8 @@ def saveWebserverSection():
     cfg.set(section, "password", autosub.PASSWORD)
     cfg.set(section, "webroot", autosub.WEBROOT)
 
-    with open(autosub.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
+    with open(autosub.CONFIGFILE, 'wb') as cfile:
+        cfg.write(cfile)
 
 
 def saveSkipshowSection():
@@ -846,8 +846,8 @@ def saveSkipshowSection():
     if cfg.has_section(section):
         cfg.remove_section(section)
         cfg.add_section(section)
-        with open(autosub.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
+        with open(autosub.CONFIGFILE, 'wb') as cfile:
+            cfg.write(cfile)
 
     for x in autosub.SKIPSHOW:
         SaveToConfig('skipshow', x, autosub.SKIPSHOW[x])
@@ -873,8 +873,8 @@ def saveUsernamemappingSection():
     if cfg.has_section(section):
         cfg.remove_section(section)
         cfg.add_section(section)
-        with open(autosub.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
+        with open(autosub.CONFIGFILE, 'wb') as cfile:
+            cfg.write(cfile)
 
     for x in autosub.USERNAMEMAPPING:
         SaveToConfig('namemapping', x, autosub.USERNAMEMAPPING[x])
@@ -927,8 +927,8 @@ def saveNotifySection():
     cfg.set(section, "notifypushover", str(autosub.NOTIFYPUSHOVER))
     cfg.set(section, "pushoverapi", autosub.PUSHOVERAPI)
     
-    with open(autosub.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
+    with open(autosub.CONFIGFILE, 'wb') as cfile:
+        cfg.write(cfile)
 
 def checkForRestart():
     """
