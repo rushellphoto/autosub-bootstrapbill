@@ -27,6 +27,7 @@ table.dataTable td {
 }
 
 table.dataTable td.group {
+	text-align: left;
 	color: white ;
 	background-color: #5b96d1;
 	background: rgb(120,177,237); /* Old browsers */
