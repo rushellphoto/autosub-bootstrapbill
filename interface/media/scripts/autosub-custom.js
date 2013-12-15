@@ -90,16 +90,6 @@ $(document).ready(function () {
  		});
  	});
 
-	$('#advanced-config').each(function () {
-		$('#content_advanced').hide();
-		$('#adv-conf-up').hide();
-	});
-	
-	$('#advanced-config').click(function() {
-		$('#content_advanced').toggle();
-		$('#adv-conf-up').toggle();
-		$('#adv-conf-down').toggle();
-	});
 });
 
 // Code to sort the Wanted/Downloaded tables on the Home page.
