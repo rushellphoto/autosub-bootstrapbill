@@ -70,12 +70,12 @@ def unzip(url):
     try:
         tmpfile = StringIO(urllib2.urlopen(req).read())
     except:
-        log.error("downloadSubs.unzip: Zip file at %s couldn't be retrieved" % url)
+        log.debug("downloadSubs.unzip: Zip file at %s couldn't be retrieved" % url)
         return None     
     try: 
         zipfile = ZipFile(tmpfile)
     except:
-        log.error("unzip: Expected a zip file but got error for link %s" % url)
+        log.debug("unzip: Expected a zip file but got error for link %s" % url)
         log.debug("unzip: %s is likely a dead link, this is known for opensubtitles.org" % url)
         return None
 
@@ -88,8 +88,8 @@ def unzip(url):
             log.debug("downloadSubs.unzip: Retrieving zip file for %s was succesful" % url )
             return subtitleFile
         else: 
-            log.error("downloadSubs.unzip: No subtitle files was found in the zip archive for %s" % url)
-            log.error("downloadSubs.unzip: Subtitle with different extention than .srt?")
+            log.debug("downloadSubs.unzip: No subtitle files was found in the zip archive for %s" % url)
+            log.debug("downloadSubs.unzip: Subtitle with different extention than .srt?")
             return None  
     
 # Add log info to the scrapers
@@ -189,18 +189,13 @@ def subscene(subSeekerLink):
     log.debug("downloadSubs.Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
     return None
         
-def DownloadSub(downloadDict):    
+def DownloadSub(downloadDict, allResults):    
 
     log.debug("downloadSubs: Starting DownloadSub function")    
 
-    if 'destinationFileLocationOnDisk' in downloadDict.keys() and 'downloadLink' in downloadDict.keys():
+    if 'destinationFileLocationOnDisk' in downloadDict.keys():
         log.debug("downloadSubs: Download dict seems ook. Dumping it for debug: %r" % downloadDict) 
         destsrt = downloadDict['destinationFileLocationOnDisk']
-        website = downloadDict['website']
-        subSeekerLink = downloadDict['downloadLink']
-
-        log.debug("downloadSubs: Trying to download the following subtitle %s" % subSeekerLink)
-        
         destdir = os.path.split(destsrt)[0] #make sure the download dest is there
         if not os.path.exists(destdir):
             log.debug("checkSubs: no destination directory %s" %destdir)
@@ -208,84 +203,95 @@ def DownloadSub(downloadDict):
         elif not os.path.lexists(destdir):
             log.debug("checkSubs: no destination directory %s" %destdir)
             return False        
+            
+        for hit in allResults:            
+            website = hit[3]
+            subSeekerLink = hit[0]
+            
+            log.debug("downloadSubs: Trying to download the following subtitle %s" % subSeekerLink)            
         
-        # Decide which scraper to use
-        # Return a fileStringIO object 
-        log.info('website is %s' % website) 
-        if website == 'opensubtitles.org':
-            log.debug("downloadSubs: Scraper for Opensubtitles.org is chosen for subtitle %s" % destsrt)
-            fileStringIO = openSubtitles(subSeekerLink)        
-        elif website == 'undertexter.se':
-            log.debug("downloadSubs: Scraper for Undertexter.se is chosen for subtitle %s" % destsrt)
-            fileStringIO = undertexter(subSeekerLink)            
-        elif website == 'subscene.com':    
-            log.debug("downloadSubs: Scraper for Subscene.com is chosen for subtitle %s" % destsrt)
-            fileStringIO = subscene(subSeekerLink)
-        elif website == 'podnapisi.net':
-            log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
-            fileStringIO = podnapisi(subSeekerLink)
-        else:
-            log.error("downloadSubs: No scraper could be selected")
-            log.debug("downloadSubs: check the SubtitleSeeker XML file. Have the website names changed?")
-            return False
+            # Decide which scraper to use
+            # Return a fileStringIO object 
+            log.info('website is %s' % website) 
+            if website == 'opensubtitles.org':
+                log.debug("downloadSubs: Scraper for Opensubtitles.org is chosen for subtitle %s" % destsrt)
+                fileStringIO = openSubtitles(subSeekerLink)        
+            elif website == 'undertexter.se':
+                log.debug("downloadSubs: Scraper for Undertexter.se is chosen for subtitle %s" % destsrt)
+                fileStringIO = undertexter(subSeekerLink)            
+            elif website == 'subscene.com':    
+                log.debug("downloadSubs: Scraper for Subscene.com is chosen for subtitle %s" % destsrt)
+                fileStringIO = subscene(subSeekerLink)
+            elif website == 'podnapisi.net':
+                log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
+                fileStringIO = podnapisi(subSeekerLink)
+            else:
+                log.error("downloadSubs: No scraper could be selected")
+                log.debug("downloadSubs: check the SubtitleSeeker XML file. Have the website names changed?")
+                log.debug("downloadSubs: Trying to download another subtitle for this episode")
+                continue
             
         
-        #Lets first download the subtitle to a tempfile and then write it to the destination
-        tmpfile = tempfile.TemporaryFile('w+b')
+            #Lets first download the subtitle to a tempfile and then write it to the destination
+            tmpfile = tempfile.TemporaryFile('w+b')
         
-        if fileStringIO:
-            try:
-                tmpfile.write(fileStringIO.getvalue())
-                tmpfile.write('\n') #If subtitle has some footer which doesn't have a line feed >.>
-            except:
-                log.error("downloadSubs: Error while downloading subtitle %s. Subtitle might be corrupt %s." % (destsrt, website))
-                return False
-        else:
-            return False
-       
-        tmpfile.seek(0) #Return to the start of the file
-        
-        try:
-            log.debug("downloadSubs: Trying to save the subtitle to the filesystem")
-            open(destsrt, 'wb').write(tmpfile.read())
-            tmpfile.close()
-        except IOError:
-            log.error("downloadSubs: Could not write subtitle file. Permission denied? Enough diskspace?")
-            tmpfile.close()
-            return False
-        
-        log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
-        
-        downloadDict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        
-        lastDown().setlastDown(dict = downloadDict)
-        
-        if downloadDict['downlang'] == 'Dutch' and autosub.ENGLISHSUBDELETE == True:
-            log.info("downloadsubs: Trying to delete English subtitle.")
-            engfileremove = os.path.splitext(destsrt)[0] + u"." + autosub.SUBENG + u".srt"
-            if os.path.exists(engfileremove):
+            if fileStringIO:
                 try:
-                    os.remove(engfileremove)
-                    log.info("downloadsubs: Removed English subtitle: %s" % engfileremove)
+                    tmpfile.write(fileStringIO.getvalue())
+                    tmpfile.write('\n') #If subtitle has some footer which doesn't have a line feed >.>
+                    tmpfile.seek(0) #Return to the start of the file
                 except:
-                    log.error("downloadsubs: Error while trying to remove the file.")
+                    log.error("downloadSubs: Error while downloading subtitle %s. Subtitle might be corrupt %s." % (destsrt, website))
+                    log.debug("downloadSubs: Trying to download another subtitle for this episode")
+                    continue
             else:
-                log.info("downloadsubs: English subtitle not found.")
-        
-        notify.notify(downloadDict['downlang'], destsrt, downloadDict["originalFileLocationOnDisk"])
+                log.debug("downloadSubs: Trying to download another subtitle for this episode")
+                continue
 
-        if autosub.POSTPROCESSCMD:
-            postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadDict["destinationFileLocationOnDisk"] + '" "' + downloadDict["originalFileLocationOnDisk"] + '"'
-            log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
-            log.info("downloadSubs: Running PostProcess")
-            postprocessoutput, postprocesserr = autosub.Helpers.RunCmd(postprocesscmdconstructed)
-            if postprocesserr:
-                log.error("downloadSubs: PostProcess: %s" % postprocesserr)
-            log.debug("downloadSubs: PostProcess Output:% s" % postprocessoutput)
+            try:
+                log.debug("downloadSubs: Trying to save the subtitle to the filesystem")
+                open(destsrt, 'wb').write(tmpfile.read())
+                tmpfile.close()
+            except IOError:
+                log.error("downloadSubs: Could not write subtitle file. Permission denied? Enough diskspace?")
+                tmpfile.close()
+                return False
         
-        log.debug('downloadSubs: ')
-        return True
+            log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
+            
+            downloadDict['subtitle'] = hit[2]
+            downloadDict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        
+            lastDown().setlastDown(dict = downloadDict)
+        
+            if downloadDict['downlang'] == 'Dutch' and autosub.ENGLISHSUBDELETE == True:
+                log.info("downloadsubs: Trying to delete English subtitle.")
+                engfileremove = os.path.splitext(destsrt)[0] + u"." + autosub.SUBENG + u".srt"
+                if os.path.exists(engfileremove):
+                    try:
+                        os.remove(engfileremove)
+                        log.info("downloadsubs: Removed English subtitle: %s" % engfileremove)
+                    except:
+                        log.error("downloadsubs: Error while trying to remove the file.")
+                else:
+                    log.info("downloadsubs: English subtitle not found.")
+        
+            notify.notify(downloadDict['downlang'], destsrt, downloadDict["originalFileLocationOnDisk"])
+
+            if autosub.POSTPROCESSCMD:
+                postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadDict["destinationFileLocationOnDisk"] + '" "' + downloadDict["originalFileLocationOnDisk"] + '"'
+                log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
+                log.info("downloadSubs: Running PostProcess")
+                postprocessoutput, postprocesserr = autosub.Helpers.RunCmd(postprocesscmdconstructed)
+                if postprocesserr:
+                    log.error("downloadSubs: PostProcess: %s" % postprocesserr)
+                log.debug("downloadSubs: PostProcess Output:% s" % postprocessoutput)
+        
+            log.debug('downloadSubs: ')
+            return True
+        
+        log.debug("downloadSubs: There are no remaining hits to look at. Wait for next run to get a subtitle for this episode")
         
     else:
-        log.error("downloadSub: No downloadLink or locationOnDisk found at downloadItem, skipping")
+        log.error("downloadSub: No locationOnDisk found at downloadItem, skipping")
         return False

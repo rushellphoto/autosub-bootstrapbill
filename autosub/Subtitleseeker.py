@@ -98,9 +98,10 @@ def getShowidApi(showName):
     else:
         log.error("API: out of api calls for MyMovieAPI")
 
-def getSubLink(showid, lang, releaseDetails):
+def getSubLinks(showid, lang, releaseDetails):
     """
-    Return the link to download the best matching subtitle.
+    Return all the hits that reach minmatchscore, sorted with the best at the top of the list
+    Each element had the downloadlink, score, releasename, and source website)
     Matching is based on the provided release details.
 
     Keyword arguments:
@@ -112,7 +113,7 @@ def getSubLink(showid, lang, releaseDetails):
     api = autosub.API
     
     if showid == -1:
-        return (None, None)    
+        return None    
     quality = None
     releasegrp = None
     source = None
@@ -134,9 +135,8 @@ def getSubLink(showid, lang, releaseDetails):
             subseekerapi.resp.close()
         except:
             log.error("getSubLink: The server returned an error for request %s" % getSubLinkUrl)
-            return (None, None, None)
+            return None
     else:
-        print 'out of api calls'
         log.error("API: out of api calls for SubtitleSeeker.com")
     
     if 'quality' in releaseDetails.keys(): quality = releaseDetails['quality']
@@ -145,7 +145,7 @@ def getSubLink(showid, lang, releaseDetails):
     if 'codec' in releaseDetails.keys(): codec = releaseDetails['codec']
 
     if not dom or len(dom.getElementsByTagName('item')) == 0:
-        return (None, None, None)
+        return None
 
     scoredict = {}
     releasedict = {}
@@ -165,20 +165,17 @@ def getSubLink(showid, lang, releaseDetails):
         tmpDict = ProcessFilename(release, '')
         if not tmpDict:
             continue
+
         
         # Scoredict is a dictionary with a download link and its match score. This will be used to determine the best match (the highest matchscore)
         scoredict[sub.getElementsByTagName('url')[0].firstChild.data] = autosub.Helpers.scoreMatch(tmpDict, release, quality, releasegrp, source, codec)
-        
+    
         # Releasedict is a dictionary with the release name, used for the lastdownload database
         releasedict[sub.getElementsByTagName('url')[0].firstChild.data] = release
         
         # Websitedict is a dictionary with the download link coupled with the source website        
         websitedict[sub.getElementsByTagName('url')[0].firstChild.data] = website
         
-        if scoredict[sub.getElementsByTagName('url')[0].firstChild.data] == 15:
-            # Sometimes you just find a perfect match, why should we continue to search if we got a perfect match?
-            log.debug('getSubLink: A perfect match found, returning the download link')
-            return (sub.getElementsByTagName('url')[0].firstChild.data, release, website)
     # Done comparing all the results, lets sort them and return the highest result
     # If there are results with the same score, the download links which comes first (alphabetically) will be returned
     # Also check if the result match the minimal score
@@ -196,9 +193,12 @@ def getSubLink(showid, lang, releaseDetails):
         log.debug("getSubLink: Removed item from the ScoreDict at index %s" % toDelete[i])
         sortedscoredict.pop(toDelete[i])
         i = i - 1
-    if len (sortedscoredict) > 0:
-        release = releasedict[sortedscoredict[0][0]]
-        website = websitedict[sortedscoredict[0][0]]
-        return (sortedscoredict[0][0], release, website)
+    if len(sortedscoredict) > 0:
+        allResults = []
+        j=0        
+        while j < len(sortedscoredict):
+            allResults.append(sortedscoredict[j] + (releasedict[sortedscoredict[j][0]], websitedict[sortedscoredict[j][0]]))
+            j += 1
+        return allResults
     
-    return (None, None, None)
+    return None

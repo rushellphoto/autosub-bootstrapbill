@@ -61,26 +61,24 @@ class checkSub():
             langtmp = languages[:]
             for lang in langtmp:
                 log.debug("checkSub: trying to get a downloadlink for %s, language is %s" % (originalfile, lang))
-                downloadLink, release, website = autosub.Subtitleseeker.getSubLink(showid, lang, wantedItem)
-                                
-                if downloadLink:
+                # get all links higher than the minmatch as input for downloadSub
+                
+                # Returns a list of 4-element tuples
+                allResults = autosub.Subtitleseeker.getSubLinks(showid, lang, wantedItem)
+                if allResults:
                     if lang == autosub.DUTCH:
                         wantedItem['destinationFileLocationOnDisk'] = srtfile
                     elif lang == autosub.ENGLISH:
                         wantedItem['destinationFileLocationOnDisk'] = engsrtfile
                     
                     
-                    log.info("checkSub: The episode %s - Season %s Episode %s has a matching subtitle on SubtitleSeeker, downloading it!" % (title, season, episode))
-                    log.debug('checkSub: Dumping downloadlink for debug perpuse %s' %downloadLink)
+                    log.info("checkSub: The episode %s - Season %s Episode %s has 1 or more matching subtitles on SubtitleSeeker, downloading it!" % (title, season, episode))
                     log.debug("checkSub: destination filename %s" % wantedItem['destinationFileLocationOnDisk'])
                 
-                    wantedItem['downloadLink'] = downloadLink
                     downloadItem = wantedItem.copy()
                     downloadItem['downlang'] = lang
-                    downloadItem['subtitle'] = release
-                    downloadItem['website'] = website
                     
-                    if not DownloadSub(downloadItem):
+                    if not DownloadSub(downloadItem, allResults):
                         break
                     
                     if lang == autosub.DUTCH and (autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and autosub.ENGLISH in languages:
@@ -94,7 +92,7 @@ class checkSub():
                     languages.remove(lang)
                     if len(languages) == 0:
                         toDelete_wantedQueue.append(index)
-                    
+                                        
         i = len(toDelete_wantedQueue) - 1
         while i >= 0:
             log.debug("checkSub: Removed item from the wantedQueue at index %s" % toDelete_wantedQueue[i])
