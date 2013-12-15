@@ -99,7 +99,7 @@ class Config:
                    mmsrsource = None, mmsrquality = None, mmsrcodec = None, mmsrrelease = None):
         # Set all internal variables
         autosub.PATH = path
-        autosub.ROOTPATH = rootpath
+        autosub.ROOTPATH = rootpath.replace(" ", "")
         autosub.LOGFILE = logfile
         autosub.FALLBACKTOENG = fallbacktoeng
         autosub.DOWNLOADENG = downloadeng

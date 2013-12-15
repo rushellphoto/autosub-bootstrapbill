@@ -93,18 +93,21 @@ class scanDisk():
             return False
         else:
             autosub.WANTEDQUEUELOCK = True
+        
         autosub.WANTEDQUEUE = []
 
-        if not os.path.exists(autosub.ROOTPATH):
-            log.error("scanDir: Root path does %s not exists, aborting..." % autosub.ROOTPATH)
-            autosub.WANTEDQUEUELOCK = False
-            return True
-        
-        try:
-            walkDir(autosub.ROOTPATH)
-        except:
-            walkDir(str(autosub.ROOTPATH))
-                    
+        seriespaths = autosub.ROOTPATH.split(",")
+        for seriespath in seriespaths:
+            if not os.path.exists(seriespath):
+                log.error("scanDir: Root path %s does not exist, aborting..." % seriespath)
+                autosub.WANTEDQUEUELOCK = False
+            
+            if os.path.exists(seriespath):
+                try:
+                    walkDir(seriespath)
+                except:
+                    walkDir(str(seriespath))
+                                    
         log.debug("scanDir: Finished round of local disk checking")
         autosub.WANTEDQUEUELOCK = False
         return True
