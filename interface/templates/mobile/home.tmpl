@@ -48,11 +48,11 @@
 							</tr>
 							</thead>
 
-#set $counter = 0
-#for $var in $autosub.WANTEDQUEUE
-#set $counter = $counter + 1
+	#set $counter = 0
+	#for $var in $autosub.WANTEDQUEUE
+	#set $counter = $counter + 1
 
-#set $title_escaped = $cgi.escape($var['title'], True)
+	#set $title_escaped = $cgi.escape($var['title'], True)
 							<tr>
 								<td><b>
 									<div style="position: relative; float: left; width: 60%;">$var['title'].upper()</div> <div style="position: relative; float: right;">S$var['season'] E$var['episode']</div>
@@ -68,8 +68,10 @@
 							#end for
 								</td>
 							</tr>						
-#end for
+	#end for
 						</table>
+#else:
+	<center>No data available at the moment.</center>
 #end if					
 					</p>
 					</div>
@@ -90,7 +92,12 @@
 							</tr>
 							</thead>
 
-#for $var in $lastdownload
+	#set $downloadeditem = 0
+	#for $var in $lastdownload
+		#set $downloadeditem += 1
+			#if $downloadeditem > 10:
+				#break
+			#else:
 							<tr>
 								<td><b>
 									<div style="position: relative; float: left; width: 60%;">$var['show_name'].upper()</div> <div style="position: relative; float: right;">S$var['season'] E$var['episode']</div>
@@ -101,10 +108,11 @@
 									<img src="$imageurl" alt="$var['language']" />
 								</td>
 								</tr>
-
-#end for
+			#end if
+	#end for
 							</table>
-
+#else:
+	<center>No data available at the moment.</center>
 #end if
 					
 					</p>
