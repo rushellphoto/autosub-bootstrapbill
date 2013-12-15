@@ -45,7 +45,20 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 
 #set $title_escaped = $cgi.escape($var['title'], True)
 		<tr>
-			<td>$var['title']</td>
+			<td align="left">
+			
+			  <div class="nav-collapse skipshow">
+				  <ul class="nav">
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown">$var['title']</a>
+					  <ul class="dropdown-menu">
+						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/0">Skip $var['title']</a></li>
+					  </ul>
+					</li>
+				  </ul>
+              </div>
+			
+			</td>
 			<td>
 			
 			  <div class="nav-collapse skipshow">
@@ -53,8 +66,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown">$var['season']</a>
 					  <ul class="dropdown-menu">
-						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/$var['season']">Skip season $var['season']</a></li>
-						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/0">Skip show</a></li>
+						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/$var['season']">Skip $var['title'] S$var['season']</a></li>
 					  </ul>
 					</li>
 				  </ul>

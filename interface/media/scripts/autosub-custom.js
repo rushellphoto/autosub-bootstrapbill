@@ -2,10 +2,27 @@
 
 $(document).ready(function () {
 
-	$('#wanted').dataTable({ "bLengthChange": false, "bPaginate": false})
-				.rowGrouping({bExpandableGrouping: false});
+	$('#wanted').dataTable({ 
+		"bStateSave": true,
+		"fnStateSave": function (oSettings, oData) { localStorage.setItem( 'AutoSub-Wanted', JSON.stringify(oData) ); },
+		"fnStateLoad": function (oSettings) { return JSON.parse( localStorage.getItem('AutoSub-Wanted') ); },
+		"iCookieDuration": 60*60*24*365,
+		"bLengthChange": true,
+		"bPaginate": true,
+		"aLengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+		"aaSorting": [ [ 0, "asc"], [ 1, "asc"], [ 2, "asc"] ]
+	});
 
-	$('#downloaded').dataTable({ "bStateSave": true, "iCookieDuration": 60*60*24*365, "bLengthChange": true, "bPaginate": true, "aaSorting": [[ 8, "desc" ]]});
+	$('#downloaded').dataTable({ 
+		"bStateSave": true,
+		"fnStateSave": function (oSettings, oData) { localStorage.setItem( 'AutoSub-Downloaded', JSON.stringify(oData) ); },
+		"fnStateLoad": function (oSettings) { return JSON.parse( localStorage.getItem('AutoSub-Downloaded') ); },
+		"iCookieDuration": 60*60*24*365,
+		"bLengthChange": true,
+		"bPaginate": true,
+		"aLengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+		"aaSorting": [ [ 8, "desc" ] ]
+	});
 	
     $('#testMail').click(function () {
         $('#testMail-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Mail...</span>');
