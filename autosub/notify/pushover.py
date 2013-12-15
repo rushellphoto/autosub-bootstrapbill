@@ -45,7 +45,7 @@ def _send_notify(pushoverapi, message):
         handle = urllib2.urlopen(req, data)
         handle.close()
             
-    except:
+    except urllib2.URLError, e:
         # if we get an error back that doesn't have an error code then who knows what's really happening
         if not hasattr(e, 'code'):
             log.error("Pushover: notification failed.")
