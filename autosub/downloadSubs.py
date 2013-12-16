@@ -231,6 +231,7 @@ def DownloadSub(downloadDict, allResults):
             return False        
             
         for hit in allResults:            
+            release = hit[2]
             website = hit[3]
             subSeekerLink = hit[0]
             
@@ -252,7 +253,7 @@ def DownloadSub(downloadDict, allResults):
                 log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
                 fileStringIO = podnapisi(subSeekerLink)
             elif website == 'bierdopje.eu':
-                log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
+                log.debug("downloadSubs: Scraper for Bierdopjes Mirror is chosen for subtitle %s" % destsrt)
                 fileStringIO = bierdopje(subSeekerLink)
             else:
                 log.error("downloadSubs: No scraper could be selected")
@@ -288,7 +289,10 @@ def DownloadSub(downloadDict, allResults):
         
             log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
             
-            downloadDict['subtitle'] = hit[2]
+            if website == 'bierdopje.eu':
+                website = 'subtitleseekers mirror of bierdopje'
+            
+            downloadDict['subtitle'] = "%s downloaded from %s" % (release,website)
             downloadDict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         
             lastDown().setlastDown(dict = downloadDict)
