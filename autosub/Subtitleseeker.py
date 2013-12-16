@@ -159,7 +159,7 @@ def getSubLinks(showid, lang, releaseDetails):
             release = release[:-4]
         website = sub.getElementsByTagName('site')[0].firstChild.data  
         website = website.lower()      
-        if not website in ['opensubtitles.org', 'undertexter.se', 'subscene.com', 'podnapisi.net']:
+        if not website in ['opensubtitles.org', 'undertexter.se', 'subscene.com', 'podnapisi.net', 'bierdopje.eu']:
             continue       
         
         tmpDict = ProcessFilename(release, '')

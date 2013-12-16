@@ -188,6 +188,32 @@ def subscene(subSeekerLink):
     log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
     log.debug("downloadSubs.Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
     return None
+    
+def bierdopje(subSeekerLink):
+    '''
+    The href embedded in the subSeekerLink automatically gives the srt file
+    Convert this in FileIO object for compatibility
+    '''
+    baseLink = 'http://www.subtitleseeker.com/classes/'
+    tags = getHTMLTags(subSeekerLink, 'a')
+    if not tags or len(tags) == 0:
+        return None
+    for tag in tags:
+        url = tag['href'].strip('/')
+        if re.match(baseLink, url):
+            req = urllib2.Request(url)
+            req.add_header("User-agent", autosub.USERAGENT)
+            try:
+                subtitleFile = StringIO(urllib2.urlopen(req).read())
+                return subtitleFile
+            except:
+                log.debug("downloadSubs.bierdopje: Subtitle file at %s couldn't be retrieved" % url)
+                return None  
+    
+    log.error("downloadSubs.bierdopje: Something went wrong while retrieving download link")
+    log.debug("downloadSubs.bierdopje: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
+    return None            
+
         
 def DownloadSub(downloadDict, allResults):    
 
@@ -225,6 +251,9 @@ def DownloadSub(downloadDict, allResults):
             elif website == 'podnapisi.net':
                 log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
                 fileStringIO = podnapisi(subSeekerLink)
+            elif website == 'bierdopje.eu':
+                log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
+                fileStringIO = bierdopje(subSeekerLink)
             else:
                 log.error("downloadSubs: No scraper could be selected")
                 log.debug("downloadSubs: check the SubtitleSeeker XML file. Have the website names changed?")
