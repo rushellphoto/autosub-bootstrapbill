@@ -3,13 +3,24 @@
 #include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
 <form method="post" action="$autosub.WEBROOT/config/saveConfig">
 		
-		<div class="page-header"><h1>Configuration <small><a href="#general">General</a></small> <small><a href="#logfile">Logfile</a></small> <small><a href="#namemapping">Namemapping</a></small> <small><a href="#skipshow">Skipshow</a></small> <small><a href="#webserver">Webserver</a></small></h1></div>
+		<div class="page-header"><h1>Configuration <small><a href="#general">General</a></small> <small><a href="#websites">Websites</a></small> <small><a href="#logfile">Logfile</a></small> <small><a href="#namemapping">Namemapping</a></small> <small><a href="#skipshow">Skipshow</a></small> <small><a href="#webserver">Webserver</a></small></h1></div>
 		<a id="general"></a>
    		<div class="well well-small center well-header"><b>General</b></div>
 		<div class="well well-small" align="center">
 		#include $os.path.join($autosub.PATH.encode(), "interface/templates/config-general.tmpl")		
 		</div>
 		<input type="submit" value="Save Changes" class="btn btn-primary" />
+		<a id="websites"></a>
+		<hr>
+		
+		<div class="well well-small center well-header"><b>Websites</b></div>
+		<div class="well well-small" align="center">
+		#include $os.path.join($autosub.PATH.encode(), "interface/templates/config-websites.tmpl")
+		</div>
+		<input type="submit" value="Save Changes" class="btn btn-primary" />
+		<a id="namemapping"></a>
+		<hr>
+		
 		<a id="logfile"></a>
 		<hr>
 		

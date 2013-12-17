@@ -146,6 +146,31 @@ def ReadConfig(configfile):
         else:
             autosub.ENGLISHSUBDELETE = False
         
+        if cfg.has_option("config", "usepodnapisi"):
+            autosub.USEPODNAPISI = cfg.getboolean("config", "usepodnapisi")
+        else:
+            autosub.USEPODNAPISI = True
+        
+        if cfg.has_option("config", "usesubscene"):
+            autosub.USESUBSCENE = cfg.getboolean("config", "usesubscene")
+        else:
+            autosub.USESUBSCENE = True
+        
+        if cfg.has_option("config", "usebierdopjemirror"):
+            autosub.USEBIERDOPJEMIRROR = cfg.getboolean("config", "usebierdopjemirror")
+        else:
+            autosub.USEBIERDOPJEMIRROR = True
+        
+        if cfg.has_option("config", "useopensubtitles"):
+            autosub.USEOPENSUBTITLES = cfg.getboolean("config", "useopensubtitles")
+        else:
+            autosub.USEOPENSUBTITLES = True
+        
+        if cfg.has_option("config", "useundertexter"):
+            autosub.USEUNDERTEXTER = cfg.getboolean("config", "useundertexter")
+        else:
+            autosub.USEUNDERTEXTER = True
+        
     else:
         # config section is missing
         print "Config ERROR: Config section is missing. This is required, it contains vital options! Using default values instead!"
@@ -168,6 +193,11 @@ def ReadConfig(configfile):
         autosub.CONFIGVERSION = version.configversion
         autosub.HOMELAYOUTFIRST = u"Wanted"
         autosub.ENGLISHSUBDELETE = False
+        autosub.USEPODNAPISI = True
+        autosub.USESUBSCENE = True
+        autosub.USEBIERDOPJEMIRROR = True
+        autosub.USEOPENSUBTITLES = True
+        autosub.USEUNDERTEXTER = True
     
     if autosub.CONFIGVERSION < version.configversion:
         upgradeConfig(autosub.CONFIGVERSION, version.configversion)
@@ -791,6 +821,11 @@ def saveConfigSection():
     cfg.set(section, "skiphiddendirs", str(autosub.SKIPHIDDENDIRS))
     cfg.set(section, "homelayoutfirst", autosub.HOMELAYOUTFIRST)
     cfg.set(section, "englishsubdelete", str(autosub.ENGLISHSUBDELETE))
+    cfg.set(section, "usepodnapisi", str(autosub.USEPODNAPISI))
+    cfg.set(section, "usesubscene", str(autosub.USESUBSCENE))
+    cfg.set(section, "usebierdopjemirror", str(autosub.USEBIERDOPJEMIRROR))
+    cfg.set(section, "useopensubtitles", str(autosub.USEOPENSUBTITLES))
+    cfg.set(section, "useundertexter", str(autosub.USEUNDERTEXTER))
     
     with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as cfile:
         cfg.write(cfile)

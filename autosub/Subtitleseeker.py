@@ -158,8 +158,26 @@ def getSubLinks(showid, lang, releaseDetails):
         if release.endswith(".srt"):
             release = release[:-4]
         website = sub.getElementsByTagName('site')[0].firstChild.data  
-        website = website.lower()      
-        if not website in ['opensubtitles.org', 'undertexter.se', 'subscene.com', 'podnapisi.net', 'bierdopje.eu']:
+        website = website.lower() 
+        
+        SOURCEWEBSITES = []
+        
+        if autosub.USEPODNAPISI:
+            SOURCEWEBSITES.append('podnapisi.net')
+        
+        if autosub.USESUBSCENE:
+            SOURCEWEBSITES.append('subscene.com')
+        
+        if autosub.USEBIERDOPJEMIRROR:
+            SOURCEWEBSITES.append('bierdopje.eu')
+        
+        if autosub.USEUNDERTEXTER:
+            SOURCEWEBSITES.append('undertexter.se')
+        
+        if autosub.USEOPENSUBTITLES:
+            SOURCEWEBSITES.append('opensubtitles.org')
+                     
+        if not website in SOURCEWEBSITES:
             continue       
         
         tmpDict = ProcessFilename(release, '')

@@ -94,7 +94,7 @@ class Config:
     def saveConfig(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, 
                    path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, englishsubdelete, username, 
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
-                   webserverip, webserverport, usernamemapping, notifyen, notifynl, homelayoutfirst, 
+                   webserverip, webserverport, usernamemapping, notifyen, notifynl, homelayoutfirst, usepodnapisi, usesubscene, usebierdopjemirror, useopensubtitles, useundertexter,
                    mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None,
                    mmsrsource = None, mmsrquality = None, mmsrcodec = None, mmsrrelease = None):
         # Set all internal variables
@@ -112,6 +112,11 @@ class Config:
         autosub.SKIPHIDDENDIRS = skiphiddendirs
         autosub.HOMELAYOUTFIRST = homelayoutfirst
         autosub.ENGLISHSUBDELETE = englishsubdelete
+        autosub.USEPODNAPISI = usepodnapisi
+        autosub.USESUBSCENE = usesubscene
+        autosub.USEBIERDOPJEMIRROR = usebierdopjemirror
+        autosub.USEOPENSUBTITLES = useopensubtitles
+        autosub.USEUNDERTEXTER = useundertexter
         
         autosub.MINMATCHSCORE = 0
         if mmssource:
