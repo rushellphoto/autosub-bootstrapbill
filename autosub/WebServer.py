@@ -95,8 +95,8 @@ class Config:
                    path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, englishsubdelete, username, 
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
                    webserverip, webserverport, usernamemapping, notifyen, notifynl, homelayoutfirst, usepodnapisi, usesubscene, usebierdopjemirror, useopensubtitles, useundertexter,
-                   mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None,
-                   mmsrsource = None, mmsrquality = None, mmsrcodec = None, mmsrrelease = None):
+                   podnapisilang, subscenelang, bierdopjemirrorlang, opensubtitleslang, undertexterlang,
+                   mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None):
         # Set all internal variables
         autosub.PATH = path
         autosub.ROOTPATH = rootpath
@@ -113,10 +113,15 @@ class Config:
         autosub.HOMELAYOUTFIRST = homelayoutfirst
         autosub.ENGLISHSUBDELETE = englishsubdelete
         autosub.USEPODNAPISI = usepodnapisi
+        autosub.PODNAPISILANG = podnapisilang
         autosub.USESUBSCENE = usesubscene
+        autosub.SUBSCENELANG = subscenelang
         autosub.USEBIERDOPJEMIRROR = usebierdopjemirror
+        autosub.BIERDOPJEMIRRORLANG = bierdopjemirrorlang
         autosub.USEOPENSUBTITLES = useopensubtitles
+        autosub.OPENSUBTITLESLANG = opensubtitleslang
         autosub.USEUNDERTEXTER = useundertexter
+        autosub.UNDERTEXTERLANG = undertexterlang
         
         autosub.MINMATCHSCORE = 0
         if mmssource:
