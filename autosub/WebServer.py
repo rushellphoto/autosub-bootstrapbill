@@ -430,6 +430,15 @@ class Log:
         result = autosub.Helpers.DisplayLogFile(loglevel)
         tmpl.logentries = result
         
+        return str(tmpl)   
+    
+    @cherrypy.expose
+    def clearLog(self):
+        autosub.Helpers.ClearLogFile()
+        tmpl = PageTemplate(file="interface/templates/home.tmpl")
+        tmpl.message = "Logfile has been cleared!"
+        tmpl.displaymessage = "Yes"
+        tmpl.modalheader = "Information"
         return str(tmpl)
 
 class Mobile:
