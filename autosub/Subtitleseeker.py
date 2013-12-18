@@ -128,19 +128,19 @@ def getSubLinks(showid, lang, releaseDetails):
         
         SOURCEWEBSITES = []
         
-        if autosub.USEPODNAPISI and autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
+        if autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
             SOURCEWEBSITES.append('podnapisi.net')
         
-        if autosub.USESUBSCENE and autosub.SUBSCENELANG == lang or autosub.SUBSCENELANG == 'Both':
+        if autosub.SUBSCENELANG == lang or autosub.SUBSCENELANG == 'Both':
             SOURCEWEBSITES.append('subscene.com')
         
-        if autosub.USEBIERDOPJEMIRROR and autosub.BIERDOPJEMIRRORLANG == lang or autosub.BIERDOPJEMIRRORLANG == 'Both':
+        if autosub.BIERDOPJEMIRRORLANG == lang or autosub.BIERDOPJEMIRRORLANG == 'Both':
             SOURCEWEBSITES.append('bierdopje.eu')
         
-        if autosub.USEUNDERTEXTER and autosub.UNDERTEXTERLANG == lang or autosub.UNDERTEXTERLANG == 'Both':
+        if autosub.UNDERTEXTERLANG == lang or autosub.UNDERTEXTERLANG == 'Both':
             SOURCEWEBSITES.append('undertexter.se')
         
-        if autosub.USEOPENSUBTITLES and autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both':
+        if autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both':
             SOURCEWEBSITES.append('opensubtitles.org')
                      
         if not website in SOURCEWEBSITES:

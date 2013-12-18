@@ -2,150 +2,145 @@
 
 		<table class="table-config">
 			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Download subtitles from Podnapisi? Also select which languages you want to download using this site. Default is Enabled and Both.">Podnapisi</a></td>
-				<td class="pull-right"><select name="usepodnapisi">
-		#if $autosub.USEPODNAPISI
-					<option value="True" selected="selected">Enabled</option>
-					<option value="False">Disabled</option>
-		#else
-					<option value="True">Enabled</option>
-					<option value="False" selected="selected">Disabled</option>
-		#end if
-				</select></td>
-				<td align="right">
-					<select class="span2" name="podnapisilang">
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Select which languages you want to download using Podnapisi. Select 'None' if you don't want to use this website. Default is Both.">Podnapisi</a></td>
+				<td class="pull-right">
+					<select name="podnapisilang">
 					#if $autosub.PODNAPISILANG == 'Both':
 						<option value="Both" selected="selected">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.PODNAPISILANG == 'Dutch':
 						<option value="Both">Both</option>
 						<option value="Dutch" selected="selected">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.PODNAPISILANG == 'English':
 						<option value="Both">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English" selected="selected">English</option>
+						<option value="None">None</option>
+					#elif $autosub.PODNAPISILANG == 'None':
+						<option value="Both">Both</option>
+						<option value="Dutch">Dutch</option>
+						<option value="English">English</option>
+						<option value="None" selected="selected">None</option>
 					#end if
 					</select>
 				</td>
 			</tr>
 			
 			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Download subtitles from Subscene? Also select which languages you want to download using this site. Default is Enabled and Both.">Subscene</a></td>
-				<td class="pull-right"><select name="usesubscene">
-		#if $autosub.USESUBSCENE
-					<option value="True" selected="selected">Enabled</option>
-					<option value="False">Disabled</option>
-		#else
-					<option value="True">Enabled</option>
-					<option value="False" selected="selected">Disabled</option>
-		#end if
-				</select></td>
-				<td align="right">
-					<select class="span2" name="subscenelang">
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Select which languages you want to download using SubScene. Select 'None' if you don't want to use this website. Default is Both.">Subscene</a></td>
+				<td class="pull-right">
+					<select name="subscenelang">
 					#if $autosub.SUBSCENELANG == 'Both':
 						<option value="Both" selected="selected">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.SUBSCENELANG == 'Dutch':
 						<option value="Both">Both</option>
 						<option value="Dutch" selected="selected">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.SUBSCENELANG == 'English':
 						<option value="Both">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English" selected="selected">English</option>
+						<option value="None">None</option>
+					#elif $autosub.SUBSCENELANG == 'None':
+						<option value="Both">Both</option>
+						<option value="Dutch">Dutch</option>
+						<option value="English">English</option>
+						<option value="None" selected="selected">None</option>
 					#end if
 					</select>
 				</td>
 			</tr>
 			
 			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Download subtitles from SubtitleSeeker's Bierdopje mirror? Also select which languages you want to download using this site. Default is Enabled and Both.">Bierdopje mirror</a></td>
-				<td class="pull-right"><select name="usebierdopjemirror">
-		#if $autosub.USEBIERDOPJEMIRROR
-					<option value="True" selected="selected">Enabled</option>
-					<option value="False">Disabled</option>
-		#else
-					<option value="True">Enabled</option>
-					<option value="False" selected="selected">Disabled</option>
-		#end if
-				</select></td>
-				<td align="right">
-					<select class="span2" name="bierdopjemirrorlang">
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Select which languages you want to download using Bierdopje's mirror on Subtitleseeker. Select 'None' if you don't want to use this website. Default is Both.">Bierdopje mirror</a></td>
+				<td class="pull-right">
+					<select name="bierdopjemirrorlang">
 					#if $autosub.BIERDOPJEMIRRORLANG == 'Both':
 						<option value="Both" selected="selected">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.BIERDOPJEMIRRORLANG == 'Dutch':
 						<option value="Both">Both</option>
 						<option value="Dutch" selected="selected">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.BIERDOPJEMIRRORLANG == 'English':
 						<option value="Both">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English" selected="selected">English</option>
+						<option value="None">None</option>
+					#elif $autosub.BIERDOPJEMIRRORLANG == 'None':
+						<option value="Both">Both</option>
+						<option value="Dutch">Dutch</option>
+						<option value="English">English</option>
+						<option value="None" selected="selected">None</option>
 					#end if
 					</select>
 				</td>
 			</tr>
 			
 			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Download subtitles from OpenSubtitles? Also select which languages you want to download using this site. Default is Enabled and Both.">OpenSubtitles</a></td>
-				<td class="pull-right"><select name="useopensubtitles">
-		#if $autosub.USEOPENSUBTITLES
-					<option value="True" selected="selected">Enabled</option>
-					<option value="False">Disabled</option>
-		#else
-					<option value="True">Enabled</option>
-					<option value="False" selected="selected">Disabled</option>
-		#end if
-				</select></td>
-				<td align="right">
-					<select class="span2" name="opensubtitleslang">
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Select which languages you want to download using OpenSubtitles. Select 'None' if you don't want to use this website. Default is Both.">OpenSubtitles</a></td>
+				<td class="pull-right">
+					<select name="opensubtitleslang">
 					#if $autosub.OPENSUBTITLESLANG == 'Both':
 						<option value="Both" selected="selected">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.OPENSUBTITLESLANG == 'Dutch':
 						<option value="Both">Both</option>
 						<option value="Dutch" selected="selected">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.OPENSUBTITLESLANG == 'English':
 						<option value="Both">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English" selected="selected">English</option>
+						<option value="None">None</option>
+					#elif $autosub.OPENSUBTITLESLANG == 'None':
+						<option value="Both">Both</option>
+						<option value="Dutch">Dutch</option>
+						<option value="English">English</option>
+						<option value="None" selected="selected">None</option>
 					#end if
 					</select>
 				</td>
 			</tr>
 			
 			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Download subtitles from Undertexter? Also select which languages you want to download using this site. Default is Enabled and Both.">Undertexter</a></td>
-				<td class="pull-right"><select name="useundertexter">
-		#if $autosub.USEUNDERTEXTER
-					<option value="True" selected="selected">Enabled</option>
-					<option value="False">Disabled</option>
-		#else
-					<option value="True">Enabled</option>
-					<option value="False" selected="selected">Disabled</option>
-		#end if
-				</select></td>
-				<td align="right">
-					<select class="span2" name="undertexterlang">
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Select which languages you want to download using Undertexter. Select 'None' if you don't want to use this website. Default is Both.">Undertexter</a></td>
+				<td class="pull-right">
+					<select name="undertexterlang">
 					#if $autosub.UNDERTEXTERLANG == 'Both':
 						<option value="Both" selected="selected">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.UNDERTEXTERLANG == 'Dutch':
 						<option value="Both">Both</option>
 						<option value="Dutch" selected="selected">Dutch</option>
 						<option value="English">English</option>
+						<option value="None">None</option>
 					#elif $autosub.UNDERTEXTERLANG == 'English':
 						<option value="Both">Both</option>
 						<option value="Dutch">Dutch</option>
 						<option value="English" selected="selected">English</option>
+						<option value="None">None</option>
+					#elif $autosub.UNDERTEXTERLANG == 'None':
+						<option value="Both">Both</option>
+						<option value="Dutch">Dutch</option>
+						<option value="English">English</option>
+						<option value="None" selected="selected">None</option>
 					#end if
 					</select>
 				</td>

@@ -145,51 +145,26 @@ def ReadConfig(configfile):
             autosub.ENGLISHSUBDELETE = cfg.getboolean("config", "englishsubdelete")
         else:
             autosub.ENGLISHSUBDELETE = False
-        
-        if cfg.has_option("config", "usepodnapisi"):
-            autosub.USEPODNAPISI = cfg.getboolean("config", "usepodnapisi")
-        else:
-            autosub.USEPODNAPISI = True
             
         if cfg.has_option("config", "podnapisilang"):
             autosub.PODNAPISILANG = cfg.get("config", "podnapisilang")
         else:
             autosub.PODNAPISILANG = u"Both"
-        
-        if cfg.has_option("config", "usesubscene"):
-            autosub.USESUBSCENE = cfg.getboolean("config", "usesubscene")
-        else:
-            autosub.USESUBSCENE = True
             
         if cfg.has_option("config", "subscenelang"):
             autosub.SUBSCENELANG = cfg.get("config", "subscenelang")
         else:
             autosub.SUBSCENELANG = u"Both"
-        
-        if cfg.has_option("config", "usebierdopjemirror"):
-            autosub.USEBIERDOPJEMIRROR = cfg.getboolean("config", "usebierdopjemirror")
-        else:
-            autosub.USEBIERDOPJEMIRROR = True
             
         if cfg.has_option("config", "bierdopjemirrorlang"):
             autosub.BIERDOPJEMIRRORLANG = cfg.get("config", "bierdopjemirrorlang")
         else:
             autosub.BIERDOPJEMIRRORLANG = u"Both"
-        
-        if cfg.has_option("config", "useopensubtitles"):
-            autosub.USEOPENSUBTITLES = cfg.getboolean("config", "useopensubtitles")
-        else:
-            autosub.USEOPENSUBTITLES = True
             
         if cfg.has_option("config", "opensubtitleslang"):
             autosub.OPENSUBTITLESLANG = cfg.get("config", "opensubtitleslang")
         else:
             autosub.OPENSUBTITLESLANG = u"Both"
-        
-        if cfg.has_option("config", "useundertexter"):
-            autosub.USEUNDERTEXTER = cfg.getboolean("config", "useundertexter")
-        else:
-            autosub.USEUNDERTEXTER = True
             
         if cfg.has_option("config", "undertexterlang"):
             autosub.UNDERTEXTERLANG = cfg.get("config", "undertexterlang")
@@ -218,15 +193,10 @@ def ReadConfig(configfile):
         autosub.CONFIGVERSION = version.configversion
         autosub.HOMELAYOUTFIRST = u"Wanted"
         autosub.ENGLISHSUBDELETE = False
-        autosub.USEPODNAPISI = True
         autosub.PODNAPISILANG = u"Both"
-        autosub.USESUBSCENE = True
         autosub.SUBSCENELANG = u"Both"
-        autosub.USEBIERDOPJEMIRROR = True
         autosub.BIERDOPJEMIRRORLANG = u"Both"
-        autosub.USEOPENSUBTITLES = True
         autosub.OPENSUBTITLESLANG = u"Both"
-        autosub.USEUNDERTEXTER = True
         autosub.UNDERTEXTERLANG = u"Both"
     
     if autosub.CONFIGVERSION < version.configversion:
@@ -851,15 +821,10 @@ def saveConfigSection():
     cfg.set(section, "skiphiddendirs", str(autosub.SKIPHIDDENDIRS))
     cfg.set(section, "homelayoutfirst", autosub.HOMELAYOUTFIRST)
     cfg.set(section, "englishsubdelete", str(autosub.ENGLISHSUBDELETE))
-    cfg.set(section, "usepodnapisi", str(autosub.USEPODNAPISI))
     cfg.set(section, "podnapisilang", autosub.PODNAPISILANG)
-    cfg.set(section, "usesubscene", str(autosub.USESUBSCENE))
     cfg.set(section, "subscenelang", autosub.SUBSCENELANG)
-    cfg.set(section, "usebierdopjemirror", str(autosub.USEBIERDOPJEMIRROR))
     cfg.set(section, "bierdopjemirrorlang", autosub.BIERDOPJEMIRRORLANG)
-    cfg.set(section, "useopensubtitles", str(autosub.USEOPENSUBTITLES))
     cfg.set(section, "opensubtitleslang", autosub.OPENSUBTITLESLANG)
-    cfg.set(section, "useundertexter", str(autosub.USEUNDERTEXTER))
     cfg.set(section, "undertexterlang", autosub.UNDERTEXTERLANG)
     
     with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as cfile:
