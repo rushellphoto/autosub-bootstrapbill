@@ -43,6 +43,7 @@ def test_notify(growlhost, growlport, growlpass):
     register = gntp.GNTPRegister()
     register.add_header('Application-Name', "Auto-Sub")
     register.add_notification('Test', True)
+    register.add_notification('Subtitle Download', True)
     register.add_notification('Registration', True)
     register.add_header('Application-Icon', 'http://img826.imageshack.us/img826/1281/autosub.png')
     if password != "":
