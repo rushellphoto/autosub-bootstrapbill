@@ -1,5 +1,25 @@
 // Javascript for test buttons used from Sickbeard source, Thanks. Project can be found here: https://github.com/midgetspy/Sick-Beard
 
+jQuery.fn.dataTableExt.oSort['euro-date-pre']  = function(a,b) {
+	if ($.trim(a) != '') {
+            var frDatea = $.trim(a).split(' ');
+            var frTimea = frDatea[1].split(':');
+            var frDatea2 = frDatea[0].split('-');
+            var x = (frDatea2[2] + frDatea2[1] + frDatea2[0] + frTimea[0] + frTimea[1] + frTimea[2]) * 1;
+        } else {
+            var x = 10000000000000; // = l'an 1000 ...
+        } 
+    return x;
+};
+
+jQuery.fn.dataTableExt.oSort['euro-date-asc']  = function(a,b) {
+	return a - b;
+};
+
+jQuery.fn.dataTableExt.oSort['euro-date-desc'] = function(a,b) {
+	return b - a;
+};
+
 $(document).ready(function () {
 
 	$('#wanted').dataTable({ 
@@ -10,7 +30,8 @@ $(document).ready(function () {
 		"bLengthChange": true,
 		"bPaginate": true,
 		"aLengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-		"aaSorting": [ [ 0, "asc"], [ 1, "asc"], [ 2, "asc"] ]
+		"aaSorting": [ [ 0, "asc"], [ 1, "asc"], [ 2, "asc"] ],
+		"aoColumnDefs": [ { "aDataSort": [ 0, 1, 2 ], "aTargets": [ 0 ] }, { "sType": "euro-date", "aTargets": [ 8 ] } ]
 	});
 
 	$('#downloaded').dataTable({ 
@@ -21,7 +42,8 @@ $(document).ready(function () {
 		"bLengthChange": true,
 		"bPaginate": true,
 		"aLengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-		"aaSorting": [ [ 8, "desc" ] ]
+		"aaSorting": [ [ 8, "desc" ] ],
+		"aoColumnDefs": [ { "aDataSort": [ 0, 1, 2 ], "aTargets": [ 0 ] }, { "sType": "euro-date", "aTargets": [ 8 ] } ]
 	});
 	
     $('#testMail').click(function () {
