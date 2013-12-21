@@ -59,22 +59,22 @@ def CheckVersion():
         req = urllib2.Request(autosub.VERSIONURL)
         req.add_header("User-agent", autosub.USERAGENT) 
         resp = urllib2.urlopen(req,None,autosub.TIMEOUT)
-        respone = resp.read()
+        response = resp.read()
         resp.close()
     except:
         log.error("checkVersion: The server returned an error for request %s" % autosub.VERSIONURL)
         return None
     try:
-        match = re.search('(Alpha|Beta|Stable) (\d+)\.(\d+)\.(\d+)', respone)
-        version_online = match.group(0)
+        version_online = response.split("'")[1]
     except:
         return None
     
     release = version_online.split(' ')[0]
-    versionnumber = version.StrictVersion(version_online.split(' ')[1])
+    versionnumber = version_online.split(' ')[1]
     
     running_release = autosubversion.split(' ')[0]
-    running_versionnumber = version.StrictVersion(autosubversion.split(' ')[1])
+    running_versionnumber = autosubversion.split(' ')[1]
+    log.info("checkVersion: %s %s vs. %s %s" %(running_release, running_versionnumber, release, versionnumber))
     
     if release == running_release: #Alpha = Alpha
         if versionnumber > running_versionnumber: #0.5.6 > 0.5.5
@@ -88,8 +88,7 @@ def CheckVersion():
             return 4
     elif release < running_release: #Alpha < Beta
         if versionnumber > running_versionnumber: #0.5.6 > 0.5.5
-            return 3
-        
+            return 3        
 
 def CleanSerieName(series_name):
     """Clean up series name by removing any . and _
