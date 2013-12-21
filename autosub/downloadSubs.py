@@ -312,7 +312,7 @@ def DownloadSub(downloadDict, allResults):
             notify.notify(downloadDict['downlang'], destsrt, downloadDict["originalFileLocationOnDisk"])
 
             if autosub.POSTPROCESSCMD:
-                postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadDict["destinationFileLocationOnDisk"] + '" "' + downloadDict["originalFileLocationOnDisk"] + '"'
+                postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadDict["destinationFileLocationOnDisk"] + '" "' + downloadDict["originalFileLocationOnDisk"] + '" "' + downloadDict["downlang"] + '"'
                 log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
                 log.info("downloadSubs: Running PostProcess")
                 postprocessoutput, postprocesserr = autosub.Helpers.RunCmd(postprocesscmdconstructed)
