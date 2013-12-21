@@ -458,11 +458,29 @@ class WebServerInit():
     mobile = Mobile()
 
     def error_page_401(status, message, traceback, version):
-        return "Error %s - Well, I'm very sorry but you don't have access to this resource!" % status
+        tmpl = PageTemplate(file="interface/templates/home.tmpl")
+        message = "You don't have access to this resource.<br><br><center><textarea rows='15' wrap='off' class='spancustom'>%s</textarea></center>" %traceback
+        tmpl.message = message
+        tmpl.displaymessage = "Yes"
+        tmpl.modalheader = "Error %s" %status
+        return str(tmpl)
+    
     def error_page_404(status, message, traceback, version):
-        return "Error %s - Well, I'm very sorry but this page could not be found!" % status
+        tmpl = PageTemplate(file="interface/templates/home.tmpl")
+        message = "Page could not be found.<br><br><center><textarea rows='15' wrap='off' class='spancustom'>%s</textarea></center>" %traceback
+        tmpl.message = message
+        tmpl.displaymessage = "Yes"
+        tmpl.modalheader = "Error %s" %status
+        return str(tmpl)
+    
     def error_page_500(status, message, traceback, version):
-        return "Error %s - Please refresh! If this error doesn't go away (after a few minutes), seek help!" % status
+        tmpl = PageTemplate(file="interface/templates/home.tmpl")
+        message = "Try again. If this error doesn't go away, please report the issue.<br><br><center><textarea rows='15' wrap='off' class='spancustom'>%s</textarea></center>" %traceback
+        tmpl.message = message
+        tmpl.displaymessage = "Yes"
+        tmpl.modalheader = "Error %s" %status
+        return str(tmpl)
+
     _cp_config = {'error_page.401':error_page_401,
                   'error_page.404':error_page_404,
                   'error_page.500':error_page_500}
