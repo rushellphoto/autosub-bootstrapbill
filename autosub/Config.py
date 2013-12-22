@@ -179,12 +179,12 @@ def ReadConfig(configfile):
         if cfg.has_option("config", "addic7eduser"):
             autosub.ADDIC7EDUSER = cfg.get("config", "addic7eduser")
         else:
-            autosub.ADDIC7EDUSER = u'None'
+            autosub.ADDIC7EDUSER = u""
 
         if cfg.has_option("config", "addic7edpasswd"):
             autosub.ADDIC7EDPASSWD = cfg.get("config", "addic7edpasswd")
         else:
-            autosub.ADDIC7EDPASSWD = u'None'
+            autosub.ADDIC7EDPASSWD = u""
         
     else:
         # config section is missing
@@ -213,9 +213,9 @@ def ReadConfig(configfile):
         autosub.BIERDOPJEMIRRORLANG = u"Both"
         autosub.OPENSUBTITLESLANG = u"Both"
         autosub.UNDERTEXTERLANG = u"Both"
-        autosub.ADDIC7EDLANG = None
-        autosub.ADDIC7EDUSER = None
-        autosub.ADDIC7EDPASSWD = None
+        autosub.ADDIC7EDLANG = u"None"
+        autosub.ADDIC7EDUSER = u""
+        autosub.ADDIC7EDPASSWD = u""
     
     if autosub.CONFIGVERSION < version.configversion:
         upgradeConfig(autosub.CONFIGVERSION, version.configversion)
@@ -844,11 +844,9 @@ def saveConfigSection():
     cfg.set(section, "bierdopjemirrorlang", autosub.BIERDOPJEMIRRORLANG)
     cfg.set(section, "opensubtitleslang", autosub.OPENSUBTITLESLANG)
     cfg.set(section, "undertexterlang", autosub.UNDERTEXTERLANG)
-    #cfg.set(section, "addic7edlang", autosub.ADDIC7EDLANG)
-    #cfg.set(section, "addic7eduser", autosub.ADDIC7EDUSER)
-    #cfg.set(section, "addic7edpasswd", autosub.ADDIC7EDPASSW)
-    
-    
+    cfg.set(section, "addic7edlang", autosub.ADDIC7EDLANG)
+    cfg.set(section, "addic7eduser", autosub.ADDIC7EDUSER)
+    cfg.set(section, "addic7edpasswd", autosub.ADDIC7EDPASSWD)
     
     with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as cfile:
         cfg.write(cfile)

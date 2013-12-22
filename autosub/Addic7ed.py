@@ -5,7 +5,7 @@
 #
 
 import re
-import requests
+import library.requests as requests
 import bs4
 import logging
 import autosub
@@ -304,10 +304,15 @@ class Addic7edAPI():
     def login(self, addic7eduser, addic7edpasswd):        
         log.debug('Addic7edAPI: Logging in')
         
+        if not addic7eduser:
+            addic7eduser = autosub.ADDIC7EDUSER
         
-        if addic7eduser == u'None' or addic7edpasswd == u'None':
+        if not addic7edpasswd:
+            addic7edpasswd = autosub.ADDIC7EDPASSWD
+        
+        if addic7eduser == u"" or addic7edpasswd == u"":
             log.error('Addic7edAPI: Username and password must be specified')
-            return 'Username and password must be specified'
+            return False
 
         data = {'username': addic7eduser, 'password': addic7edpasswd, 'Submit': 'Log in'}
         try:
@@ -317,10 +322,10 @@ class Addic7edAPI():
         if r.status_code == 302:
             log.info('Addic7edAPI: Logged in')
             self.logged_in = True
-            return 'Logged in to Addic7ed.com'
+            return True
         else:
             log.error('Addic7edAPI: Failed to login')
-            return 'Failed to log in to Addic7ed.com: check your login information'
+            return False
 
     def logout(self):
         if self.logged_in:

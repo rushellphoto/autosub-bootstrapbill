@@ -121,9 +121,7 @@ class Config:
         autosub.UNDERTEXTERLANG = undertexterlang
         autosub.ADDIC7EDLANG = addic7edlang
         autosub.ADDIC7EDUSER = addic7eduser
-        autosub.ADDIC7EDPASSW = addic7edpasswd
-        
-        
+        autosub.ADDIC7EDPASSWD = addic7edpasswd
         
         autosub.MINMATCHSCORE = 0
         if mmssource:
@@ -315,6 +313,17 @@ class Config:
             return "Auto-Sub successfully sent a test message with <strong>Prowl</strong>."
         else:
             return "Failed to send a test message with <strong>Prowl</strong>."
+    
+    @cherrypy.expose
+    
+    def testAddic7ed(self, addic7eduser, addic7edpasswd):
+        
+        log.info("Addic7ed: Testing Login")
+        result = autosub.Addic7ed.Addic7edAPI().login(addic7eduser, addic7edpasswd)
+        if result:
+            return "Auto-Sub successfully logged on to <strong>Addic7ed</strong>."
+        else:
+            return "Failed to login to <strong>Addic7ed</strong>."
     
     @cherrypy.expose
     def regTwitter(self, token_key=None, token_secret=None, token_pin=None):
