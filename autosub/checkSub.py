@@ -64,34 +64,34 @@ class checkSub():
                 # get all links higher than the minmatch as input for downloadSub
                 
                 # Returns a list of 4-element tuples
-                allResults = autosub.Subtitleseeker.getSubLinks(showid, lang, wantedItem)
-                if allResults:
-                    if lang == autosub.DUTCH:
-                        wantedItem['destinationFileLocationOnDisk'] = srtfile
-                    elif lang == autosub.ENGLISH:
-                        wantedItem['destinationFileLocationOnDisk'] = engsrtfile
+                allResults = autosub.Subtitleseeker.getSubLinks(showid, lang, wantedItem)                
+
+                if lang == autosub.DUTCH:
+                    wantedItem['destinationFileLocationOnDisk'] = srtfile
+                elif lang == autosub.ENGLISH:
+                    wantedItem['destinationFileLocationOnDisk'] = engsrtfile
                     
-                    
+                if allResults:                   
                     log.info("checkSub: The episode %s - Season %s Episode %s has 1 or more matching subtitles on SubtitleSeeker, downloading it!" % (title, season, episode))
                     log.debug("checkSub: destination filename %s" % wantedItem['destinationFileLocationOnDisk'])
                 
-                    downloadItem = wantedItem.copy()
-                    downloadItem['downlang'] = lang
+                downloadItem = wantedItem.copy()
+                downloadItem['downlang'] = lang
                     
-                    if not DownloadSub(downloadItem, allResults):
-                        break
+                if not DownloadSub(downloadItem, allResults):
+                    continue
                     
-                    if lang == autosub.DUTCH and (autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and autosub.ENGLISH in languages:
-                        log.debug('checkSub: We found a dutch subtitle and fallback is true. Removing the english subtitle from the wantedlist.')
-                        languages.remove(autosub.ENGLISH)
-                        languages.remove(lang)
-                        if len(languages) == 0:
-                            toDelete_wantedQueue.append(index)
-                        break
-                    
+                if lang == autosub.DUTCH and (autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and autosub.ENGLISH in languages:
+                    log.debug('checkSub: We found a dutch subtitle and fallback is true. Removing the english subtitle from the wantedlist.')
+                    languages.remove(autosub.ENGLISH)
                     languages.remove(lang)
                     if len(languages) == 0:
                         toDelete_wantedQueue.append(index)
+                    break
+                    
+                languages.remove(lang)
+                if len(languages) == 0:
+                    toDelete_wantedQueue.append(index)
                                         
         i = len(toDelete_wantedQueue) - 1
         while i >= 0:

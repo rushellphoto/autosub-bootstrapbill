@@ -96,7 +96,9 @@ class Config:
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
                    webserverip, webserverport, usernamemapping, notifyen, notifynl, homelayoutfirst,
                    podnapisilang, subscenelang, bierdopjemirrorlang, opensubtitleslang, undertexterlang,
+                   addic7edlang, addic7eduser, addic7edpasswd,
                    mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None):
+                   
         # Set all internal variables
         autosub.PATH = path
         autosub.ROOTPATH = rootpath
@@ -117,6 +119,11 @@ class Config:
         autosub.BIERDOPJEMIRRORLANG = bierdopjemirrorlang
         autosub.OPENSUBTITLESLANG = opensubtitleslang
         autosub.UNDERTEXTERLANG = undertexterlang
+        autosub.ADDIC7EDLANG = addic7edlang
+        autosub.ADDIC7EDUSER = addic7eduser
+        autosub.ADDIC7EDPASSW = addic7edpasswd
+        
+        
         
         autosub.MINMATCHSCORE = 0
         if mmssource:

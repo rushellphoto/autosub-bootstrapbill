@@ -53,5 +53,35 @@ def getShowidApi(showName):
         log.error("API: out of api calls for TvDB API")
 
 
-def getShowOffcialName(imdbID):
-    pass
+def getShowName(imdbID):
+    """
+    Search for the official TV show name using the IMDB ID
+    """
+    
+    api = autosub.IMDBAPI
+    
+    getShowIdUrl = "%sGetSeriesByRemoteID.php?imdbid=%s" % (api, imdbID)
+    log.debug("getShowName: TvDB API request for imdbID %s: %s" % (imdbID, getShowIdUrl))
+    if autosub.Helpers.checkAPICallsTvdb(use=True):
+        try:
+            tvdbapi = autosub.Helpers.API(getShowIdUrl)
+            dom = minidom.parse(tvdbapi.resp)
+            tvdbapi.resp.close()
+        except:
+            log.error("getShowid: The server returned an error for request %s" % getShowIdUrl)
+            return None
+        
+        if not dom or len(dom.getElementsByTagName('Series')) == 0:
+            return None
+        
+        for sub in dom.getElementsByTagName('Series'):
+            # Assume that first match is best, maybe adapt this in future
+            try:
+                TVShowName = sub.getElementsByTagName('SeriesName')[0].firstChild.data
+            except:
+                log.error("getShowName: Error while retrieving the official release name for %s." % imdbID)
+                #log.error("getShowName: Recommend to add the IMDB ID for %s manually for the time being." % imdbID)
+                return None    
+            return TVShowName
+    else:
+        log.error("API: out of api calls for TvDB API")

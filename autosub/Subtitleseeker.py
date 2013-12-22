@@ -17,52 +17,6 @@ from autosub.ProcessFilename import ProcessFilename
 # Settings
 log = logging.getLogger('thelogger')
 
-'''
-class API:
-    """
-    One place to rule them all, a function that handels all the request to the server
-
-    Keyword arguments:
-    url - the URL that is requested
-    
-    """
-    def __init__(self,url):
-        self.errorcode = None        
-        self.req = None
-        self.req = urllib2.Request(url)
-        self.req.add_header("User-agent", autosub.USERAGENT)
-        self.connect()
-        
-    def connect(self):
-        import socket
-        socket.setdefaulttimeout(autosub.TIMEOUT)
-        
-        try:
-            self.resp = urllib2.urlopen(self.req)
-            self.errorcode = self.resp.getcode()
-        except urllib2.HTTPError, e:
-            self.errorcode = e.getcode()
-        
-        if self.errorcode == 200:
-            log.debug("API: HTTP Code: 200: OK!")
-        elif self.errorcode == 429:
-            # don't know if this code is valid for subtitleseeker
-            log.debug("API: HTTP Code: 429 You have exceeded your number of allowed requests for this period.")
-            log.error("API: You have exceeded your number of allowed requests for this period. (1000 con/day))")
-            log.warning("API: Forcing a 1 minute rest to relieve subtitleseeker.com. If you see this info more then once. Cleanup your wanted list!")
-            time.sleep(54)
-        elif self.errorcode == 503:
-            log.debug("API: HTTP Code: 503 You have exceeded your number of allowed requests for this period (MyMovieApi).")
-            log.error("API: You have exceeded your number of allowed requests for this period. (either 30 con/m or 2500 con/day))")
-            log.warning("API: Forcing a 1 minute rest to relieve mymovieapi.com. If you see this info more then once. Cleanup your wanted list!")
-            time.sleep(54)
-        
-        log.debug("API: Resting for 6 seconds to prevent 429 errors")
-        time.sleep(6) #Max 0.5 connections each second
-        
-    def close(self):
-        self.resp.close()
-'''
 
 def getSubLinks(showid, lang, releaseDetails):
     """
@@ -75,7 +29,27 @@ def getSubLinks(showid, lang, releaseDetails):
     lang -- Language of the wanted subtitle, Dutch or English
     releaseDetails -- Dict containing the quality, releasegrp, source season and episode.
     """
+
+    SOURCEWEBSITES = []
     
+    # Addic7ed release are found and scored in downloadSubs itself
+    # To get maximal sensitivity for this site        
+    if autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
+        SOURCEWEBSITES.append('podnapisi.net')
+        
+    if autosub.SUBSCENELANG == lang or autosub.SUBSCENELANG == 'Both':
+        SOURCEWEBSITES.append('subscene.com')
+        
+    if autosub.BIERDOPJEMIRRORLANG == lang or autosub.BIERDOPJEMIRRORLANG == 'Both':
+        SOURCEWEBSITES.append('bierdopje.eu')
+        
+    if autosub.UNDERTEXTERLANG == lang or autosub.UNDERTEXTERLANG == 'Both':
+        SOURCEWEBSITES.append('undertexter.se')
+    
+    if autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both':
+        SOURCEWEBSITES.append('opensubtitles.org')
+
+
     api = autosub.API
     
     if showid == -1:
@@ -91,9 +65,10 @@ def getSubLinks(showid, lang, releaseDetails):
     # Get the IMDB ID for the TV show    
     imdbId = autosub.Helpers.getShowid(showName)
     
+    
     # this is the API search 
     getSubLinkUrl = "%s&imdb=%s&season=%s&episode=%s&language=%s" % (api, imdbId, season, episode, lang)
-    log.info('this is the subseeker API request %s' % getSubLinkUrl)
+    log.info('Subtitleseeker: This is the subseeker API request %s' % getSubLinkUrl)
     if autosub.Helpers.checkAPICallsSubSeeker(use=True):
         try:
             subseekerapi = autosub.Helpers.API(getSubLinkUrl)
@@ -109,7 +84,7 @@ def getSubLinks(showid, lang, releaseDetails):
     if 'releasegrp' in releaseDetails.keys(): releasegrp = releaseDetails['releasegrp']
     if 'source' in releaseDetails.keys(): source = releaseDetails['source']
     if 'codec' in releaseDetails.keys(): codec = releaseDetails['codec']
-
+    
     if not dom or len(dom.getElementsByTagName('item')) == 0:
         return None
 
@@ -126,30 +101,13 @@ def getSubLinks(showid, lang, releaseDetails):
         website = sub.getElementsByTagName('site')[0].firstChild.data  
         website = website.lower() 
         
-        SOURCEWEBSITES = []
-        
-        if autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
-            SOURCEWEBSITES.append('podnapisi.net')
-        
-        if autosub.SUBSCENELANG == lang or autosub.SUBSCENELANG == 'Both':
-            SOURCEWEBSITES.append('subscene.com')
-        
-        if autosub.BIERDOPJEMIRRORLANG == lang or autosub.BIERDOPJEMIRRORLANG == 'Both':
-            SOURCEWEBSITES.append('bierdopje.eu')
-        
-        if autosub.UNDERTEXTERLANG == lang or autosub.UNDERTEXTERLANG == 'Both':
-            SOURCEWEBSITES.append('undertexter.se')
-        
-        if autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both':
-            SOURCEWEBSITES.append('opensubtitles.org')
-                     
+                
         if not website in SOURCEWEBSITES:
             continue       
         
         tmpDict = ProcessFilename(release, '')
         if not tmpDict:
             continue
-
         
         # Scoredict is a dictionary with a download link and its match score. This will be used to determine the best match (the highest matchscore)
         scoredict[sub.getElementsByTagName('url')[0].firstChild.data] = autosub.Helpers.scoreMatch(tmpDict, release, quality, releasegrp, source, codec)

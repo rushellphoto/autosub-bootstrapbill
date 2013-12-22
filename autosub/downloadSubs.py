@@ -1,4 +1,4 @@
-# Autosub Db.py - http://code.google.com/p/auto-sub/
+# Autosub downloadSubs.py - http://code.google.com/p/auto-sub/
 #
 # The Autosub downloadSubs module
 # Scrapers are used for websites:
@@ -6,20 +6,26 @@
 #
 import logging
 
-import urllib2
-from library.beautifulsoup import BeautifulSoup, SoupStrainer
+#import urllib2
+#from library.beautifulsoup import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup, SoupStrainer, Doctype
 from zipfile import ZipFile
 from StringIO import StringIO
 import re 
 from urlparse import urljoin
 
-import autosub
+
+
 import os
 import time
 import tempfile
+import autosub
 
 from autosub.Db import lastDown
+import autosub.Addic7ed
 import autosub.notify as notify
+import autosub.Helpers
+import autosub.Tvdb
 
 log = logging.getLogger('thelogger')
 
@@ -31,27 +37,26 @@ log = logging.getLogger('thelogger')
 # Settings
 log = logging.getLogger('thelogger')
 
-def getHTML(url):
-    html = urllib2.urlopen(url).read()
-    return html
-    
+
 def getHTMLTags(url, tagSearch):
     try:
-        resp = urllib2.urlopen(url)
-        errorcode = resp.getcode()
-    except urllib2.HTTPError, e:
-        errorcode = e.getcode()
-        log.error("downloadSubs.getHTMLTags: The server returned the error %s for request %s" % (errorcode, url))  
-        return False       
-    if errorcode == 200:
-        log.debug("downloadSubs.downloadSubs.getHTMLTags: HTTP Code: 200: OK!")
-            
-    html = resp.read()
+        api = autosub.Helpers.API(url)
+        html = api.resp.read()
+        api.close()
+    except:
+        log.error("getHTMLTags: The server returned an error for request %s" % url)
+        return False
+    
     link_pat = SoupStrainer(tagSearch)
-    tags = BeautifulSoup(html, parseOnlyThese=link_pat)
+    tags = BeautifulSoup(html, parse_only=link_pat)
+    
     if len(tags) == 0:
         log.error("downloadSubs.getHTMLTags: No suitable HTML Tags were found")
-        return False
+        return False    
+    # Remove DOCTYPE header
+    for tag in tags:
+        if isinstance(tag, Doctype):
+            tag.extract()
     return tags 
 
 def getHTMLTagAttrib(url, tagToSearch, attrib):
@@ -61,14 +66,13 @@ def getHTMLTagAttrib(url, tagToSearch, attrib):
         return None
     for tag in tags:
         url = tag[attrib].strip('/')
-        return url
+        return url    
         
 def unzip(url):
-    # returns a file-like StringIO object
-    req = urllib2.Request(url)
-    req.add_header("User-agent", autosub.USERAGENT)
+    # returns a file-like StringIO object    
     try:
-        tmpfile = StringIO(urllib2.urlopen(req).read())
+        api = autosub.Helpers.API(url)
+        tmpfile = StringIO(api.resp.read())
     except:
         log.debug("downloadSubs.unzip: Zip file at %s couldn't be retrieved" % url)
         return None     
@@ -96,17 +100,25 @@ def unzip(url):
 
 def openSubtitles(subSeekerLink):
     openSubLink = 'http://www.opensubtitles.org/subtitleserve/sub/' 
-    # link is http://www.opensubtitles.org/subtitles/5318376/revolution-everyone-says-i-love-you-en
+    # link is http://www.opensubtitles.org//subtitles/5318376/revolution-everyone-says-i-love-you-en
     link = getHTMLTagAttrib(subSeekerLink, 'iframe', 'src')            
     if link:
-        html = getHTML(link)
+        try:        
+            openSubtitlesapi = autosub.Helpers.API(link)
+            html = openSubtitlesapi.resp.read()
+            openSubtitlesapi.close()
+        except:
+            log.error("downloadSubs.openSubtitles: The server returned an error for request %s" % link)
+            return None     
+         
         openID = None
         # capture dead links
         if not html.find("msg error") == -1:
             # get alternate link
-            #log.debug("HTML: %s" % html)
             try:
                 r = re.search('http://www.opensubtitles.org/en/subtitles/(\d*)/', html).group(1)
+                if not r:
+                    r = re.search('http://www.opensubtitles.org/nl/subtitles/(\d*)/', html).group(1)               
                 if r:
                     openID = r
             except:
@@ -145,7 +157,7 @@ def podnapisi(subSeekerLink):
             if not tags_second or len(tags_second) == 0:
                 return None
             for tag in tags_second:
-                if tag.has_key('href'):
+                if tag.has_attr('href'):
                     url = tag['href'].strip('/')
                     # second link: download link
                     if re.search('ppodnapisi/download', url):
@@ -174,7 +186,7 @@ def subscene(subSeekerLink):
             if not tags_second or len(tags_second) == 0:
                 return None
             for tag in tags_second:
-                if tag.has_key('href'):
+                if tag.has_attr('href'):
                     url = tag['href'].strip('/')
                     # second link: download link
                     if re.match('subtitle/download', url):
@@ -200,21 +212,123 @@ def bierdopje(subSeekerLink):
         return None
     for tag in tags:
         url = tag['href'].strip('/')
-        if re.match(baseLink, url):
-            req = urllib2.Request(url)
-            req.add_header("User-agent", autosub.USERAGENT)
+        if re.match(baseLink, url):            
             try:
-                subtitleFile = StringIO(urllib2.urlopen(req).read())
-                return subtitleFile
+                bierdopjeapi = autosub.Helpers.API(url)
+                subtitleFile = StringIO(bierdopjeapi.resp.read())            
             except:
                 log.debug("downloadSubs.bierdopje: Subtitle file at %s couldn't be retrieved" % url)
-                return None  
-    
+                return None   
+            return subtitleFile
+                
     log.error("downloadSubs.bierdopje: Something went wrong while retrieving download link")
     log.debug("downloadSubs.bierdopje: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
     return None            
 
+
+def addic7ed(downloadDict):    
+    # Initiate the a7 API
+    try:
+        addic7edapi = autosub.Addic7ed.Addic7edAPI()
+        apiresponse = addic7edapi.login(autosub.ADDIC7EDUSER, autosub.ADDIC7EDPASSWD)
+    except:
+        return (None,None)
+    
+    
+    # Info about episode file
+    title = downloadDict['title']
+    season = downloadDict['season']
+    episode = downloadDict['episode']    
+    source = downloadDict['source']
+    quality = downloadDict['quality']
+    codec = downloadDict['codec']
+    language = downloadDict['downlang']
+    rlsgrp = downloadDict['releasegrp']
+
+    # Get official name of TV series via IMDB ID
+    imdbID = autosub.Helpers.getShowid(downloadDict['title'])
+    showName = autosub.Tvdb.getShowName(imdbID).lower()
+    
+    show_ids={}
+    
+    try:
+        soup = addic7edapi.get('/shows.php')        
+        for html_show in soup.select('td.version > h3 > a[href^="/show/"]'):
+            show_ids[html_show.string.lower()] = int(html_show['href'][6:])
+    except:
+        return (None,None)
+
+    if showName in show_ids:
+        show_id = show_ids[showName]
+    else:
+        log.error("downloadSubs.addic7ed: Addic7ed ID for %s wasn't found" % showName)
+        return (None, None)
+    
+    
+    params = {'show_id': show_id, 'season': season}
+    soup = addic7edapi.get('/show/{show_id}&season={season}'.format(**params))
+    if not soup:
+        return (None,None)
         
+    versions = []
+    for row in soup('tr', class_='epeven completed'):
+        releaseInfo = {}
+        cells = row('td')
+        # filter out HI versions        
+        if bool(cells[6].string) == True:
+            continue
+        # filter on Completed, wanted language and episode
+        if cells[5].string != 'Completed':
+            continue       
+        if not unicode(cells[3].string) == language:        
+            continue
+        if not unicode(cells[1].string) == episode:
+            continue
+        
+        # use ASCII codec
+        # put in lower case
+        details = unicode(cells[4].string).encode('utf-8')
+        details = details.lower()
+        HD = True if bool(cells[8].string) != None else False        
+        versionDict = autosub.Addic7ed.ReconstructRelease(details, HD)
+        if not versionDict:
+            continue
+        versionDict['url'] = cells[9].a['href'].encode('utf-8')
+        versionDict['a7'] = details
+        versions.append(versionDict)
+        twinDict = autosub.Addic7ed.MakeTwinRelease(versionDict)
+        if twinDict:
+            versions.append(twinDict)
+    
+    if not versions:
+        return (None, None)        
+    
+    scoreList = []        
+    for releaseDict in versions: 
+        score = autosub.Helpers.scoreMatch(releaseDict, releaseDict['a7'], quality, rlsgrp, source, codec)
+        scoreList.append((releaseDict['a7'], score, releaseDict['url']))
+            
+    sortedScoreList = sorted(scoreList, key=lambda tup:tup[1], reverse=True)    
+    for hit in sortedScoreList:
+        originalVersion = hit[0]
+        score = hit[1]
+        downloadLink = hit[2]
+        if score >= autosub.MINMATCHSCORE:
+            try:
+                subtitleFile = StringIO(addic7edapi.download(downloadLink))
+                addic7edapi.logout()
+                releaseInfo = autosub.Addic7ed.makeRelease(originalVersion, title, season, episode)
+                return subtitleFile, releaseInfo
+            except:
+                log.error("downloadSubs.addic7ed: Subtitle file at %s couldn't be retrieved" % downloadLink)
+                addic7edapi.logout()
+                return (None, None)
+        log.error("downloadSubs.addic7ed: No suitable subtitle was found on Addic7ed.com")
+        log.error("downloadSubs.addic7ed: Try again with a lower minmatchscore") 
+        addic7edapi.logout()
+        return (None, None)  
+          
+
 def DownloadSub(downloadDict, allResults):    
 
     log.debug("downloadSubs: Starting DownloadSub function")    
@@ -229,101 +343,123 @@ def DownloadSub(downloadDict, allResults):
         elif not os.path.lexists(destdir):
             log.debug("checkSubs: no destination directory %s" %destdir)
             return False        
-            
-        for hit in allResults:            
-            release = hit[2]
-            website = hit[3]
-            subSeekerLink = hit[0]
-            
-            log.debug("downloadSubs: Trying to download the following subtitle %s" % subSeekerLink)            
         
-            # Decide which scraper to use
-            # Return a fileStringIO object 
-            log.info('website is %s' % website) 
-            if website == 'opensubtitles.org':
-                log.debug("downloadSubs: Scraper for Opensubtitles.org is chosen for subtitle %s" % destsrt)
-                fileStringIO = openSubtitles(subSeekerLink)        
-            elif website == 'undertexter.se':
-                log.debug("downloadSubs: Scraper for Undertexter.se is chosen for subtitle %s" % destsrt)
-                fileStringIO = undertexter(subSeekerLink)            
-            elif website == 'subscene.com':    
-                log.debug("downloadSubs: Scraper for Subscene.com is chosen for subtitle %s" % destsrt)
-                fileStringIO = subscene(subSeekerLink)
-            elif website == 'podnapisi.net':
-                log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
-                fileStringIO = podnapisi(subSeekerLink)
-            elif website == 'bierdopje.eu':
-                log.debug("downloadSubs: Scraper for Bierdopjes Mirror is chosen for subtitle %s" % destsrt)
-                fileStringIO = bierdopje(subSeekerLink)
-            else:
-                log.error("downloadSubs: No scraper could be selected")
-                log.debug("downloadSubs: check the SubtitleSeeker XML file. Have the website names changed?")
-                log.debug("downloadSubs: Trying to download another subtitle for this episode")
-                continue
-            
-        
-            #Lets first download the subtitle to a tempfile and then write it to the destination
-            tmpfile = tempfile.TemporaryFile('w+b')
-        
-            if fileStringIO:
-                try:
-                    tmpfile.write(fileStringIO.getvalue())
-                    tmpfile.write('\n') #If subtitle has some footer which doesn't have a line feed >.>
-                    tmpfile.seek(0) #Return to the start of the file
-                except:
-                    log.error("downloadSubs: Error while downloading subtitle %s. Subtitle might be corrupt %s." % (destsrt, website))
-                    log.debug("downloadSubs: Trying to download another subtitle for this episode")
-                    continue
-            else:
-                log.debug("downloadSubs: Trying to download another subtitle for this episode")
-                continue
+        skipOtherResults = False # When a7 hit is found
 
-            try:
-                log.debug("downloadSubs: Trying to save the subtitle to the filesystem")
-                open(destsrt, 'wb').write(tmpfile.read())
-                tmpfile.close()
-            except IOError:
-                log.error("downloadSubs: Could not write subtitle file. Permission denied? Enough diskspace?")
-                tmpfile.close()
-                return False
+        language = downloadDict['downlang']        
+        fileStringIO = None
+        website = None
+        release = None
+
+ 
+        # First look in Addic7ed for a hit            
+        if autosub.ADDIC7EDLANG == language or autosub.ADDIC7EDLANG == 'Both':
+            # To avoid unnecessary a7 searching
+            #if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD:
+                log.debug("downloadSubs: First look on Addic7ed.com for suntitle %s" % destsrt)
+                fileStringIO, release = addic7ed(downloadDict)
+                if fileStringIO:
+                    website = 'addic7ed.com'
+                    skipOtherResults = True
         
-            log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
-            
-            if website == 'bierdopje.eu':
-                website = 'subtitleseekers mirror of bierdopje'
-            
-            downloadDict['subtitle'] = "%s downloaded from %s" % (release,website)
-            downloadDict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        
-            lastDown().setlastDown(dict = downloadDict)
-        
-            if downloadDict['downlang'] == 'Dutch' and autosub.ENGLISHSUBDELETE == True:
-                log.info("downloadsubs: Trying to delete English subtitle.")
-                engfileremove = os.path.splitext(destsrt)[0] + u"." + autosub.SUBENG + u".srt"
-                if os.path.exists(engfileremove):
-                    try:
-                        os.remove(engfileremove)
-                        log.info("downloadsubs: Removed English subtitle: %s" % engfileremove)
-                    except:
-                        log.error("downloadsubs: Error while trying to remove the file.")
+        if allResults:
+            for result in allResults:   
+                if skipOtherResults:
+                    break                           
+                
+                subSeekerLink = result[0]
+                release = result[2]
+                website = result[3]             
+                
+                log.debug("downloadSubs: Trying to download the following subtitle %s" % subSeekerLink)      
+
+                if website == 'opensubtitles.org':
+                    log.debug("downloadSubs: Scraper for Opensubtitles.org is chosen for subtitle %s" % destsrt)
+                    fileStringIO = openSubtitles(subSeekerLink)
+                elif website == 'undertexter.se':
+                    log.debug("downloadSubs: Scraper for Undertexter.se is chosen for subtitle %s" % destsrt)
+                    fileStringIO = undertexter(subSeekerLink) 
+                elif website == 'subscene.com':    
+                    log.debug("downloadSubs: Scraper for Subscene.com is chosen for subtitle %s" % destsrt)
+                    fileStringIO = subscene(subSeekerLink)
+                elif website == 'podnapisi.net':
+                    log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
+                    fileStringIO = podnapisi(subSeekerLink)
+                elif website == 'bierdopje.eu':
+                    log.debug("downloadSubs: Scraper for Bierdopjes Mirror is chosen for subtitle %s" % destsrt)
+                    fileStringIO = bierdopje(subSeekerLink)
                 else:
-                    log.info("downloadsubs: English subtitle not found.")
+                    log.error("downloadSubs: check the SubtitleSeeker XML file. Have the website name changed for %s?" % website)
+ 
+                if fileStringIO:
+                    break
+            
+                log.debug("downloadSubs: Trying to download another subtitle for this episode")
+                  
         
-            notify.notify(downloadDict['downlang'], destsrt, downloadDict["originalFileLocationOnDisk"])
+        if not fileStringIO:
+            return False
+        
+        #Lets first download the subtitle to a tempfile and then write it to the destination
+        tmpfile = tempfile.TemporaryFile('w+b')
+            
+        try:
+            tmpfile.write(fileStringIO.getvalue())
+            tmpfile.write('\n') #If subtitle has some footer which doesn't have a line feed >.>
+            tmpfile.seek(0) #Return to the start of the file
+        except:
+            log.error("downloadSubs: Error while downloading subtitle %s. Subtitle might be corrupt %s." % (destsrt, website))
 
-            if autosub.POSTPROCESSCMD:
-                postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadDict["destinationFileLocationOnDisk"] + '" "' + downloadDict["originalFileLocationOnDisk"] + '" "' + downloadDict["downlang"] + '"'
-                log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
-                log.info("downloadSubs: Running PostProcess")
-                postprocessoutput, postprocesserr = autosub.Helpers.RunCmd(postprocesscmdconstructed)
-                if postprocesserr:
-                    log.error("downloadSubs: PostProcess: %s" % postprocesserr)
+        try:
+            log.debug("downloadSubs: Trying to save the subtitle to the filesystem")
+            open(destsrt, 'wb').write(tmpfile.read())
+            tmpfile.close()
+        except IOError:
+            log.error("downloadSubs: Could not write subtitle file. Permission denied? Enough diskspace?")
+            tmpfile.close()
+            return False
+            
+        log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
+            
+        if website == 'bierdopje.eu':
+            website = 'subtitleseekers mirror of bierdopje'
+
+        print 'at the end'
+        print website, release
+        
+
+            
+        downloadDict['subtitle'] = "%s downloaded from %s" % (release,website)
+        downloadDict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        
+        lastDown().setlastDown(dict = downloadDict)
+        
+        if downloadDict['downlang'] == 'Dutch' and autosub.ENGLISHSUBDELETE == True:
+            log.info("downloadsubs: Trying to delete English subtitle.")
+            engfileremove = os.path.splitext(destsrt)[0] + u"." + autosub.SUBENG + u".srt"
+            if os.path.exists(engfileremove):
+                try:
+                    os.remove(engfileremove)
+                    log.info("downloadsubs: Removed English subtitle: %s" % engfileremove)
+                except:
+                    log.error("downloadsubs: Error while trying to remove the file.")
+            else:
+                log.info("downloadsubs: English subtitle not found.")
+        
+        notify.notify(downloadDict['downlang'], destsrt, downloadDict["originalFileLocationOnDisk"])
+
+        if autosub.POSTPROCESSCMD:
+            postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadDict["destinationFileLocationOnDisk"] + '" "' + downloadDict["originalFileLocationOnDisk"] + '" "' + downloadDict["downlang"] + '"'
+            log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
+            log.info("downloadSubs: Running PostProcess")
+            postprocessoutput, postprocesserr = autosub.Helpers.RunCmd(postprocesscmdconstructed)
+            if postprocesserr:
+                log.error("downloadSubs: PostProcess: %s" % postprocesserr)
                 log.debug("downloadSubs: PostProcess Output:% s" % postprocessoutput)
         
-            log.debug('downloadSubs: ')
-            return True
+        log.debug('downloadSubs: ')
+        return True
         
-        log.debug("downloadSubs: There are no remaining hits to look at. Wait for next run to get a subtitle for this episode")
         
     else:
         log.error("downloadSub: No locationOnDisk found at downloadItem, skipping")
