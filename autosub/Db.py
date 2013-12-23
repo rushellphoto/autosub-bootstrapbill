@@ -148,6 +148,18 @@ def upgradeDb(from_version, to_version):
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (3,2))
             connection.commit()
             connection.close()
+        if from_version == 3 and to_version == 4:
+            #Change IMDB_ID from INTEGER to TEXT
+            connection=sqlite3.connect(autosub.DBFILE)
+            cursor=connection.cursor()
+            cursor.execute("CREATE TABLE temp_table as select * from id_cache;")
+            cursor.execute("DROP TABLE id_cache;")
+            cursor.execute("CREATE TABLE id_cache (imdb_id TEXT, show_name TEXT);")
+            cursor.execute("INSERT INTO id_cache select * from temp_table;")
+            cursor.execute("DROP TABLE temp_table;")
+            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (4,3))
+            connection.commit()
+            connection.close()
 
 def getDbVersion():
     try:
