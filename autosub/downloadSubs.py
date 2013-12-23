@@ -173,25 +173,26 @@ def subscene(subSeekerLink):
     if not tags_first or len(tags_first) == 0:
         return None
     for tag in tags_first:
-        url = tag['href'].strip('/')
-        # first link: to the episode subtitle page
-        if re.match(urljoin(baseLink, 'subtitles'), url):
-            linkToSubscene = url
-            tags_second = getHTMLTags(linkToSubscene, 'a')
-            if not tags_second or len(tags_second) == 0:
-                return None
-            for tag in tags_second:
-                if tag.has_attr('href'):
-                    url = tag['href'].strip('/')
-                    # second link: download link
-                    if re.match('subtitle/download', url):
-                        zipUrl = urljoin(baseLink, url)
-                        subtitleFile = unzip(zipUrl)
-                        return subtitleFile
+        if tag.has_attr('href'):
+            url = tag['href'].strip('/')
+            # first link: to the episode subtitle page
+            if re.match(urljoin(baseLink, 'subtitles'), url):
+                linkToSubscene = url
+                tags_second = getHTMLTags(linkToSubscene, 'a')
+                if not tags_second or len(tags_second) == 0:
+                    return None
+                for tag in tags_second:
+                    if tag.has_attr('href'):
+                        url = tag['href'].strip('/')
+                        # second link: download link
+                        if re.match('subtitle/download', url):
+                            zipUrl = urljoin(baseLink, url)
+                            subtitleFile = unzip(zipUrl)
+                            return subtitleFile
 
-            log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
-            log.debug("downloadSubs.Subscene: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
-            return None
+                log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
+                log.debug("downloadSubs.Subscene: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
+                return None
     log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
     log.debug("downloadSubs.Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
     return None
