@@ -306,8 +306,8 @@ def addic7ed(downloadDict):
                 log.error("downloadSubs.addic7ed: Subtitle file at %s couldn't be retrieved" % downloadLink)
                 addic7edapi.logout()
                 return (None, None)
-        log.error("downloadSubs.addic7ed: No suitable subtitle was found on Addic7ed.com")
-        log.error("downloadSubs.addic7ed: Try again with a lower minmatchscore") 
+        log.debug("downloadSubs.addic7ed: No suitable subtitle was found on Addic7ed.com")
+        log.debug("downloadSubs.addic7ed: Try to find one on the other websites") 
         addic7edapi.logout()
         return (None, None)  
           
@@ -338,15 +338,17 @@ def DownloadSub(downloadDict, allResults):
         if autosub.ADDIC7EDLANG == language or autosub.ADDIC7EDLANG == 'Both':
             # To avoid unnecessary a7 searching
             #if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD:
-                log.debug("downloadSubs: First look on Addic7ed.com for suntitle %s" % destsrt)
+                log.debug("downloadSubs: Going to Addic7ed.com to find subtitle %s" % destsrt)
                 fileStringIO, release = addic7ed(downloadDict)
                 if fileStringIO:
                     website = 'addic7ed.com'
+                    log.debug("downloadSubs: Found subtitle on addic7ed.com)
                     skipOtherResults = True
         
         if allResults:
             for result in allResults:   
                 if skipOtherResults:
+                    log.debug("downloadSubs: Skipping other results...)
                     break                           
                 
                 subSeekerLink = result[0]
@@ -379,7 +381,14 @@ def DownloadSub(downloadDict, allResults):
                 log.debug("downloadSubs: Trying to download another subtitle for this episode")
                   
         
-        if not fileStringIO:
+        else:
+            log.debug("downloadSubs: No suitable results were found on the 5 sites using the SubSeeker API")
+            log.debug("downloadSubs: Or only addic7ed.com is used for %s subtitles" % language)
+            return False
+
+            
+        
+        if not fileStringIO:            
             return False
         
         #Lets first download the subtitle to a tempfile and then write it to the destination
