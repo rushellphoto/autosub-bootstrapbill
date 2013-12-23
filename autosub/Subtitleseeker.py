@@ -62,12 +62,9 @@ def getSubLinks(showid, lang, releaseDetails):
     showName = releaseDetails['title']
     
     
-    # Get the IMDB ID for the TV show    
-    imdbId = autosub.Helpers.getShowid(showName)
-    
     
     # this is the API search 
-    getSubLinkUrl = "%s&imdb=%s&season=%s&episode=%s&language=%s" % (api, imdbId, season, episode, lang)
+    getSubLinkUrl = "%s&imdb=%s&season=%s&episode=%s&language=%s" % (api, showid, season, episode, lang)
     log.info('Subtitleseeker: This is the subseeker API request %s' % getSubLinkUrl)
     if autosub.Helpers.checkAPICallsSubSeeker(use=True):
         try:

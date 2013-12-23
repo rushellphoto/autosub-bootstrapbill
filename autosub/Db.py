@@ -37,7 +37,7 @@ class idCache():
         
         connection.close()
         if imdb_id:
-            return int(imdb_id)
+            return imdb_id
     
     def setId(self, imdb_id, show_name):
         show_name = show_name
@@ -105,7 +105,7 @@ def createDatabase():
         connection=sqlite3.connect(autosub.DBFILE)
         cursor=connection.cursor()
         
-        cursor.execute("CREATE TABLE id_cache (imdb_id INTEGER, show_name TEXT);")
+        cursor.execute("CREATE TABLE id_cache (imdb_id TEXT, show_name TEXT);")
         cursor.execute("CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, show_name TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT);")
         cursor.execute("CREATE TABLE info (database_version NUMERIC);")
         connection.commit()

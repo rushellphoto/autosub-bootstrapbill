@@ -267,7 +267,7 @@ def getShowid(show_name):
     show_id = nameMapping(show_name)
     if show_id:
         log.debug('getShowid: showid from namemapping %s' %show_id)
-        return int(show_id)
+        return show_id
     
     show_id = idCache().getId(show_name)
     if show_id:
@@ -275,7 +275,7 @@ def getShowid(show_name):
         if show_id == -1:
             log.error('getShowid: showid not found for %s' %show_name)
             return
-        return int(show_id)
+        return show_id
     
     #do we have enough api calls?
     if checkAPICallsTvdb(use=False): 
@@ -288,7 +288,8 @@ def getShowid(show_name):
         log.debug('getShowid: showid from api %s' %show_id)
         idCache().setId(show_id, show_name)
         log.info('getShowid: %r added to cache with %s' %(show_name, show_id))
-        return int(show_id)
+        
+        return show_id
     
     log.error('getShowid: showid not found for %s' %show_name)
     idCache().setId(-1, show_name)

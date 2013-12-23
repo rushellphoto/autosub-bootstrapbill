@@ -6,15 +6,11 @@
 #
 import logging
 
-#import urllib2
-#from library.beautifulsoup import BeautifulSoup, SoupStrainer
 from bs4 import BeautifulSoup, SoupStrainer, Doctype
 from zipfile import ZipFile
 from StringIO import StringIO
 import re 
 from urlparse import urljoin
-
-
 
 import os
 import time
@@ -31,7 +27,6 @@ log = logging.getLogger('thelogger')
 
 #TODO: Remove DOWNLOADQUEUELOCK everywhere
 #TODO: Remove DownloadSubs threath
-
 # Think about: keep url hardcoded here or set __init__?
 
 # Settings
@@ -227,14 +222,7 @@ def bierdopje(subSeekerLink):
 
 
 def addic7ed(downloadDict):    
-    # Initiate the a7 API
-    try:
-        addic7edapi = autosub.Addic7ed.Addic7edAPI()
-        apiresponse = addic7edapi.login(autosub.ADDIC7EDUSER, autosub.ADDIC7EDPASSWD)
-    except:
-        return (None,None)
-    
-    
+
     # Info about episode file
     title = downloadDict['title']
     season = downloadDict['season']
@@ -244,32 +232,26 @@ def addic7ed(downloadDict):
     codec = downloadDict['codec']
     language = downloadDict['downlang']
     rlsgrp = downloadDict['releasegrp']
-
-    # Get official name of TV series via IMDB ID
-    imdbID = autosub.Helpers.getShowid(downloadDict['title'])
-    showName = autosub.Tvdb.getShowName(imdbID).lower()
     
-    show_ids={}
     
+    # Initiate the a7 API
     try:
-        soup = addic7edapi.get('/shows.php')        
-        for html_show in soup.select('td.version > h3 > a[href^="/show/"]'):
-            show_ids[html_show.string.lower()] = int(html_show['href'][6:])
+        addic7edapi = autosub.Addic7ed.Addic7edAPI()
+        apiresponse = addic7edapi.login(autosub.ADDIC7EDUSER, autosub.ADDIC7EDPASSWD)
     except:
         return (None,None)
-
-    if showName in show_ids:
-        show_id = show_ids[showName]
-    else:
-        log.error("downloadSubs.addic7ed: Addic7ed ID for %s wasn't found" % showName)
+    
+    # Fetch a7 ID for show
+    a7ID = autosub.Addic7ed.geta7ID(title)
+    
+    if not a7ID:     
         return (None, None)
     
-    
-    params = {'show_id': show_id, 'season': season}
+    params = {'show_id': a7ID, 'season': season}
     soup = addic7edapi.get('/show/{show_id}&season={season}'.format(**params))
     if not soup:
         return (None,None)
-        
+     
     versions = []
     for row in soup('tr', class_='epeven completed'):
         releaseInfo = {}
@@ -282,7 +264,7 @@ def addic7ed(downloadDict):
             continue       
         if not unicode(cells[3].string) == language:        
             continue
-        if not unicode(cells[1].string) == episode:
+        if not unicode(cells[1].string) == episode and not unicode(cells[1].string) == unicode(int(episode)):
             continue
         
         # use ASCII codec
@@ -299,7 +281,7 @@ def addic7ed(downloadDict):
         twinDict = autosub.Addic7ed.MakeTwinRelease(versionDict)
         if twinDict:
             versions.append(twinDict)
-    
+
     if not versions:
         return (None, None)        
     
@@ -317,7 +299,7 @@ def addic7ed(downloadDict):
             try:
                 subtitleFile = StringIO(addic7edapi.download(downloadLink))
                 addic7edapi.logout()
-                releaseInfo = autosub.Addic7ed.makeRelease(originalVersion, title, season, episode)
+                releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode)
                 return subtitleFile, releaseInfo
             except:
                 log.error("downloadSubs.addic7ed: Subtitle file at %s couldn't be retrieved" % downloadLink)
@@ -350,7 +332,6 @@ def DownloadSub(downloadDict, allResults):
         fileStringIO = None
         website = None
         release = None
-
  
         # First look in Addic7ed for a hit            
         if autosub.ADDIC7EDLANG == language or autosub.ADDIC7EDLANG == 'Both':
@@ -424,15 +405,12 @@ def DownloadSub(downloadDict, allResults):
         if website == 'bierdopje.eu':
             website = 'subtitleseekers mirror of bierdopje'
 
-        print 'at the end'
-        print website, release
-        
-
             
         downloadDict['subtitle'] = "%s downloaded from %s" % (release,website)
         downloadDict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         
         lastDown().setlastDown(dict = downloadDict)
+        
         
         if downloadDict['downlang'] == 'Dutch' and autosub.ENGLISHSUBDELETE == True:
             log.info("downloadsubs: Trying to delete English subtitle.")

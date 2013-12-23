@@ -490,7 +490,6 @@ def ReadConfig(configfile):
     # Settings
     autosub.SHOWID_CACHE = {}
 
-    # Deleted example ID hash
     autosub.NAMEMAPPING = {
             "Against the Wall" :"1836237",
             "alcatraz" :"1728102",

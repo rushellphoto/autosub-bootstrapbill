@@ -47,7 +47,7 @@ def getShowidApi(showName):
                 log.error("getShowid: Error while retrieving the IMDB ID for %s." % showName)
                 log.error("getShowid: Recommend to add the IMDB ID for %s manually for the time being." % showName)
                 return None    
-            # Remove trailing 'tt' from IMDB ID
+            # Remove trailing 'tt' from IMDB ID 
             return showid[2:]
     else:
         log.error("API: out of api calls for TvDB API")
