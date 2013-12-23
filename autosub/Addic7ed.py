@@ -7,6 +7,7 @@
 import re
 import library.requests as requests
 from bs4 import BeautifulSoup
+import time
 
 import autosub
 from autosub.Db import idCache
@@ -210,6 +211,11 @@ def ReconstructRelease(version_info, HD):
     
     # assume missing codec is x264, error prone!
     
+    # Add info based on quality
+    if quality == u'1080p':
+        if not source:
+            source = u'web-dl'    
+    
     # Add info based on source
     if any(source == x for x in (u'web-dl', u'hdtv', u'bluray')):
         if not codec:
@@ -217,7 +223,7 @@ def ReconstructRelease(version_info, HD):
     if source == u'web-dl':
         # default quality for WEB-DLs is 720p
         if not quality:
-            quality = '720p'
+            quality = u'720p'
 
     # Add info based on specific Releasegroups  
     if releasegroup:  
@@ -406,6 +412,9 @@ class Addic7edAPI():
             log.debug('Addic7edAPI: Timeout after 10 seconds')
         if r.status_code != 200:
             log.error('Addic7edAPI: Request failed with status code %d' % r.status_code)
+
+        log.debug("Addic7edAPI: Resting for 6 seconds to prevent errors")
+        time.sleep(6) #Max 0.5 connections each second
         return BeautifulSoup(r.content)
 
     def download(self, downloadlink):
@@ -423,6 +432,8 @@ class Addic7edAPI():
             log.debug('Addic7edAPI: Request succesful with status code %d' % r.status_code)
         if r.headers['Content-Type'] == 'text/html':
             log.error('Addic7edAPI: Download limit exceeded')
+        log.debug("Addic7edAPI: Resting for 6 seconds to prevent errors")
+        time.sleep(6) #Max 0.5 connections each second
         return r.content
 
 
