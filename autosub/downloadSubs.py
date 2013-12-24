@@ -2,11 +2,12 @@
 #
 # The Autosub downloadSubs module
 # Scrapers are used for websites:
-# Podnapisi.net, Subscene.com, Undertexter.se, Opensubtitles.org
+# Podnapisi.net, Subscene.com, Undertexter.se, Opensubtitles.org, SubSeeker's Mirror of BD
+# and addic7ed.com
 #
 import logging
 
-from bs4 import BeautifulSoup, SoupStrainer, Doctype
+from bs4 import BeautifulSoup
 from zipfile import ZipFile
 from StringIO import StringIO
 import re 
@@ -33,43 +34,23 @@ log = logging.getLogger('thelogger')
 log = logging.getLogger('thelogger')
 
 
-def getHTMLTags(url, tagSearch):
+def getSoup(url):
     try:
         api = autosub.Helpers.API(url)
-        html = api.resp.read()
+        soup = BeautifulSoup(api.resp.read())
         api.close()
+        return soup
     except:
-        log.error("getHTMLTags: The server returned an error for request %s" % url)
-        return False
-    
-    link_pat = SoupStrainer(tagSearch)
-    tags = BeautifulSoup(html, parse_only=link_pat)
-    
-    if len(tags) == 0:
-        log.error("downloadSubs.getHTMLTags: No suitable HTML Tags were found")
-        return False    
-    # Remove DOCTYPE header
-    for tag in tags:
-        if isinstance(tag, Doctype):
-            tag.extract()
-    return tags 
+        log.error("getSoup: The server returned an error for request %s" % url)
+        return False   
 
-def getHTMLTagAttrib(url, tagToSearch, attrib):
-    tags = getHTMLTags(url, tagToSearch)
-    if not tags or len(tags) != 1:
-        log.error("downloadSubs.getHTMLTagAttrib: More than one HTML tag %s was found for %s" % (tagToSearch, url))
-        return None
-    for tag in tags:
-        url = tag[attrib].strip('/')
-        return url    
-        
 def unzip(url):
     # returns a file-like StringIO object    
     try:
         api = autosub.Helpers.API(url)
         tmpfile = StringIO(api.resp.read())
     except:
-        log.debug("downloadSubs.unzip: Zip file at %s couldn't be retrieved" % url)
+        log.debug("unzip: Zip file at %s couldn't be retrieved" % url)
         return None     
     try: 
         zipfile = ZipFile(tmpfile)
@@ -84,143 +65,127 @@ def unzip(url):
         tmpname = name.lower()
         if tmpname.endswith('srt'):
             subtitleFile = StringIO(zipfile.open(name).read())
-            log.debug("downloadSubs.unzip: Retrieving zip file for %s was succesful" % url )
+            log.debug("unzip: Retrieving zip file for %s was succesful" % url )
             return subtitleFile
         else: 
-            log.debug("downloadSubs.unzip: No subtitle files was found in the zip archive for %s" % url)
-            log.debug("downloadSubs.unzip: Subtitle with different extention than .srt?")
+            log.debug("unzip: No subtitle files was found in the zip archive for %s" % url)
+            log.debug("unzip: Subtitle with different extention than .srt?")
             return None  
     
-# Add log info to the scrapers
 
 def openSubtitles(subSeekerLink):
     openSubLink = 'http://www.opensubtitles.org/subtitleserve/sub/' 
-    # link is http://www.opensubtitles.org//subtitles/5318376/revolution-everyone-says-i-love-you-en
-    link = getHTMLTagAttrib(subSeekerLink, 'iframe', 'src')            
-    if link:
-        try:        
-            openSubtitlesapi = autosub.Helpers.API(link)
-            html = openSubtitlesapi.resp.read()
-            openSubtitlesapi.close()
-        except:
-            log.error("downloadSubs.openSubtitles: The server returned an error for request %s" % link)
-            return None     
-         
-        openID = None
-        # capture dead links
-        if not html.find("msg error") == -1:
-            # get alternate link
-            try:
-                r = re.search('http://www.opensubtitles.org/en/subtitles/(\d*)/', html).group(1)
-                if not r:
-                    r = re.search('http://www.opensubtitles.org/nl/subtitles/(\d*)/', html).group(1)               
-                if r:
-                    openID = r
-            except:
-                return None
-        else:
-            openID = link.split('/')[4].encode('utf8')
-        zipUrl = openSubLink + openID
-        subtitleFile = unzip(zipUrl)
-        return subtitleFile
-    else:
+   
+    soup = getSoup(subSeekerLink)
+    tag = soup.find('iframe', src=True)
+    if not tag:
         return None
+        log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
+    
+    try:
+        link = tag['src'].strip('/')    
+        soup = getSoup(link)
+        msgError = soup.find('div', class_='msg error')
+    except:
+        return None
+    
+    if not msgError:  
+        try:      
+            openID = link.split('/')[4].encode('utf8')
+        except:
+            log.error("openSubtitles: Something went with parsing the downloadlink")        
+            return None
+            
+    else:   
+        log.debug("openSubtitles: Original link %s is dead. Trying to find alternative in error message" % link)        
+        match = re.search('http://www.opensubtitles.org/.*/subtitles/(\d*)/', msgError.text).group(1)
+        if match:
+            log.debug("openSubtitles: Alternative link found: %s" % link)  
+            openID = match
+        else:
+            return None
+    
+    zipUrl = urljoin(openSubLink, openID.encode('utf8'))
+    subtitleFile = unzip(zipUrl)
+    return subtitleFile
+
     
 def undertexter(subSeekerLink):
-    # http://www.engsub.net/197187
-    engSub = 'http://www.engsub.net/getsub.php?id='
-    # link is http://www.engsub.net/197187
-    link = getHTMLTagAttrib(subSeekerLink, 'iframe', 'src')        
-    if link:    
-        zipUrl = engSub + link.split('/')[3].encode('utf8')
-        subtitleFile = unzip(zipUrl)
-        return subtitleFile
-    else:
-        return None
-    
-def podnapisi(subSeekerLink):
-    baseLink = 'http://www.podnapisi.net/'
-    tags_first = getHTMLTags(subSeekerLink, 'a')
-    if not tags_first or len(tags_first) == 0:
-        return None
-    for tag in tags_first:
-        url = tag['href'].strip('/')
-        # first link: to the episode subtitle page
-        if re.match(urljoin(baseLink, 'ppodnapisi/podnapis/i'), url):
-            linkToPodnapisi = url
-            tags_second = getHTMLTags(linkToPodnapisi, 'a')
-            if not tags_second or len(tags_second) == 0:
-                return None
-            for tag in tags_second:
-                if tag.has_attr('href'):
-                    url = tag['href'].strip('/')
-                    # second link: download link
-                    if re.search('ppodnapisi/download', url):
-                        zipUrl = urljoin(baseLink,url)
-                        subtitleFile = unzip(zipUrl)
-                        return subtitleFile
+    engSub = 'http://www.engsub.net/getsub.php?id='    
 
-            log.error("downloadSubs.Podnapisi: Something went wrong while retrieving download link")
-            log.debug("downloadSubs.Podnapisi: No hrefs were found in the Podnapisi HTML page for %s" % subSeekerLink)
-            return None
-    log.error("downloadSubs.Podnapisi: Something went wrong while retrieving download link")
-    log.debug("downloadSubs.Podnapisi: Couldnt find the Subseeker link to the Podnapisi page for %s" % subSeekerLink)
-    return None
+    soup = getSoup(subSeekerLink)
+    tag = soup.find('iframe', src=True)
+    if not tag:
+        log.error("Undertexter: Failed to extract download link using SubtitleSeekers's link")        
+        return None       
+    link = tag['src'].strip('/')     
+    try:
+        zipUrl = engSub + link.split('/')[3].encode('utf8')
+    except:
+        log.error("Undertexter: Something went with parsing the downloadlink")        
+        return None    
+
+    subtitleFile = unzip(zipUrl)
+    return subtitleFile
     
+
+def podnapisi(subSeekerLink):
+    baseLink = 'http://www.podnapisi.net/'    
+    
+    soup = getSoup(subSeekerLink)    
+    linkToPodnapisi = soup.select('p > a[href]')[0]['href'].strip('/')
+    if not linkToPodnapisi:
+        log.error("Podnapisi: Failed to find the redirect link using SubtitleSeekers's link")        
+        return None
+    
+    soup = getSoup(linkToPodnapisi)
+    downloadTag = soup.select('a.button.big.download')[0]
+    if not downloadTag.has_attr('href'):
+        log.error("Podnapisi: Failed to find the download link on Podnapisi.net")        
+        return None
+    downloadLink = downloadTag['href'].strip('/')
+    
+    zipUrl = urljoin(baseLink,downloadLink.encode('utf8'))
+    subtitleFile = unzip(zipUrl)
+    return subtitleFile
+
+
 def subscene(subSeekerLink):
     baseLink = 'http://subscene.com/'
-    tags_first = getHTMLTags(subSeekerLink, 'a')
-    if not tags_first or len(tags_first) == 0:
-        return None
-    for tag in tags_first:
-        if tag.has_attr('href'):
-            url = tag['href'].strip('/')
-            # first link: to the episode subtitle page
-            if re.match(urljoin(baseLink, 'subtitles'), url):
-                linkToSubscene = url
-                tags_second = getHTMLTags(linkToSubscene, 'a')
-                if not tags_second or len(tags_second) == 0:
-                    return None
-                for tag in tags_second:
-                    if tag.has_attr('href'):
-                        url = tag['href'].strip('/')
-                        # second link: download link
-                        if re.match('subtitle/download', url):
-                            zipUrl = urljoin(baseLink, url)
-                            subtitleFile = unzip(zipUrl)
-                            return subtitleFile
 
-                log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
-                log.debug("downloadSubs.Subscene: No hrefs were found in the Subscene HTML page for %s" % subSeekerLink)
-                return None
-    log.error("downloadSubs.Subscene: Something went wrong while retrieving download link")
-    log.debug("downloadSubs.Subscene: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
-    return None
+    soup = getSoup(subSeekerLink)
+    linkToSubscene = soup.select('p > a[href]')[0]['href'].strip('/')
+    if not linkToSubscene:
+        log.error("Subscene: Failed to find the redirect link using SubtitleSeekers's link")        
+        return None
+    
+    soup = getSoup(linkToSubscene)
+    downloadLink = soup.select('div.download > a[href]')[0]['href'].strip('/')
+    if not downloadLink:
+        log.error("Subscene: Failed to find the download link on Subscene.com")        
+        return None
+    
+    zipUrl = urljoin(baseLink,downloadLink.encode('utf8'))
+    subtitleFile = unzip(zipUrl)
+    return subtitleFile
+
     
 def bierdopje(subSeekerLink):
-    '''
-    The href embedded in the subSeekerLink automatically gives the srt file
-    Convert this in FileIO object for compatibility
-    '''
     baseLink = 'http://www.subtitleseeker.com/classes/'
-    tags = getHTMLTags(subSeekerLink, 'a')
-    if not tags or len(tags) == 0:
-        return None
-    for tag in tags:
-        url = tag['href'].strip('/')
-        if re.match(baseLink, url):            
-            try:
-                bierdopjeapi = autosub.Helpers.API(url)
-                subtitleFile = StringIO(bierdopjeapi.resp.read())            
-            except:
-                log.debug("downloadSubs.bierdopje: Subtitle file at %s couldn't be retrieved" % url)
-                return None   
-            return subtitleFile
+    
+    soup = getSoup(subSeekerLink)
+    downloadLink = soup.select('p > a[href]')[0]['href'].strip('/')
+    if not downloadLink:
+       log.error("Mirror Bierdopje: Something went wrong while retrieving download link")
+       return None    
+    try:
+        bierdopjeapi = autosub.Helpers.API(url)
+        subtitleFile = StringIO(bierdopjeapi.resp.read())            
+    except:
+        log.debug("Mirror Bierdopje: Subtitle file at %s couldn't be retrieved" % url)
+        return None   
+    return subtitleFile
                 
-    log.error("downloadSubs.bierdopje: Something went wrong while retrieving download link")
-    log.debug("downloadSubs.bierdopje: Couldnt find the Subseeker link to the Subscene page for %s" % subSeekerLink)
-    return None            
-
 
 def addic7ed(downloadDict):    
 
