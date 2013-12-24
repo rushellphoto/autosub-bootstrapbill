@@ -418,7 +418,6 @@ class Addic7edAPI():
         return BeautifulSoup(r.content)
 
     def download(self, downloadlink):
-
         if not self.logged_in:
             log.error("Addic7edAPI: You are not properly logged in. Check your credentials!")
             return None
