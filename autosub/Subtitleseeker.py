@@ -49,9 +49,9 @@ def getSubLinks(showid, lang, releaseDetails):
     if autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both':
         SOURCEWEBSITES.append('opensubtitles.org')
 
-    if not website in SOURCEWEBSITES:
-        None       
-
+    if len(SOURCEWEBSITES) == 0:
+        return None
+    
     api = autosub.API
     
     if showid == -1:
@@ -100,6 +100,9 @@ def getSubLinks(showid, lang, releaseDetails):
         website = sub.getElementsByTagName('site')[0].firstChild.data  
         website = website.lower() 
         
+        if not website in SOURCEWEBSITES:
+            continue       
+
         tmpDict = ProcessFilename(release, '')
         if not tmpDict:
             continue

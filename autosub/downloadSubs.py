@@ -342,13 +342,13 @@ def DownloadSub(downloadDict, allResults):
                 fileStringIO, release = addic7ed(downloadDict)
                 if fileStringIO:
                     website = 'addic7ed.com'
-                    log.debug("downloadSubs: Found subtitle on addic7ed.com)
+                    log.debug("downloadSubs: Found subtitle on addic7ed.com")
                     skipOtherResults = True
         
         if allResults:
             for result in allResults:   
                 if skipOtherResults:
-                    log.debug("downloadSubs: Skipping other results...)
+                    log.debug("downloadSubs: Skipping other results...")
                     break                           
                 
                 subSeekerLink = result[0]
