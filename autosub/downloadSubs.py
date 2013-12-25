@@ -279,11 +279,12 @@ def addic7ed(downloadDict):
     if FallBackDownload:
         originalVersion = FallBackDownload[0]
         downloadLink = FallBackDownload[2]
+        
         log.debug("downloadSubs.addic7ed: Trying to download HI subtitle as fall back")      
         try:
             subtitleFile = StringIO(addic7edapi.download(downloadLink))
             addic7edapi.logout()
-            releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode)
+            releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode, HI=True)
             return subtitleFile, releaseInfo
         except:
             log.debug("downloadSubs.addic7ed: Subtitle file at %s couldn't be retrieved" % downloadLink)

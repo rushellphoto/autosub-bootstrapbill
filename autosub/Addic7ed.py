@@ -299,10 +299,12 @@ def MakeTwinRelease(originalDict):
         return None
 
 
-def makeReleaseName(versionInfo, title, season, episode):
+def makeReleaseName(versionInfo, title, season, episode, HI=False):
     version = versionInfo.replace(' ','.')
     se = 'S' + season + 'E' + episode
     release = '.'.join([title,se,version])
+    if HI:
+        release = release + '.HI'
     return release
 
 
