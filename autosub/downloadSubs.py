@@ -99,10 +99,10 @@ def openSubtitles(subSeekerLink):
     else:   
         log.debug("openSubtitles: Original link %s is dead. Trying to find alternative in error message" % link)        
         pattern = re.compile('http://www.opensubtitles.org/.*/subtitles/(\d*)/', re.IGNORECASE)
-        if re.search(pattern, msgError.text):
-            match = re.search(pattern, msgError.text).group(1)
+        match = re.search(pattern, msgError.text)
+        if match:
+            openID = match.group(1)
             log.debug("openSubtitles: Alternative link found: %s" % link)  
-            openID = match
         else:
             return None
     
