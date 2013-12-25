@@ -4,10 +4,7 @@
 # The Subtitleseeker API module
 #
 
-#import urllib
-#import urllib2
 import logging
-import time
 
 from xml.dom import minidom
 from operator import itemgetter
@@ -61,7 +58,6 @@ def getSubLinks(showid, lang, releaseDetails):
     source = None
     season = releaseDetails['season']
     episode = releaseDetails['episode']
-    showName = releaseDetails['title']
     
     
     

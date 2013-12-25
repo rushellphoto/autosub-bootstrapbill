@@ -348,7 +348,7 @@ def DownloadSub(downloadDict, allResults):
         if not fileStringIO:            
             log.debug("downloadSubs: No suitable subtitle was found")
             return False
-        
+      
         #Lets first download the subtitle to a tempfile and then write it to the destination
         tmpfile = tempfile.TemporaryFile('w+b')
             
@@ -405,8 +405,7 @@ def DownloadSub(downloadDict, allResults):
         
         log.debug('downloadSubs: ')
         return True
-        
-        
+    
     else:
         log.error("downloadSub: No locationOnDisk found at downloadItem, skipping")
         return False
