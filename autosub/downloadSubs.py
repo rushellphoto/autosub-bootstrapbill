@@ -75,9 +75,10 @@ def unzip(url):
 def openSubtitles(subSeekerLink):
     openSubLink = 'http://www.opensubtitles.org/subtitleserve/sub/' 
    
-    soup = getSoup(subSeekerLink)
-    tag = soup.find('iframe', src=True)
-    if not tag:
+    try:
+        soup = getSoup(subSeekerLink)
+        tag = soup.find('iframe', src=True)
+    except:
         log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
         return None
     
@@ -112,11 +113,14 @@ def openSubtitles(subSeekerLink):
 def undertexter(subSeekerLink):
     engSub = 'http://www.engsub.net/getsub.php?id='    
 
-    soup = getSoup(subSeekerLink)
-    tag = soup.find('iframe', src=True)
-    if not tag:
+    try:
+        soup = getSoup(subSeekerLink)
+        tag = soup.find('iframe', src=True)
+        link = tag['src'].strip('/')     
+    except:
         log.error("Undertexter: Failed to extract download link using SubtitleSeekers's link")        
         return None       
+    
     link = tag['src'].strip('/')     
     try:
         zipUrl = engSub + link.split('/')[3].encode('utf8')
@@ -131,19 +135,21 @@ def undertexter(subSeekerLink):
 def podnapisi(subSeekerLink):
     baseLink = 'http://www.podnapisi.net/'    
     
-    soup = getSoup(subSeekerLink)    
-    linkToPodnapisi = soup.select('p > a[href]')[0]['href'].strip('/')
-    if not linkToPodnapisi:
+    try:
+        soup = getSoup(subSeekerLink)    
+        linkToPodnapisi = soup.select('p > a[href]')[0]['href'].strip('/')
+    except:
         log.error("Podnapisi: Failed to find the redirect link using SubtitleSeekers's link")        
         return None
     
-    soup = getSoup(linkToPodnapisi)
-    downloadTag = soup.select('a.button.big.download')[0]
-    if not downloadTag.has_attr('href'):
+    try:
+        soup = getSoup(linkToPodnapisi)
+        downloadTag = soup.select('a.button.big.download')[0]
+    except:
         log.error("Podnapisi: Failed to find the download link on Podnapisi.net")        
         return None
-    downloadLink = downloadTag['href'].strip('/')
     
+    downloadLink = downloadTag['href'].strip('/')
     zipUrl = urljoin(baseLink,downloadLink.encode('utf8'))
     subtitleFile = unzip(zipUrl)
     return subtitleFile
@@ -151,16 +157,18 @@ def podnapisi(subSeekerLink):
 
 def subscene(subSeekerLink):
     baseLink = 'http://subscene.com/'
-
-    soup = getSoup(subSeekerLink)
-    linkToSubscene = soup.select('p > a[href]')[0]['href'].strip('/')
-    if not linkToSubscene:
+    
+    try:
+        soup = getSoup(subSeekerLink)
+        linkToSubscene = soup.select('p > a[href]')[0]['href'].strip('/')
+    except:
         log.error("Subscene: Failed to find the redirect link using SubtitleSeekers's link")        
         return None
     
-    soup = getSoup(linkToSubscene)
-    downloadLink = soup.select('div.download > a[href]')[0]['href'].strip('/')
-    if not downloadLink:
+    try:
+        soup = getSoup(linkToSubscene)
+        downloadLink = soup.select('div.download > a[href]')[0]['href'].strip('/')
+    except:
         log.error("Subscene: Failed to find the download link on Subscene.com")        
         return None
     
@@ -171,9 +179,10 @@ def subscene(subSeekerLink):
     
 def bierdopje(subSeekerLink):    
     
-    soup = getSoup(subSeekerLink)
-    downloadLink = soup.select('p > a[href]')[0]['href'].strip('/')
-    if not downloadLink:
+    try:
+        soup = getSoup(subSeekerLink)
+        downloadLink = soup.select('p > a[href]')[0]['href'].strip('/')
+    except:
         log.error("Mirror Bierdopje: Something went wrong while retrieving download link")
         return None    
     try:
