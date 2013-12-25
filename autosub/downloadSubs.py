@@ -121,8 +121,7 @@ def undertexter(subSeekerLink):
     except:
         log.error("Undertexter: Failed to extract download link using SubtitleSeekers's link")        
         return None       
-    
-    link = tag['src'].strip('/')     
+       
     try:
         zipUrl = engSub + link.split('/')[3].encode('utf8')
     except:
