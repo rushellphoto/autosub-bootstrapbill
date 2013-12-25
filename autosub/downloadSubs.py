@@ -22,7 +22,6 @@ from autosub.Db import lastDown
 import autosub.Addic7ed
 import autosub.notify as notify
 import autosub.Helpers
-import autosub.Tvdb
 
 log = logging.getLogger('thelogger')
 
@@ -170,19 +169,18 @@ def subscene(subSeekerLink):
     return subtitleFile
 
     
-def bierdopje(subSeekerLink):
-    baseLink = 'http://www.subtitleseeker.com/classes/'
+def bierdopje(subSeekerLink):    
     
     soup = getSoup(subSeekerLink)
     downloadLink = soup.select('p > a[href]')[0]['href'].strip('/')
     if not downloadLink:
-       log.error("Mirror Bierdopje: Something went wrong while retrieving download link")
-       return None    
+        log.error("Mirror Bierdopje: Something went wrong while retrieving download link")
+        return None    
     try:
-        bierdopjeapi = autosub.Helpers.API(url)
+        bierdopjeapi = autosub.Helpers.API(downloadLink)
         subtitleFile = StringIO(bierdopjeapi.resp.read())            
     except:
-        log.debug("Mirror Bierdopje: Subtitle file at %s couldn't be retrieved" % url)
+        log.debug("Mirror Bierdopje: Subtitle file at %s couldn't be retrieved" % downloadLink)
         return None   
     return subtitleFile
                 

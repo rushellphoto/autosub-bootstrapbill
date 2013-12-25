@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 import time
 
 import autosub
-from autosub.Db import idCache
 import autosub.Helpers
 import autosub.Tvdb
 
