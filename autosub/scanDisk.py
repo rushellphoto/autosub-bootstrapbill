@@ -29,7 +29,11 @@ def walkDir(path):
                 log.debug("scanDisk: found a failed directory, skipping")
                 continue
             
-            for filename in filenames:
+
+            for filename_old in filenames:
+                filename = autosub.Helpers.removeIllegalChars(filename_old)
+                # Also rename actual file 
+                os.rename(os.path.join(dirname, filename_old), os.path.join(dirname, filename))
                 splitname = filename.split(".")
                 ext = splitname[len(splitname) - 1]
 
