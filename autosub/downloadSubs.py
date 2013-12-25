@@ -220,9 +220,6 @@ def addic7ed(downloadDict):
     for row in soup('tr', class_='epeven completed'):
         releaseInfo = {}
         cells = row('td')
-        # filter out HI versions        
-        if bool(cells[6].string) == True:
-            continue
         # filter on Completed, wanted language and episode
         if cells[5].string != 'Completed':
             continue       
@@ -231,8 +228,7 @@ def addic7ed(downloadDict):
         if not unicode(cells[1].string) == episode and not unicode(cells[1].string) == unicode(int(episode)):
             continue
         
-        # use ASCII codec
-        # put in lower case
+        # use ASCII codec and put in lower case
         details = unicode(cells[4].string).encode('utf-8')
         details = details.lower()
         HD = True if bool(cells[8].string) != None else False        
@@ -241,6 +237,7 @@ def addic7ed(downloadDict):
             continue
         versionDict['url'] = cells[9].a['href'].encode('utf-8')
         versionDict['a7'] = details
+        versionDict['HI'] = bool(cells[6].string)
         versions.append(versionDict)
         twinDict = autosub.Addic7ed.MakeTwinRelease(versionDict)
         if twinDict:
@@ -252,27 +249,51 @@ def addic7ed(downloadDict):
     scoreList = []        
     for releaseDict in versions: 
         score = autosub.Helpers.scoreMatch(releaseDict, releaseDict['a7'], quality, rlsgrp, source, codec)
-        scoreList.append((releaseDict['a7'], score, releaseDict['url']))
+        scoreList.append([releaseDict['a7'], score, releaseDict['url'], releaseDict['HI'] ])
             
-    sortedScoreList = sorted(scoreList, key=lambda tup:tup[1], reverse=True)    
+    sortedScoreList = sorted(scoreList, key=lambda ind:ind[1], reverse=True)   
+
+    FallBackDownload = None    
     for hit in sortedScoreList:
         originalVersion = hit[0]
         score = hit[1]
         downloadLink = hit[2]
-        if score >= autosub.MINMATCHSCORE:
-            try:
-                subtitleFile = StringIO(addic7edapi.download(downloadLink))
-                addic7edapi.logout()
-                releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode)
-                return subtitleFile, releaseInfo
-            except:
-                log.error("downloadSubs.addic7ed: Subtitle file at %s couldn't be retrieved" % downloadLink)
-                addic7edapi.logout()
-                return (None, None)
-        log.debug("downloadSubs.addic7ed: No suitable subtitle was found on Addic7ed.com")
-        log.debug("downloadSubs.addic7ed: Try to find one on the other websites") 
-        addic7edapi.logout()
-        return (None, None)  
+        HI = hit[3]
+        if score < autosub.MINMATCHSCORE:
+            break
+        if HI:
+            if not FallBackDownload:
+                FallBackDownload = hit[:]
+            continue                
+        #First try to get non-HI version
+        try:
+            subtitleFile = StringIO(addic7edapi.download(downloadLink))
+            addic7edapi.logout()
+            releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode)
+            return subtitleFile, releaseInfo
+        except:
+            log.debug("downloadSubs.addic7ed: Trying to download next hit")
+            continue
+    
+    # If only HI version is present, download this one instead
+    if FallBackDownload:
+        originalVersion = FallBackDownload[0]
+        downloadLink = FallBackDownload[2]
+        log.debug("downloadSubs.addic7ed: Trying to download HI subtitle as fall back")      
+        try:
+            subtitleFile = StringIO(addic7edapi.download(downloadLink))
+            addic7edapi.logout()
+            releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode)
+            return subtitleFile, releaseInfo
+        except:
+            log.debug("downloadSubs.addic7ed: Subtitle file at %s couldn't be retrieved" % downloadLink)
+    
+    
+    addic7edapi.logout()
+    log.debug("downloadSubs.addic7ed: No suitable subtitle was found on Addic7ed.com")
+    log.debug("downloadSubs.addic7ed: Try to find one on the other websites") 
+    addic7edapi.logout()
+    return (None, None)  
           
 
 def DownloadSub(downloadDict, allResults):    
