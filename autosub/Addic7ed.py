@@ -432,6 +432,7 @@ class Addic7edAPI():
             log.debug('Addic7edAPI: Request succesful with status code %d' % r.status_code)
         if r.headers['Content-Type'] == 'text/html':
             log.error('Addic7edAPI: Download limit exceeded')
+            return None
         log.debug("Addic7edAPI: Resting for 6 seconds to prevent errors")
         time.sleep(6) #Max 0.5 connections each second
         return r.content

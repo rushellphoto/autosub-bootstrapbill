@@ -78,8 +78,8 @@ def openSubtitles(subSeekerLink):
     soup = getSoup(subSeekerLink)
     tag = soup.find('iframe', src=True)
     if not tag:
-        return None
         log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
+        return None
     
     try:
         link = tag['src'].strip('/')    
