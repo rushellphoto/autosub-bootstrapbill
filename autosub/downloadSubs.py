@@ -210,7 +210,7 @@ def addic7ed(downloadDict):
     # Initiate the a7 API
     try:
         addic7edapi = autosub.Addic7ed.Addic7edAPI()
-        apiresponse = addic7edapi.login(autosub.ADDIC7EDUSER, autosub.ADDIC7EDPASSWD)
+        apiresponse = addic7edapi.login()
     except:
         return (None,None)
     

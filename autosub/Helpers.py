@@ -401,6 +401,6 @@ class API:
         
         log.debug("API: Resting for 6 seconds to prevent 429 errors")
         time.sleep(6) #Max 0.5 connections each second
-        
+    
     def close(self):
         self.resp.close()

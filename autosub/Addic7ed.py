@@ -355,25 +355,28 @@ def geta7ID(showTitle):
 class Addic7edAPI():
     def __init__(self):
         self.session = requests.Session()
-        self.server = 'http://www.addic7ed.com/'
+        self.server = 'http://www.addic7ed.com'
         self.session.headers = {'User-Agent': autosub.USERAGENT}        
-       
+        self.user = None
+        self.passwd = None
         self.logged_in = False
         
-    def login(self, addic7eduser, addic7edpasswd):        
+    def login(self, addic7eduser=None, addic7edpasswd=None):        
         log.debug('Addic7edAPI: Logging in')
         
+        # Expose to test login
+        # When fields are empty it will check the config file
         if not addic7eduser:
-            addic7eduser = autosub.ADDIC7EDUSER
+            self.user = autosub.ADDIC7EDUSER
         
         if not addic7edpasswd:
-            addic7edpasswd = autosub.ADDIC7EDPASSWD
+            self.passwd = autosub.ADDIC7EDPASSWD
         
-        if addic7eduser == u"" or addic7edpasswd == u"":
+        if self.user == u"" or self.passwd == u"":
             log.error('Addic7edAPI: Username and password must be specified')
             return False
 
-        data = {'username': addic7eduser, 'password': addic7edpasswd, 'Submit': 'Log in'}
+        data = {'username': self.user, 'password': self.passwd, 'Submit': 'Log in'}
         try:
             r = self.session.post(self.server + '/dologin.php', data, timeout=10, allow_redirects=False)
         except requests.Timeout:
@@ -419,9 +422,14 @@ class Addic7edAPI():
         return BeautifulSoup(r.content)
 
     def download(self, downloadlink):
+        count = self.checkCurrentDownloads(fullSession=False)
+        if count >= autosub.DOWNLOADS_A7MAX:
+            log.error("Addic7edAPI: You have reached your 24h limit of 30 downloads!")
+            return None            
         if not self.logged_in:
             log.error("Addic7edAPI: You are not properly logged in. Check your credentials!")
             return None
+       
         try:
             r = self.session.get(self.server + downloadlink, timeout=10, headers={'Referer': autosub.USERAGENT})
         except requests.Timeout:
@@ -430,12 +438,41 @@ class Addic7edAPI():
             log.error('Addic7edAPI: Request failed with status code %d' % r.status_code)
         else:
             log.debug('Addic7edAPI: Request succesful with status code %d' % r.status_code)
+        
         if r.headers['Content-Type'] == 'text/html':
-            log.error('Addic7edAPI: Download limit exceeded')
+            log.error('Addic7edAPI: Expected srt file but got HTML; report this!')
             return None
         log.debug("Addic7edAPI: Resting for 6 seconds to prevent errors")
         time.sleep(6) #Max 0.5 connections each second
         return r.content
+    
+    def checkCurrentDownloads(self, fullSession=True):
+        # When thread is running, you can't check for this
+        if autosub.WANTEDQUEUELOCK == True:
+            return False
+        
+        if fullSession:
+            self.login()
+            
+        soup = self.get('/panel.php')
+        aTag = soup.select('a[href^="mydownloads.php"]')
+        
+        try:
+            pattern = re.compile('(\d*).*of.*\d*', re.IGNORECASE)
+            myDownloads = aTag[0].text if aTag else False
+            count = re.search(pattern, myDownloads).group(1)
+            count = int(count)
+        except:
+            log.error("Addic7edAPI: Couldn't retrieve current download count for user %s" % self.user)
+            return False
+        
+        if fullSession:
+            self.logout()
+            if count != autosub.DOWNLOADS_A7:
+                autosub.DOWNLOADS_A7 = count
+                return True
+        else:    
+            return count
 
 
 '''Lookup table for a7 IDs (23/12/'12)
