@@ -34,8 +34,9 @@ def walkDir(path):
             for filename in filenames:
                 if not platform.system() == 'Windows':
                     tempFilename = autosub.Helpers.removeIllegalChars(filename)
-                    os.rename(os.path.join(dirname, filename), os.path.join(dirname, tempFilename))
-                    log.info("scanDir: Renamed file %s" % tempFilename)
+                    if not tempFilename is filename:
+                        os.rename(os.path.join(dirname, filename), os.path.join(dirname, tempFilename))
+                        log.info("scanDir: Renamed file %s" % tempFilename)
                     filename = tempFilename
                 splitname = filename.split(".")
                 ext = splitname[len(splitname) - 1]
