@@ -5,6 +5,7 @@
 
 import logging
 import os
+import platform
 import re
 import time
 
@@ -28,12 +29,14 @@ def walkDir(path):
             if re.search('_failed_', dirname, re.IGNORECASE): 
                 log.debug("scanDisk: found a failed directory, skipping")
                 continue
-            
+             
 
-            for filename_old in filenames:
-                filename = autosub.Helpers.removeIllegalChars(filename_old)
-                # Also rename actual file 
-                os.rename(os.path.join(dirname, filename_old), os.path.join(dirname, filename))
+            for filename in filenames:
+                if not platform.system() == 'Windows':
+                    tempFilename = autosub.Helpers.removeIllegalChars(filename)
+                    os.rename(os.path.join(dirname, filename), os.path.join(dirname, tempFilename))
+                    log.info("scanDir: Renamed file %s" % tempFilename)
+                    filename = tempFilename
                 splitname = filename.split(".")
                 ext = splitname[len(splitname) - 1]
 

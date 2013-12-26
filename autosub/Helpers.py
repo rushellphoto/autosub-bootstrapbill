@@ -11,7 +11,6 @@ import time
 import urllib2
 import codecs
 import os
-import platform
 import unicodedata
 
 from library import version
@@ -353,9 +352,6 @@ def getAttr(name):
     return inner_func
 
 def removeIllegalChars(faultyString):
-    if platform.system() == 'Windows':
-        return faultyString
-    
     # First code illegal chars into hexidecimal
     decoded = unicode(faultyString.decode('utf-8'))
     
