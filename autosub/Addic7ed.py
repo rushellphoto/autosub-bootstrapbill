@@ -357,8 +357,8 @@ class Addic7edAPI():
         self.session = requests.Session()
         self.server = 'http://www.addic7ed.com'
         self.session.headers = {'User-Agent': autosub.USERAGENT}        
-        self.user = None
-        self.passwd = None
+        addic7eduser = None
+        addic7edpasswd = None
         self.logged_in = False
         
     def login(self, addic7eduser=None, addic7edpasswd=None):        
@@ -367,16 +367,16 @@ class Addic7edAPI():
         # Expose to test login
         # When fields are empty it will check the config file
         if not addic7eduser:
-            self.user = autosub.ADDIC7EDUSER
+            addic7eduser = autosub.ADDIC7EDUSER
         
         if not addic7edpasswd:
-            self.passwd = autosub.ADDIC7EDPASSWD
+            addic7edpasswd = autosub.ADDIC7EDPASSWD
         
-        if self.user == u"" or self.passwd == u"":
+        if addic7eduser == u"" or addic7edpasswd == u"":
             log.error('Addic7edAPI: Username and password must be specified')
             return False
 
-        data = {'username': self.user, 'password': self.passwd, 'Submit': 'Log in'}
+        data = {'username': addic7eduser, 'password': addic7edpasswd, 'Submit': 'Log in'}
         try:
             r = self.session.post(self.server + '/dologin.php', data, timeout=10, allow_redirects=False)
         except requests.Timeout:
