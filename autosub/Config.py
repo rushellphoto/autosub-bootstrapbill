@@ -493,6 +493,7 @@ def ReadConfig(configfile):
         autosub.PUSHALOTAPI = u"API key"
         autosub.NOTIFYPUSHOVER = False
         autosub.PUSHOVERAPI = u"API key"
+        autosub.NOTIFYBOXCAR = False
         autosub.BOXCARUSER = u"Boxcar email"
 
     if cfg.has_section('dev'):
