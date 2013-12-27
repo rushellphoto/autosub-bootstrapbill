@@ -16,6 +16,7 @@ from autosub.notify import growl
 from autosub.notify import prowl
 from autosub.notify import pushalot
 from autosub.notify import pushover
+from autosub.notify import boxcar
 
 log = logging.getLogger('thelogger')  
 
@@ -58,3 +59,7 @@ def notifySend(lang, subtitlefile, videofile):
     if autosub.NOTIFYPUSHOVER:
         log.debug("Notification: Pushover is enabled")
         pushover.send_notify(lang, subtitlefile, videofile)
+    
+    if autosub.NOTIFYBOXCAR:
+        log.debug("Notification: Boxcar is enabled")
+        boxcar.send_notify(lang, subtitlefile, videofile)

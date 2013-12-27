@@ -456,6 +456,17 @@ def ReadConfig(configfile):
             else:
                 autosub.PUSHOVERAPI = u"API key"
             
+            #Boxcar - iOS and OSX notifier.
+            if cfg.has_option('notify', 'notifyboxcar'):
+                autosub.NOTIFYBOXCAR = cfg.getboolean('notify', 'notifyboxcar')
+            else:
+                autosub.NOTIFYBOXCAR = False
+            
+            if cfg.has_option('notify', 'boxcaruser'):
+                autosub.BOXCARUSER = cfg.get('notify', 'boxcaruser')
+            else:
+                autosub.BOXCARUSER = u"Boxcar email"
+            
     else:
         # notify section is missing
         autosub.NOTIFYMAIL = False
@@ -482,6 +493,7 @@ def ReadConfig(configfile):
         autosub.PUSHALOTAPI = u"API key"
         autosub.NOTIFYPUSHOVER = False
         autosub.PUSHOVERAPI = u"API key"
+        autosub.BOXCARUSER = u"Boxcar email"
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
@@ -1004,6 +1016,8 @@ def saveNotifySection():
     cfg.set(section, "pushalotapi", autosub.PUSHALOTAPI)
     cfg.set(section, "notifypushover", str(autosub.NOTIFYPUSHOVER))
     cfg.set(section, "pushoverapi", autosub.PUSHOVERAPI)
+    cfg.set(section, "notifyboxcar", str(autosub.NOTIFYBOXCAR))
+    cfg.set(section, "boxcaruser", autosub.BOXCARUSER)
     
     with open(autosub.CONFIGFILE, 'wb') as cfile:
         cfg.write(cfile)

@@ -161,7 +161,7 @@ class Config:
                          mailtoaddr, mailusername, mailpassword, mailsubject, mailencryption, mailauth, 
                          growlhost, growlport, growlpass, nmaapi, twitterkey, twittersecret, notifyprowl, 
                          prowlapi, prowlpriority, notifypushalot, pushalotapi, notifypushover, pushoverapi, 
-                         nmapriority):
+                         nmapriority, notifyboxcar, boxcaruser):
 
         # Set all internal notify variables
         autosub.NOTIFYMAIL = notifymail
@@ -190,6 +190,8 @@ class Config:
         autosub.PUSHALOTAPI = pushalotapi
         autosub.NOTIFYPUSHOVER = notifypushover
         autosub.PUSHOVERAPI = pushoverapi
+        autosub.NOTIFYBOXCAR = notifyboxcar
+        autosub.BOXCARUSER = boxcaruser
 
         # Now save to the configfile
         message = autosub.Config.WriteConfig(configsection="notifications")
@@ -315,7 +317,16 @@ class Config:
             return "Failed to send a test message with <strong>Prowl</strong>."
     
     @cherrypy.expose
+    def testBoxcar(self, boxcaruser):
+        
+        log.info("Notification: Testing Boxcar")
+        result = notify.boxcar.test_notify(boxcaruser)
+        if result:
+            return "Auto-Sub successfully sent a test message with <strong>Boxcar</strong>."
+        else:
+            return "Failed to send a test message with <strong>Boxcar</strong>."
     
+    @cherrypy.expose
     def testAddic7ed(self, addic7eduser, addic7edpasswd):
         
         log.info("Addic7ed: Testing Login")

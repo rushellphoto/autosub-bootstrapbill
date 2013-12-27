@@ -107,6 +107,13 @@ $(document).ready(function () {
 			function (data) { $('#testProwl-result').html(data); });
     });
 	
+	$('#testBoxcar').click(function () {
+        $('#testBoxcar-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Boxcar...</span>');
+        var boxcaruser = $("#boxcaruser").val();
+		$.get(autosubRoot + "/config/testBoxcar", {'boxcaruser': boxcaruser},
+			function (data) { $('#testBoxcar-result').html(data); });
+    });
+	
 	$('#testAddic7ed').click(function () {
         $('#testAddic7ed-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Addic7ed login...</span>');
         var addic7eduser = $("#addic7eduser").val();

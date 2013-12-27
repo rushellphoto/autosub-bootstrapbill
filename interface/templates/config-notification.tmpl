@@ -212,6 +212,41 @@
 	
 	<hr>
 	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%">		
+		<tr>
+			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/boxcar.png" width="25px" height="24px" alt="" /> <b><a href="http://www.boxcar.io/sign-in" target="_blank">Boxcar</a></b></td>
+			<td class="pull-right"><select name="notifyboxcar" id="notifyboxcar" class="enabler">
+				#if $autosub.NOTIFYBOXCAR
+				  <option value="True" selected="selected">Enabled</option>
+				  <option value="False">Disabled</option>
+				#else
+				  <option value="True">Enabled</option>
+				  <option value="False" selected="selected">Disabled</option>
+				#end if
+			</select></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="left">Boxcar is a notifier for iOS and OSX</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_notifyboxcar">		
+		<tr>
+			<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What email address do you use for Boxcar?">Account</a></td>
+			<td class="pull-right"><input type="text" class="input-xxlarge" name="boxcaruser" id="boxcaruser" value="$autosub.BOXCARUSER" /></td>
+		</tr>
+		
+		<tr>
+			<td width="200px" align="left">&nbsp;</td>
+			<td align="right">
+				<span id="testBoxcar-result">Click below to test Boxcar.</span><br>
+				<input type="button" class="btn" value="Test Boxcar" id="testBoxcar" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</td>
+		</tr>
+	</table>
+	
+	<hr>
+	
 	<table cellpadding="0" cellspacing="0" border="0" width="70%">
 		<tr>
 			<td width="200px" align="left"><img src="$autosub.WEBROOT/images/notifiers/pushover.png" width="25px" height="24px" alt="" /> <b><a href="https://pushover.net/" target="_blank">Pushover</a></b></td>
