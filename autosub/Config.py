@@ -496,6 +496,7 @@ def ReadConfig(configfile):
         autosub.NMAPRIORITY = 0
         autosub.PROWLAPI = u"API key"
         autosub.NOTIFYPROWL = False
+        autosub.PROWLPRIORITY = 0
         autosub.NOTIFYPUSHALOT = False
         autosub.PUSHALOTAPI = u"API key"
         autosub.NOTIFYPUSHOVER = False
