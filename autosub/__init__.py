@@ -174,13 +174,7 @@ def Initialize():
     APICALLSMAX_TVDB = 2500
     APICALLS_TVDB = APICALLSMAX_TVDB
     APICALLSMAX_SUBSEEKER = 1000
-    APICALLS_SUBSEEKER = APICALLSMAX_SUBSEEKER
-    
-    if ADDIC7EDACCOUNT == 'VIP':
-        DOWNLOADS_A7MAX = 55
-    elif ADDIC7EDACCOUNT == 'Normal user':
-        DOWNLOADS_A7MAX = 30
-        
+    APICALLS_SUBSEEKER = APICALLSMAX_SUBSEEKER      
 
     #Set the language paramater for the API query
     ENGLISH = 'English'

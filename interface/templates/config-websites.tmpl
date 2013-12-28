@@ -31,7 +31,21 @@
 			</tr>
 		</table>
 		
-		<table class="table-config" id="content_addic7edlang">		
+		<table class="table-config" id="content_addic7edlang">
+			<tr>
+				<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="Do you have a Normal or VIP account? Default is Normal.">Account type</a></td>
+				<td class="pull-right">
+					<select name="addic7edaccount">
+					#if $autosub.ADDIC7EDACCOUNT == "VIP":
+						<option value="VIP" selected="selected">VIP</option>
+						<option value="Normal">Normal</option>
+					#elif $autosub.ADDIC7EDACCOUNT == "Normal":
+						<option value="VIP">VIP</option>
+						<option value="Normal" selected="selected">Normal</option>
+					#end if
+					</select>
+				</td>
+			</tr>		
 			<tr>
 				<td width="200px" align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="What is your username for addic7ed?">Username</a></td>
 				<td align="right"><input type="text" class="span2" name="addic7eduser" id="addic7eduser" value="$autosub.ADDIC7EDUSER" /></td>

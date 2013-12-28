@@ -189,7 +189,7 @@ def ReadConfig(configfile):
         if cfg.has_option("config", "addic7edaccount"):
             autosub.ADDIC7EDACCOUNT = cfg.get("config", "addic7edaccount")
         else:
-            autosub.ADDIC7EDACCOUNT = u""
+            autosub.ADDIC7EDACCOUNT = u"Normal"
         
         
     else:
@@ -222,7 +222,7 @@ def ReadConfig(configfile):
         autosub.ADDIC7EDLANG = u"None"
         autosub.ADDIC7EDUSER = u""
         autosub.ADDIC7EDPASSWD = u""
-        autosub.ADDIC7EDACCOUNT = u""
+        autosub.ADDIC7EDACCOUNT = u"Normal"
     
     if autosub.CONFIGVERSION < version.configversion:
         upgradeConfig(autosub.CONFIGVERSION, version.configversion)

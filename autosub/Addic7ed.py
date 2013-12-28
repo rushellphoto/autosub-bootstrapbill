@@ -361,6 +361,11 @@ class Addic7edAPI():
         addic7edpasswd = None
         self.logged_in = False
         
+        if autosub.ADDIC7EDACCOUNT == 'VIP':
+            autosub.DOWNLOADS_A7MAX = 55
+        elif autosub.ADDIC7EDACCOUNT == 'Normal':
+            autosub.DOWNLOADS_A7MAX = 30
+        
     def login(self, addic7eduser=None, addic7edpasswd=None):        
         log.debug('Addic7edAPI: Logging in')
         
