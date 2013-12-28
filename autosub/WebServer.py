@@ -440,6 +440,14 @@ class Home:
     @cherrypy.expose
     def shutdown(self):
         tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
+        
+        if not hasattr(autosub.CHECKSUB, 'stop'):
+            tmpl = PageTemplate(file="interface/templates/home.tmpl")
+            tmpl.message = "Auto-Sub is still running CheckSub, you cannot shutdown at the moment.<br>Please wait a few minutes."
+            tmpl.displaymessage = "Yes"
+            tmpl.modalheader = "Information"
+            return str(tmpl)
+        
         threading.Timer(2, autosub.AutoSub.stop).start()
         return str(tmpl)
 
