@@ -111,7 +111,16 @@ def CleanSerieName(series_name):
         series_name = re.sub("\.(?!\s)(\D)", " \\1", series_name)
         series_name = series_name.replace("_", " ")
         series_name = re.sub("-$", "", series_name)
-        return capwords(series_name.strip())
+        
+        words = [x.strip() for x in series_name.split()]
+        tempword=[]
+        for word in words:
+            if not word.isupper():
+                word = capwords(word)
+            tempword.append(word)
+        new_series_name = " ".join(tempword)
+
+        return new_series_name.strip()
     except TypeError:
         log.debug("CleanSerieName: There is no SerieName to clean")
 
