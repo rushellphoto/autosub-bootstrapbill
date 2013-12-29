@@ -29,7 +29,10 @@ def walkDir(path):
             if re.search('_failed_', dirname, re.IGNORECASE): 
                 log.debug("scanDisk: found a failed directory, skipping")
                 continue
-             
+            
+            if re.search('@eaDir', dirname, re.IGNORECASE): 
+                log.debug("scanDisk: found a Synology indexing/thumbnail directory, skipping")
+                continue
 
             for filename in filenames:
                 splitname = filename.split(".")
