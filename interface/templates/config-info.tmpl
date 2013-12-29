@@ -76,12 +76,16 @@
 			</tr>
 		</table>
 #if $autosub.ADDIC7EDLANG != "None":
-#set $checkCurrentDownloads = Addic7edAPI().checkCurrentDownloads()
 		<hr>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr>
 				<td width="140px">Addic7ed count</td>
+#if autosub.WANTEDQUEUELOCK != True:
+#set $checkCurrentDownloads = Addic7edAPI().checkCurrentDownloads()
 				<td>$autosub.DOWNLOADS_A7 of $autosub.DOWNLOADS_A7MAX</td>
+#else:
+				<td>Auto-Sub is currently checking Addic7ed for subtitles, unable to refresh data at the moment.</td>
+#end if
 			</tr>
 		</table>
 #end if
