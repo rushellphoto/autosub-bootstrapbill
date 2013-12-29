@@ -429,7 +429,7 @@ class Addic7edAPI():
     def download(self, downloadlink):
         count = self.checkCurrentDownloads(fullSession=False)
         if count >= autosub.DOWNLOADS_A7MAX:
-            log.error("Addic7edAPI: You have reached your 24h limit of 30 downloads! Download count: %s" % count)
+            log.error("Addic7edAPI: You have reached your 24h limit of %s downloads!" % autosub.DOWNLOADS_A7MAX)
             return None            
         if not self.logged_in:
             log.error("Addic7edAPI: You are not properly logged in. Check your credentials!")
@@ -453,11 +453,7 @@ class Addic7edAPI():
         time.sleep(6) #Max 0.5 connections each second
         return r.content
     
-    def checkCurrentDownloads(self, fullSession=True):
-        # When thread is running, you can't check for this
-        if autosub.WANTEDQUEUELOCK == True:
-            return False
-        
+    def checkCurrentDownloads(self, fullSession=True):      
         if fullSession:
             self.login()
             
@@ -470,7 +466,7 @@ class Addic7edAPI():
             count = re.search(pattern, myDownloads).group(1)
             count = int(count)
         except:
-            log.error("Addic7edAPI: Couldn't retrieve current download count for user %s" % self.user)
+            log.error("Addic7edAPI: Couldn't retrieve current download count for user %s" % addic7eduser)
             return False
         
         if fullSession:
