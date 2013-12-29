@@ -1,0 +1,29 @@
+#import autosub
+
+<table class="table-config">
+	<tr>
+		<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="To allow hosts to connect to any ip number assign to the machine use '0.0.0.0'.">Webserver IP</a></td>
+		<td class="pull-right"><input type="text" class="input-xxlarge" name="webserverip" value="$autosub.WEBSERVERIP" /></td>
+	</tr>
+
+	<tr>
+		<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Set port">Webserver Port</a></td>
+		<td class="pull-right"><input type="text" class="input-xxlarge" name="webserverport" value="$autosub.WEBSERVERPORT" /></td>
+	</tr>
+
+	<tr>
+		<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="If a username and password are set, the webserver requires authentication. Otherwise no authentication is set or required.">Username</a></td>
+		<td class="pull-right"><input type="text" class="input-xxlarge" name="username" value="$autosub.USERNAME" /> </td>
+	</tr>
+
+	<tr>
+		<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Set password.">Password</a></td>
+		<td class="pull-right"><input type="password" class="input-xxlarge" name="password" value="$autosub.PASSWORD" /></td>
+	</tr>
+
+    <tr>
+        <td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Set Webroot for reverse proxying. Example: to proxy it to http://localhost/autosub/ webroot needs to be: /autosub">Webroot</a></td>
+        <td class="pull-right"><input type="text" class="input-xxlarge" name="webroot" value="$autosub.WEBROOT" /></td>
+    </tr>
+
+</table>
