@@ -11,7 +11,6 @@ import time
 import urllib2
 import codecs
 import os
-import unicodedata
 
 from library import version
 from autosub.version import autosubversion
@@ -350,14 +349,6 @@ def getAttr(name):
             rv = o[name]
         return rv
     return inner_func
-
-def removeIllegalChars(faultyString):
-    # First code illegal chars into hexidecimal
-    decoded = unicode(faultyString.decode('utf-8'))
-    
-    # Then translate it into best matching ascii char 
-    correctString = ''.join((c for c in unicodedata.normalize('NFD', decoded) if unicodedata.category(c) != 'Mn'))
-    return correctString
     
 
 class API:

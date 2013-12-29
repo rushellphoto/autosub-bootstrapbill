@@ -8,6 +8,7 @@ import os
 import platform
 import re
 import time
+import unicodedata
 
 # Autosub specific modules
 import autosub
@@ -42,11 +43,14 @@ def walkDir(path):
                     if re.search('sample', filename): continue
 
                     if not platform.system() == 'Windows':
-                        tempFilename = autosub.Helpers.removeIllegalChars(filename)
-                        if not tempFilename is filename:
-                            os.rename(os.path.join(dirname, filename), os.path.join(dirname, tempFilename))
-                            log.info("scanDir: Renamed file %s" % tempFilename)
-                        filename = tempFilename
+                        # First transform to unicode
+                        decodedFilename = unicode(filename.decode('utf-8'))
+                        # Then translate it into best matching ascii char 
+                        correctedFilename = ''.join((c for c in unicodedata.normalize('NFD', decodedFilename) if unicodedata.category(c) != 'Mn'))
+                        if decodedFilename != correctedFilename:
+                            os.rename(os.path.join(dirname, filename), os.path.join(dirname, correctedFilename))
+                            log.info("scanDir: Renamed file %s" % correctedFilename)
+                        filename = correctedFilename
 
                     # What subtitle files should we expect?
             
