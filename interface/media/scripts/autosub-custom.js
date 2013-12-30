@@ -122,6 +122,14 @@ $(document).ready(function () {
 			function (data) { $('#testAddic7ed-result').html(data); });
     });
 	
+	$('#testPlex').click(function () {
+        $('#testPlex-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Plex Media Server...</span>');
+        var plexserverhost = $("#plexserverhost").val();
+		var plexserverport = $("#plexserverport").val();
+		$.get(autosubRoot + "/config/testPlex", {'plexserverhost': plexserverhost, 'plexserverport': plexserverport},
+			function (data) { $('#testPlex-result').html(data); });
+    });
+	
 	// Code to display the tooltip on the configuration page.
 	$("a").tooltip()
 	

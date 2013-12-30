@@ -162,7 +162,7 @@ class Config:
                          mailtoaddr, mailusername, mailpassword, mailsubject, mailencryption, mailauth, 
                          growlhost, growlport, growlpass, nmaapi, twitterkey, twittersecret, notifyprowl, 
                          prowlapi, prowlpriority, notifypushalot, pushalotapi, notifypushover, pushoverapi, 
-                         nmapriority, notifyboxcar, boxcaruser):
+                         nmapriority, notifyboxcar, boxcaruser, notifyplex, plexserverhost, plexserverport):
 
         # Set all internal notify variables
         autosub.NOTIFYMAIL = notifymail
@@ -193,6 +193,9 @@ class Config:
         autosub.PUSHOVERAPI = pushoverapi
         autosub.NOTIFYBOXCAR = notifyboxcar
         autosub.BOXCARUSER = boxcaruser
+        autosub.NOTIFYPLEX = notifyplex
+        autosub.PLEXSERVERHOST = plexserverhost
+        autosub.PLEXSERVERPORT = plexserverport
 
         # Now save to the configfile
         message = autosub.Config.WriteConfig(configsection="notifications")
@@ -336,6 +339,16 @@ class Config:
             return "Auto-Sub successfully logged on to <strong>Addic7ed</strong>."
         else:
             return "Failed to login to <strong>Addic7ed</strong>."
+    
+    @cherrypy.expose
+    def testPlex(self, plexserverhost, plexserverport):
+        
+        log.info("Notification: Testing Plex Media Server")
+        result = notify.plexmediaserver.test_update_library(plexserverhost, plexserverport)
+        if result:
+            return "Auto-Sub successfully updated the media library on your <strong>Plex Media Server</strong>."
+        else:
+            return "Failed to update the media library on your <strong>Plex Media Server</strong>."
     
     @cherrypy.expose
     def regTwitter(self, token_key=None, token_secret=None, token_pin=None):

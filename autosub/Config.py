@@ -474,6 +474,22 @@ def ReadConfig(configfile):
             else:
                 autosub.BOXCARUSER = u"Boxcar email"
             
+            #Plex Media Server
+            if cfg.has_option('notify', 'notifyplex'):
+                autosub.NOTIFYPLEX = cfg.getboolean('notify', 'notifyplex')
+            else:
+                autosub.NOTIFYPLEX = False
+            
+            if cfg.has_option('notify', 'plexserverhost'):
+                autosub.PLEXSERVERHOST = cfg.get('notify', 'plexserverhost')
+            else:
+                autosub.PLEXSERVERHOST = u"127.0.0.1"
+            
+            if cfg.has_option('notify', 'plexserverport'):
+                autosub.PLEXSERVERPORT = cfg.get('notify', 'plexserverport')
+            else:
+                autosub.PLEXSERVERPORT = u"32400"
+            
     else:
         # notify section is missing
         autosub.NOTIFYMAIL = False
@@ -503,6 +519,9 @@ def ReadConfig(configfile):
         autosub.PUSHOVERAPI = u"API key"
         autosub.NOTIFYBOXCAR = False
         autosub.BOXCARUSER = u"Boxcar email"
+        autosub.NOTIFYPLEX = False
+        autosub.PLEXSERVERHOST = u"127.0.0.1"
+        autosub.PLEXSERVERPORT = u"32400"
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
@@ -1029,6 +1048,9 @@ def saveNotifySection():
     cfg.set(section, "pushoverapi", autosub.PUSHOVERAPI)
     cfg.set(section, "notifyboxcar", str(autosub.NOTIFYBOXCAR))
     cfg.set(section, "boxcaruser", autosub.BOXCARUSER)
+    cfg.set(section, "notifyplex", str(autosub.NOTIFYPLEX))
+    cfg.set(section, "plexserverhost", autosub.PLEXSERVERHOST)
+    cfg.set(section, "plexserverport", autosub.PLEXSERVERPORT)
     
     with open(autosub.CONFIGFILE, 'wb') as cfile:
         cfg.write(cfile)
