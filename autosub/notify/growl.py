@@ -16,7 +16,7 @@ def _send_notify(message, growlhost, growlport):
     if not growlport:
         port = int(autosub.GROWLPORT)
             
-    if growlhost:
+    if growlport:
         port = int(growlport)
     
     try:
