@@ -38,6 +38,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 					<th>Group</th>
 					<th>Language</th>
 					<th>Time</th>
+					<th>&nbsp;</th>
 				</tr>
 			</thead>
 		<tbody>
@@ -45,34 +46,8 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 
 #set $title_escaped = $cgi.escape($var['title'], True)
 		<tr>
-			<td align="left">
-			
-			  <div class="nav-collapse skipshow">
-				  <ul class="nav">
-					<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown">$var['title']</a>
-					  <ul class="dropdown-menu">
-						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/0">Skip $var['title']</a></li>
-					  </ul>
-					</li>
-				  </ul>
-              </div>
-			
-			</td>
-			<td>
-			
-			  <div class="nav-collapse skipshow">
-				  <ul class="nav">
-					<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown">$var['season']</a>
-					  <ul class="dropdown-menu">
-						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/$var['season']">Skip $var['title'] S$var['season']</a></li>
-					  </ul>
-					</li>
-				  </ul>
-              </div>
-			
-			</td>
+			<td align="left"><a href="#" data-placement="right" data-toggle="tooltip" data-original-title="$var['originalFileLocationOnDisk']">$var['title']</a></td>
+			<td>$var['season']</td>
 			<td>$var['episode']</td>
 #if $type($var['source']) == UnicodeType:
 			<td>$var['source'].upper()</td>
@@ -109,8 +84,24 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #else
 			<td>Unknown</td>
 #end if	
+			<td>
+			
+			  <div class="nav-collapse skipshow">
+				  <ul class="nav">
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-wrench"></i></a>
+					  <ul class="dropdown-menu">
+						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/0">Skip $var['title']</a></li>
+						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/$var['season']">Skip $var['title'] S$var['season']</a></li>
+					  </ul>
+					</li>
+				  </ul>
+              </div>
+			
+			</td>
 		</tr>
 #end for
+
 		</tbody>
 			<tfoot>
 				<tr>
@@ -123,6 +114,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 					<th>Group</th>
 					<th>Language</th>
 					<th>Time</th>
+					<th>&nbsp;</th>
 				</tr>
 			</tfoot>
 		</table>
