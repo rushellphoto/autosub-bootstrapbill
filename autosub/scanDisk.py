@@ -122,7 +122,7 @@ class scanDisk():
                 walkDir(seriespath)
             except:
                 walkDir(str(seriespath))
-                                    
+                                          
         log.debug("scanDir: Finished round of local disk checking")
         autosub.WANTEDQUEUELOCK = False
  

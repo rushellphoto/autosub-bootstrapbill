@@ -593,6 +593,7 @@ def ReadConfig(configfile):
             "Man Up" :"1828238",
             "marvel's agents of s h i e l d" :"2364582",
             "marvels agents of s h i e l d" :"2364582",
+            "marvel agents of shield": "2364582",
             "agents of s h i e l d" :"2364582",
             "masters of sex" :"2137109",
             "Melissa And Joey" :"1597420",

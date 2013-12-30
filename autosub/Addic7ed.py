@@ -4,6 +4,8 @@
 # The Addic7ed method specific module
 #
 
+import os
+
 import re
 import library.requests as requests
 from bs4 import BeautifulSoup
@@ -12,6 +14,9 @@ import time
 import autosub
 import autosub.Helpers
 import autosub.Tvdb
+
+from itertools import product
+
 
 import logging
 
@@ -132,140 +137,255 @@ _releasegrps = ['0TV',
                'XS',
                'YFN']
 
+'''
+_releasegrpsHD = ['DIMENSION',
+                  'IMMERSE',
+                  'ORENJi',
+                  'EVOLVE',
+                  'CTU',
+                  'KILLERS',
+                  '2HD',
+                  'MOMENTUM']
+
+_rlsgroupsSD = ['LOL',
+                'ASAP',
+                'FQM',
+                'XOR',
+                'NoTV',
+                'FoV',
+                'FEVER',
+                'AVS',
+                'COMPULSiON']
+
+_rlsgroups_xvid = ['AFG']
+
+_rlsgroups_h264 = ['TLA',
+                  'BiA',
+                  'BAJSKOR']
+
+_rlsgroupsWebdl = ['YFN',
+                   'FUM',
+                   'BS',
+                   'ECI',
+                   'NTb',
+                   'CtrlHD',
+                   'NFHD',
+                   'KiNGS',
+                   'POD',
+                   'TVSmash'
+                   'HWD'
+                   'PCSYNDICATE']
+'''
+
 
 _releasegrp_pre = '(' + '|'.join(_releasegrps) + ')'
 
 releasegrp = [re.compile(_releasegrp_pre, re.IGNORECASE)]
 
-def _returnHit(regex, version_info):
+rlsgroupsHD = re.compile("(DIMENSION|IMMERSE|ORENJi|EVOLVE|CTU|KILLERS|2HD|MOMENTUM)" , re.IGNORECASE)
+rlsgroupsSD = re.compile("(LOL|ASAP|FQM|XOR|NoTV|FoV|FEVER|AVS|COMPULSiON)" , re.IGNORECASE)
+rlsgroups_xvid = re.compile("(AFG)" , re.IGNORECASE)
+rlsgroups_h264 = re.compile("(TLA|BiA|BAJSKORV)" , re.IGNORECASE)        
+rlsgroupsWebdl = re.compile("(YFN|FUM|BS|ECI|NTb|CtrlHD|NFHD|KiNGS|POD|TVSmash|HWD|PCSYNDICATE)" , re.IGNORECASE)
+
+
+def _returnHits(regex, version_info):
     # Should have been filter out beforehand
-    if not version_info:        
-        return -1
+    results=[]
+    if not version_info:
+        results.append(-1)        
+        return results
     
     for reg in regex:
         results = re.findall(reg, version_info)
         if results:
-            # Multiple hits in 1 group returns conflict
-            # These releases are ignored
-            if len(results) > 1:
-                return -1 
-            result = results[0].lower()
-            result = re.sub("[. _-]", "-", result)
-            return result
-        else:
-            return None
-    
+            results = [x.lower() for x in results]
+            results = [re.sub("[. _-]", "-", x) for x in results]
+            break
+    return results
+        
                     
-def _checkSynonyms(synonyms, result):
-    if result in synonyms.keys():
-        if synonyms[result]:
-            return synonyms[result].lower()
-    else:
-        return result
+def _checkSynonyms(synonyms, results):
+    for index, result in enumerate(results):
+        if result in synonyms.keys() and synonyms[result]:
+            results[index] = synonyms[result].lower()
+        else: continue
+    return results
 
 
 def _getSource(file_info):
-    result = _checkSynonyms(source_syn,
-                            _returnHit(source, file_info))
-    return result
+    results = _checkSynonyms(source_syn,
+                            _returnHits(source, file_info))
+    return results
 
 def _getQuality(file_info, HD):
-    result = _checkSynonyms(quality_syn,
-                            _returnHit(quality, file_info))
-    
-    if not result:
+    results = _checkSynonyms(quality_syn,
+                            _returnHits(quality, file_info))
+    '''
+    if not results:
         # CheckBOX HD on a7
         if HD:
-            result = u'720p'
-    
-    return result
+            results.append(u'720p')
+    '''
+    return results
 
 def _getCodec(file_info):
-    result = _checkSynonyms(codec_syn,
-                            _returnHit(codec, file_info))
+    results = _checkSynonyms(codec_syn,
+                            _returnHits(codec, file_info))
     
-    return result
+    return results
 
 def _getReleasegrp(file_info):
-    result = _returnHit(releasegrp, file_info)
+    results = _returnHits(releasegrp, file_info)
     
-    return result
+    return results
 
 
-def ReconstructRelease(version_info, HD):
-    # This method tries to reconstruct the original releasename
-    # based on the information in the version column
-    # in the a7 show-season overview page
+def _ParseVersionInfo(version_info, HD):
+    # Here the information in the a7 version columns get grouped 
+    # Either source, quality, codec or releasegroup
     
-    source = _getSource(version_info)
-    quality = _getQuality(version_info, HD)
-    codec = _getCodec(version_info)
-    releasegroup = _getReleasegrp(version_info)
-    release_dict = {}
+    sourceList = _getSource(version_info)
+    #print sourceList
+    qualityList = _getQuality(version_info, HD)
+    codecList = _getCodec(version_info)
+    releasegroupList = _getReleasegrp(version_info)
     
-    # Version info gave error (eg multiple releasegroups)
-    # Ignore these releases
-    if any(x==-1 for x in (source, quality, codec, releasegroup)):
-        return False
-    
-    # assume missing codec is x264, error prone!
-    
-    # Add info based on quality
-    if quality == u'1080p':
-        if not source:
-            source = u'web-dl'    
-    
-    # Add info based on source
-    if any(source == x for x in (u'web-dl', u'hdtv', u'bluray')):
-        if not codec:
-            codec = u'h264'
-    if source == u'web-dl':
-        # default quality for WEB-DLs is 720p
-        if not quality:
-            quality = u'720p'
+    parametersList = [sourceList, qualityList, codecList, releasegroupList]   
+    return parametersList
 
-    # Add info based on specific Releasegroups  
-    if releasegroup:  
-        rlsgroupsHD = re.compile("(DIMENSION|IMMERSE|ORENJi|EVOLVE|CTU|KILLERS|2HD|MOMENTUM)" , re.IGNORECASE)
-        rlsgroupsSD = re.compile("(LOL|ASAP|FQM|XOR|NoTV|FoV|FEVER|AVS|COMPULSiON)" , re.IGNORECASE)
-        rlsgroups_xvid = re.compile("(AFG)" , re.IGNORECASE)
-        rlsgroups_h264 = re.compile("(TLA|BiA|BAJSKORV)" , re.IGNORECASE)        
-        rlsgroupsWebdl = re.compile("(YFN|FUM|BS|ECI|NTb|CtrlHD|NFHD|KiNGS|POD|TVSmash|HWD|PCSYNDICATE)" , re.IGNORECASE)
+    
+def _checkIfParseable(parametersList):
+    for index,parameter in enumerate(parametersList):
+        if len(parameter) > 1:
+            tempLists = parametersList[:]
+            tempLists.pop(index)
+            for tempList in tempLists:
+                if len(tempList) > 1:
+                    return True
+    return False
+
+
+def _checkConflicts(versionDicts):
+# Check if data is consistent in the dict
+# If inconsistent, remove particalr dict
+    toDelete = []
+    for index, versionDict in enumerate(versionDicts):
+        source = versionDict['source']
+        quality = versionDict['quality']
+        codec = versionDict['codec']
+        releasegroup = versionDict['releasegrp']
         
-        if re.match(rlsgroupsHD, releasegroup) or \
-            re.match(rlsgroupsSD, releasegroup) or \
-            re.match(rlsgroups_h264, releasegroup) or \
-            re.match(rlsgroupsWebdl, releasegroup):
-            if not codec:
-                codec = u'h264'
-        if re.match(rlsgroups_xvid, releasegroup):
-            if not codec:
-                codec = u'xvid'
-        if re.match(rlsgroupsHD, releasegroup) or \
-            re.match(rlsgroupsSD, releasegroup) or \
-            re.match(rlsgroups_h264, releasegroup) or \
-            re.match(rlsgroups_xvid, releasegroup):
+        # The following combinations are inconsistent
+        
+        # Based on quality
+        if quality == u'1080p':
+            if source == u'hdtv':
+                toDelete.append(index)
+                continue
+    
+        # Based on source
+        if source == u'web-dl':
+            if codec == u'xvid':
+                toDelete.append(index)
+                continue
+        
+        elif source == u'hdtv':
+            if quality == u'1080p':
+                toDelete.append(index)
+                continue
+
+        # Based on releasegroup
+        if releasegroup:
+            if re.match(rlsgroupsHD, releasegroup) or \
+                re.match(rlsgroupsSD, releasegroup) or \
+                re.match(rlsgroups_h264, releasegroup) or \
+                re.match(rlsgroups_xvid, releasegroup):
+                if source == u'web-dl':
+                    toDelete.append(index)
+                    continue
+            if re.match(rlsgroupsHD, releasegroup) or \
+                re.match(rlsgroups_h264, releasegroup):
+                if codec == u'xvid':
+                    toDelete.append(index)
+                    continue
+            if re.match(rlsgroupsHD, releasegroup):
+                if quality == u'sd':
+                    toDelete.append(index)
+                    continue
+            if re.match(rlsgroups_xvid, releasegroup):
+                if codec == u'h264':
+                    toDelete.append(index)
+                    continue
+            if re.match(rlsgroupsSD, releasegroup):
+                if quality == u'720p' or quality == u'1080p':
+                    toDelete.append(index)
+                    continue
+    
+    # Delete duplicate indices
+    toDelete = sorted(set(toDelete))    
+    i = len(toDelete) -1
+    
+    while i>=0:
+        versionDicts.pop(toDelete[i])
+        i=i-1
+    return versionDicts   
+
+def _addInfo(versionDicts):
+    # assume missing codec is x264, error prone!
+    for index, versionDict in enumerate(versionDicts):
+        source = versionDict['source']
+        quality = versionDict['quality']
+        codec = versionDict['codec']
+        releasegroup = versionDict['releasegrp']
+    
+        # Based on quality
+        if quality == u'1080p':
             if not source:
-                source = u'hdtv'  
-        if re.match(rlsgroupsWebdl, releasegroup):
-            if not source:
-                source = u'web-dl'
-        if re.match(rlsgroupsHD, releasegroup):
+                versionDicts[index]['source'] = u'web-dl'    
+    
+        # Based on source
+        if any(source == x for x in (u'web-dl', u'hdtv', u'bluray')):
+            if not codec:
+                versionDicts[index]['codec'] = u'h264'
+        if source == u'web-dl':
+            # default quality for WEB-DLs is 720p
             if not quality:
-                quality = u'720p'
-        if re.match(rlsgroupsSD, releasegroup):
-            if not quality:
-                quality = u'sd'
-    
-    release_dict['source'] = source
-    release_dict['quality'] = quality
-    release_dict['codec'] = codec
-    release_dict['releasegrp'] = releasegroup
-    
-    return release_dict
-    
-def MakeTwinRelease(originalDict):
+                versionDicts[index]['quality'] = u'720p'
+
+        # Based on specific Releasegroups  
+        if releasegroup:  
+            if re.match(rlsgroupsHD, releasegroup) or \
+                re.match(rlsgroupsSD, releasegroup) or \
+                re.match(rlsgroups_h264, releasegroup) or \
+                re.match(rlsgroupsWebdl, releasegroup):
+                if not codec:
+                    versionDicts[index]['codec'] = u'h264'
+            if re.match(rlsgroups_xvid, releasegroup):
+                if not codec:
+                    versionDicts[index]['codec'] = u'xvid'
+            if re.match(rlsgroupsHD, releasegroup) or \
+                re.match(rlsgroupsSD, releasegroup) or \
+                re.match(rlsgroups_h264, releasegroup) or \
+                re.match(rlsgroups_xvid, releasegroup):
+                if not source:
+                    versionDicts[index]['source'] = u'hdtv'  
+            if re.match(rlsgroupsWebdl, releasegroup):
+                if not source:
+                    versionDicts[index]['source'] = u'web-dl'
+            if re.match(rlsgroupsHD, releasegroup):
+                if not quality:
+                    versionDicts[index]['quality'] = u'720p'
+            if re.match(rlsgroupsSD, releasegroup):
+                if not quality:
+                    versionDicts[index]['quality'] = u'sd'
+
+    return versionDicts
+
+
+def _MakeTwinRelease(originalDict):
     # This modules creates the SD/HD counterpart for releases with specific releasegroups
+    
     rlsgroup = originalDict['releasegrp']
     qual = originalDict['quality']
     source = originalDict['source']
@@ -290,13 +410,66 @@ def MakeTwinRelease(originalDict):
     if source == 'web-dl' and qual in qualSwitchDict_webdl.keys():
         twinDict['quality'] = qualSwitchDict_webdl[qual]
     
-    
     diff = set(originalDict.iteritems())-set(twinDict.iteritems())
     
     if len(diff):
         return twinDict
     else:
-        return None
+        return None  
+    
+
+def ReconstructRelease(version_info, HD, downloadUrl, hearingImpaired):
+    # This method reconstructs the original releasename    
+    # First split up all components
+    print
+    parametersList = _ParseVersionInfo(version_info, HD)
+    
+        
+    #First check for unresolvable versions (eg 3 sources combined with multiple qualities)
+    problem = _checkIfParseable(parametersList)
+    if problem:
+        return False
+    
+    
+    releasegroups = parametersList.pop()
+    codecs = parametersList.pop()
+    qualities = parametersList.pop()
+    sources = parametersList.pop()
+    
+    for x in [sources, qualities, codecs, releasegroups]:
+        if not x: x.append(None)
+    
+    
+    
+    downloadUrl = [downloadUrl]
+    hearingImpaired = [hearingImpaired]
+    version_info = [version_info]
+    
+    # Make version dictionaries
+    # Do a cartessian product    
+    versionDicts = [
+    {'source': sour, 'quality': qual, 'codec': cod, 'releasegrp': rls, 'a7': vers, 'url': url, 'HI': hi}
+    for sour, qual, cod, rls, vers, url, hi  in product(sources, qualities, codecs, releasegroups, version_info, downloadUrl, hearingImpaired)
+    ]
+    
+    
+    # Check for conflicting entries 
+    versionDicts = _checkConflicts(versionDicts)
+    if not versionDicts:
+        return False
+
+    # Fill in the gaps
+    versionDicts = _addInfo(versionDicts)
+
+    twinDicts = []
+    for originalDict in versionDicts:
+        twinDict = _MakeTwinRelease(originalDict)
+        if twinDict:
+            twinDicts.append(twinDict)
+    
+    versionDicts.extend(twinDicts)
+    
+    return versionDicts
 
 
 def makeReleaseName(versionInfo, title, season, episode, HI=False):
@@ -466,7 +639,7 @@ class Addic7edAPI():
             count = re.search(pattern, myDownloads).group(1)
             count = int(count)
         except:
-            log.error("Addic7edAPI: Couldn't retrieve current download count for user %s" % addic7eduser)
+            log.error("Addic7edAPI: Couldn't retrieve current download count")
             return False
         
         if fullSession:

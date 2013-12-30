@@ -205,8 +205,7 @@ def addic7ed(downloadDict):
     codec = downloadDict['codec']
     language = downloadDict['downlang']
     rlsgrp = downloadDict['releasegrp']
-    
-    
+        
     # Initiate the a7 API
     try:
         addic7edapi = autosub.Addic7ed.Addic7edAPI()
@@ -224,7 +223,7 @@ def addic7ed(downloadDict):
     soup = addic7edapi.get('/show/{show_id}&season={season}'.format(**params))
     if not soup:
         return (None,None)
-     
+    
     versions = []
     for row in soup('tr', class_='epeven completed'):
         releaseInfo = {}
@@ -240,18 +239,17 @@ def addic7ed(downloadDict):
         # use ASCII codec and put in lower case
         details = unicode(cells[4].string).encode('utf-8')
         details = details.lower()
-        HD = True if bool(cells[8].string) != None else False        
-        versionDict = autosub.Addic7ed.ReconstructRelease(details, HD)
-        if not versionDict:
+        HD = True if bool(cells[8].string) != None else False    
+        downloadUrl = cells[9].a['href'].encode('utf-8')
+        hearingImpaired = True if bool(cells[6].string) else False
+        
+        # Retun is a list of possible releases that match
+        versionDicts = autosub.Addic7ed.ReconstructRelease(details, HD, downloadUrl, hearingImpaired)
+        if not versionDicts:
             continue
-        versionDict['url'] = cells[9].a['href'].encode('utf-8')
-        versionDict['a7'] = details
-        versionDict['HI'] = bool(cells[6].string)
-        versions.append(versionDict)
-        twinDict = autosub.Addic7ed.MakeTwinRelease(versionDict)
-        if twinDict:
-            versions.append(twinDict)
 
+        versions.extend(versionDicts)
+        
     if not versions:
         return (None, None)        
     
@@ -311,9 +309,9 @@ def addic7ed(downloadDict):
           
 
 def DownloadSub(downloadDict, allResults):    
-
+    
     log.debug("downloadSubs: Starting DownloadSub function")    
-
+    
     if 'destinationFileLocationOnDisk' in downloadDict.keys():
         log.debug("downloadSubs: Download dict seems ook. Dumping it for debug: %r" % downloadDict) 
         destsrt = downloadDict['destinationFileLocationOnDisk']
