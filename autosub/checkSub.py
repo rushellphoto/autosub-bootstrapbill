@@ -34,6 +34,7 @@ class checkSub():
             autosub.WANTEDQUEUELOCK = True
         
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
+            print wantedItem
             title = wantedItem['title']
             season = wantedItem['season']
             episode = wantedItem['episode']
@@ -52,7 +53,7 @@ class checkSub():
                         
             if autosub.SUBENG == "":
                 # Check for overlapping names
-                if autosub.SUBNL != "":
+                if autosub.SUBNL != "" or not autosub.DOWNLOADDUTCH:
                     engsrtfile = os.path.splitext(originalfile)[0] + u".srt"
                 # Hardcoded fallback
                 else:

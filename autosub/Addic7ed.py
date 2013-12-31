@@ -633,11 +633,12 @@ class Addic7edAPI():
             self.login()
             
         soup = self.get('/panel.php')
-        aTag = soup.select('a[href^="mydownloads.php"]')
+        countTag = soup.select('a[href^="mydownloads.php"]')
+        #classTag = soup.select('a[href^="mydownloads.php"]')
         
         try:
             pattern = re.compile('(\d*).*of.*\d*', re.IGNORECASE)
-            myDownloads = aTag[0].text if aTag else False
+            myDownloads = countTag[0].text if countTag else False
             count = re.search(pattern, myDownloads).group(1)
             count = int(count)
         except:

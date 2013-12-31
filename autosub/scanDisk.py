@@ -70,7 +70,7 @@ def walkDir(path):
                         lang.append(autosub.ENGLISH)
                         if autosub.SUBENG == "":
                             # Check for overlapping names
-                            if autosub.SUBNL != "":
+                            if autosub.SUBNL != "" or not autosub.DOWNLOADDUTCH:
                                 srtfileeng = os.path.splitext(filename)[0] + u".srt"
                             # Hardcoded fallback
                             else:
