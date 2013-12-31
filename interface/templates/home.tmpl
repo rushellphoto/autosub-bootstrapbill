@@ -46,7 +46,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 
 #set $title_escaped = $cgi.escape($var['title'], True)
 		<tr>
-			<td align="left"><a href="#" data-placement="right" data-toggle="tooltip" data-original-title="$var['originalFileLocationOnDisk']">$var['title']</a></td>
+			<td align="left"><a data-placement="right" data-toggle="tooltip" data-original-title="$var['originalFileLocationOnDisk']">$var['title']</a></td>
 			<td>$var['season']</td>
 			<td>$var['episode']</td>
 #if $type($var['source']) == UnicodeType:
