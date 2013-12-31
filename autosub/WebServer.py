@@ -508,12 +508,7 @@ class WebServerInit():
     mobile = Mobile()
 
     def error_page_401(status, message, traceback, version):
-        tmpl = PageTemplate(file="interface/templates/home.tmpl")
-        message = "You don't have access to this resource.<br><br><center><textarea rows='15' wrap='off' class='spancustom'>%s</textarea></center>" %traceback
-        tmpl.message = message
-        tmpl.displaymessage = "Yes"
-        tmpl.modalheader = "Error %s" %status
-        return str(tmpl)
+        return "Error %s - You don't have access to this resource." %status
     
     def error_page_404(status, message, traceback, version):
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
