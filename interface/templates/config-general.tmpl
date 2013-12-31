@@ -1,27 +1,20 @@
 #import autosub
 
+		<hr>
+
 		<table class="table-config">
 			<tr>
 				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="The folder(s) where your series are located. You can add more folders by seperating with a comma. Example: D:\Series1,D:\Series2 - This field is required!">Series folder</a></td>
 				<td class="pull-right"><input type="text" class="input-xxlarge" name="rootpath" class="input-xxlarge" value="$autosub.ROOTPATH"/></td>
 			</tr>
-
-			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are downloaded when there are no Dutch subtitles available. Default is Enabled.">Fallback to English</a></td>
-				<td class="pull-right"><select name="fallbacktoeng">
-		#if $autosub.FALLBACKTOENG
-		  <option value="True" selected="selected">Enabled</option>
-		  <option value="False">Disabled</option>
-		#else
-		  <option value="True">Enabled</option>
-		  <option value="False" selected="selected">Disabled</option>
-		#end if
-		</select></td>
-			</tr>
-
+		</table>
+		
+		<hr>
+		
+		<table class="table-config">
 			<tr>
 				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, Dutch subtitles are always downloaded. Default is Enabled.">Download Dutch</a></td>
-				<td class="pull-right"><select name="downloaddutch">
+				<td class="pull-right"><select name="downloaddutch" id="downloaddutch" class="enabler">
 		#if $autosub.DOWNLOADDUTCH
 		  <option value="True" selected="selected">Enabled</option>
 		  <option value="False">Disabled</option>
@@ -31,11 +24,31 @@
 		#end if
 		</select></td>
 			</tr>
+		</table>
+
+		<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_downloaddutch">
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When enabled, Auto-Sub will send a notification when a Dutch subtitle has been downloaded. Default is Enabled.">Notify Dutch</a></td>
+				<td class="pull-right"><select name="notifynl">
+					#if $autosub.NOTIFYNL
+					  <option value="True" selected="selected">Enabled</option>
+					  <option value="False">Disabled</option>
+					#else
+					  <option value="True">Enabled</option>
+					  <option value="False" selected="selected">Disabled</option>
+					#end if
+				</select></td>
+			</tr>
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When downloading Dutch subtitles, files are renamed to: filename.srt when left emtpy. Default is Empty.">Dutch subtitle suffix</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="subnl" value="$autosub.SUBNL" /></td>
+			</tr>	
 
 			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are always downloaded. Default is Disabled.">Download English</a></td>
-				<td class="pull-right"><select name="downloadeng"> <!--value="$autosub.DOWNLOADENG" />-->
-		#if $autosub.DOWNLOADENG
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are downloaded when there are no Dutch subtitles available. Default is Enabled.">Fallback to English</a></td>
+				<td class="pull-right"><select name="fallbacktoeng">
+		#if $autosub.FALLBACKTOENG
 		  <option value="True" selected="selected">Enabled</option>
 		  <option value="False">Disabled</option>
 		#else
@@ -57,6 +70,23 @@
 				#end if
 				</select></td>
 			</tr>
+		</table>
+		
+		<hr>
+		
+		<table class="table-config">
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are always downloaded. Default is Disabled.">Download English</a></td>
+				<td class="pull-right"><select name="downloadeng"> <!--value="$autosub.DOWNLOADENG" />-->
+		#if $autosub.DOWNLOADENG
+		  <option value="True" selected="selected">Enabled</option>
+		  <option value="False">Disabled</option>
+		#else
+		  <option value="True">Enabled</option>
+		  <option value="False" selected="selected">Disabled</option>
+		#end if
+		</select></td>
+			</tr>
 
 			<tr>
 				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When enabled, Auto-Sub will send a notification when an English subtitle has been downloaded. Default is Enabled.">Notify English</a></td>
@@ -69,25 +99,7 @@
 					  <option value="False" selected="selected">Disabled</option>
 					#end if
 				</select></td>
-			</tr>			
-			
-			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When enabled, Auto-Sub will send a notification when a Dutch subtitle has been downloaded. Default is Enabled.">Notify Dutch</a></td>
-				<td class="pull-right"><select name="notifynl">
-					#if $autosub.NOTIFYNL
-					  <option value="True" selected="selected">Enabled</option>
-					  <option value="False">Disabled</option>
-					#else
-					  <option value="True">Enabled</option>
-					  <option value="False" selected="selected">Disabled</option>
-					#end if
-				</select></td>
-			</tr>
-
-			<tr>
-				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When downloading Dutch subtitles, files are renamed to: filename.srt when left emtpy. Default is Empty.">Dutch subtitle suffix</a></td>
-				<td class="pull-right"><input type="text" class="input-xxlarge" name="subnl" value="$autosub.SUBNL" /></td>
-			</tr>			
+			</tr>				
 			
 			<tr>
 				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Fallback to English is enabled, English subtitles are renamed to: filename.subeng.srt. Default is 'en' (filename.en.srt).">English subtitle suffix</a></td>
@@ -108,12 +120,12 @@
 			</tr>
 		</table>
 		
+		<hr>
+		
 		<table class="table-config">
 			<tr>
 				<td colspan="2" class="center">
-				<hr>
-				<strong>Advanced settings</strong>
-				<hr>
+				<strong>Advanced settings</strong><br><br>
 				</td>
 			<tr>
 				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="The folder where the Auto-Sub files are located. This field is required and is usually not changed!">Auto-Sub installation folder</a></td>
