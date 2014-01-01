@@ -88,8 +88,7 @@ def walkDir(path):
                         # If the Dutch and English subtitles do not exist, then add English to the wanted list.
                         if not os.path.exists(os.path.join(dirname, srtfilenl)) and not os.path.exists(os.path.join(dirname, srtfileeng)):
                             lang.append(autosub.ENGLISH)
-                            
-                    print 'Desired subs %s' % lang
+
                     if not lang:
                         # autosub.WANTEDQUEUE empty
                         continue

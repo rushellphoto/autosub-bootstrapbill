@@ -34,7 +34,6 @@ class checkSub():
             autosub.WANTEDQUEUELOCK = True
         
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
-            print wantedItem
             title = wantedItem['title']
             season = wantedItem['season']
             episode = wantedItem['episode']
