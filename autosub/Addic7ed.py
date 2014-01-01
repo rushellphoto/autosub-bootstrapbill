@@ -248,7 +248,6 @@ def _ParseVersionInfo(version_info, HD):
     # Either source, quality, codec or releasegroup
     
     sourceList = _getSource(version_info)
-    #print sourceList
     qualityList = _getQuality(version_info, HD)
     codecList = _getCodec(version_info)
     releasegroupList = _getReleasegrp(version_info)
@@ -423,7 +422,6 @@ def _MakeTwinRelease(originalDict):
 def ReconstructRelease(version_info, HD, downloadUrl, hearingImpaired):
     # This method reconstructs the original releasename    
     # First split up all components
-    print
     parametersList = _ParseVersionInfo(version_info, HD)
     
         
@@ -649,13 +647,13 @@ class Addic7edAPI():
             return count
     
     def determineAccountType(self):
-        self.login()
-        
-        soup = self.get('/panel.php')
-        classTag = soup.select("table.tabel70 > tr > td  > table.tabel > tr")[7]        
+        self.login()        
+
+        soup = self.get('/panel.php')        
+        classTag = soup.select("tr")[20]
         account = classTag.select("td")[1].string
+                
         self.logout()
-        
         return account
 
 '''Lookup table for a7 IDs (23/12/'12)

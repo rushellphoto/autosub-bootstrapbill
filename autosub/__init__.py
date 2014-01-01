@@ -197,7 +197,7 @@ def Initialize():
             DOWNLOADS_A7MAX = 55
         elif ADDIC7EDACCOUNT == 'Regular':
             DOWNLOADS_A7MAX = 30
-        #print 'Account type: %s' % ADDIC7EDACCOUNT
+        print 'Account type: %s' % ADDIC7EDACCOUNT
 
      
     

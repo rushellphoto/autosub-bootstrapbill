@@ -204,8 +204,6 @@ def addic7ed(downloadDict):
     quality = downloadDict['quality']
     codec = downloadDict['codec']
     language = downloadDict['downlang']
-    print 'in a7'
-    print language
     rlsgrp = downloadDict['releasegrp']
         
     a7ID = autosub.Addic7ed.geta7ID(title)
@@ -316,7 +314,6 @@ def DownloadSub(downloadDict, allResults, a7Response):
         a7Hit = False # When a7 hit is found
 
         language = downloadDict['downlang']   
-        print 'language downloadsubs: %s' % language     
         fileStringIO = None
         website = None
         release = None

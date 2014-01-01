@@ -77,7 +77,6 @@ class checkSub():
                 continue
             
             langtmp = languages[:]
-            print langtmp
             for lang in langtmp:
                 log.debug("checkSub: trying to get a downloadlink for %s, language is %s" % (originalfile, lang))
                 # get all links higher than the minmatch as input for downloadSub
