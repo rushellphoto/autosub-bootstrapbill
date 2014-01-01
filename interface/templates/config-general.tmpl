@@ -1,0 +1,222 @@
+#import autosub
+
+		<hr>
+
+		<table class="table-config">
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="The folder(s) where your series are located. You can add more folders by seperating with a comma. Example: D:\Series1,D:\Series2 - This field is required!">Series folder</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="rootpath" class="input-xxlarge" value="$autosub.ROOTPATH"/></td>
+			</tr>
+		</table>
+		
+		<hr>
+		
+		<table class="table-config">
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, Dutch subtitles are always downloaded. Default is Enabled.">Download Dutch</a></td>
+				<td class="pull-right"><select name="downloaddutch" id="downloaddutch" class="enabler">
+		#if $autosub.DOWNLOADDUTCH
+		  <option value="True" selected="selected">Enabled</option>
+		  <option value="False">Disabled</option>
+		#else
+		  <option value="True">Enabled</option>
+		  <option value="False" selected="selected">Disabled</option>
+		#end if
+		</select></td>
+			</tr>
+		</table>
+
+		<table cellpadding="0" cellspacing="0" border="0" width="70%" id="content_downloaddutch">
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When enabled, Auto-Sub will send a notification when a Dutch subtitle has been downloaded. Default is Enabled.">Notify Dutch</a></td>
+				<td class="pull-right"><select name="notifynl">
+					#if $autosub.NOTIFYNL
+					  <option value="True" selected="selected">Enabled</option>
+					  <option value="False">Disabled</option>
+					#else
+					  <option value="True">Enabled</option>
+					  <option value="False" selected="selected">Disabled</option>
+					#end if
+				</select></td>
+			</tr>
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When downloading Dutch subtitles, files are renamed to: filename.srt when left emtpy. Default is Empty.">Dutch subtitle suffix</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="subnl" value="$autosub.SUBNL" /></td>
+			</tr>	
+
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are downloaded when there are no Dutch subtitles available. Default is Enabled.">Fallback to English</a></td>
+				<td class="pull-right"><select name="fallbacktoeng">
+		#if $autosub.FALLBACKTOENG
+		  <option value="True" selected="selected">Enabled</option>
+		  <option value="False">Disabled</option>
+		#else
+		  <option value="True">Enabled</option>
+		  <option value="False" selected="selected">Disabled</option>
+		#end if
+		</select></td>
+			</tr>
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Do you want to remove the English subtitle when the Dutch subtitle is downloaded?">Clean up English subtitle</a></td>
+				<td class="pull-right"><select name="englishsubdelete">
+				#if $autosub.ENGLISHSUBDELETE == True:
+					<option value="True" selected="selected">Enabled</option>
+					<option value="False">Disabled</option>
+				#else
+					<option value="True">Enabled</option>
+					<option value="False" selected="selected">Disabled</option>
+				#end if
+				</select></td>
+			</tr>
+		</table>
+		
+		<hr>
+		
+		<table class="table-config">
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are always downloaded. Default is Disabled.">Download English</a></td>
+				<td class="pull-right"><select name="downloadeng"> <!--value="$autosub.DOWNLOADENG" />-->
+		#if $autosub.DOWNLOADENG
+		  <option value="True" selected="selected">Enabled</option>
+		  <option value="False">Disabled</option>
+		#else
+		  <option value="True">Enabled</option>
+		  <option value="False" selected="selected">Disabled</option>
+		#end if
+		</select></td>
+			</tr>
+
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When enabled, Auto-Sub will send a notification when an English subtitle has been downloaded. Default is Enabled.">Notify English</a></td>
+				<td class="pull-right"><select name="notifyen">
+					#if $autosub.NOTIFYEN
+					  <option value="True" selected="selected">Enabled</option>
+					  <option value="False">Disabled</option>
+					#else
+					  <option value="True">Enabled</option>
+					  <option value="False" selected="selected">Disabled</option>
+					#end if
+				</select></td>
+			</tr>				
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="When Fallback to English is enabled, English subtitles are renamed to: filename.subeng.srt. Default is 'en' (filename.en.srt).">English subtitle suffix</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="subeng" value="$autosub.SUBENG" /></td>
+			</tr>
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Which table do you want displayed first on the Home page?">Home table order</a></td>
+				<td class="pull-right"><select name="homelayoutfirst">
+				#if $autosub.HOMELAYOUTFIRST == "Wanted"
+					<option value="Wanted" selected="selected">Wanted, Downloaded</option>
+					<option value="Downloaded">Downloaded, Wanted</option>
+				#else
+					<option value="Wanted">Wanted, Downloaded</option>
+					<option value="Downloaded" selected="selected">Downloaded, Wanted</option>
+				#end if
+				</select></td>
+			</tr>
+		</table>
+		
+		<hr>
+		
+		<table class="table-config">
+			<tr>
+				<td colspan="2" class="center">
+				<strong>Advanced settings</strong><br><br>
+				</td>
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="The folder where the Auto-Sub files are located. This field is required and is usually not changed!">Auto-Sub installation folder</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="path" value="$autosub.PATH" readonly /></td>
+			</tr>
+
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="The location and the name of the logfile. When not set, AutoSubService.log will be used. This field is required!">Logfile</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="logfile" value="$autosub.LOGFILE" /></td>
+			</tr>			
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Should we start a browser every time Auto-Sub starts? This overwrites the commandline parameters.">Launchbrowser</a></td>
+				<td class="pull-right"><select name="launchbrowser">
+		#if $autosub.LAUNCHBROWSER
+		  <option value="True" selected="selected">Enabled</option>
+		  <option value="False">Disabled</option>
+		#else
+		  <option value="True">Enabled</option>
+		  <option value="False" selected="selected">Disabled</option>
+		#end if
+				</select></td>
+			</tr>
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Auto-Sub will run this command after downloading a subtitle. Check the wiki for more info.">Post-process CMD</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="postprocesscmd" value="$autosub.POSTPROCESSCMD" /></td>
+			</tr>
+			
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories.">Skip hidden directories</a></td>
+				<td class="pull-right"><select name="skiphiddendirs">
+				#if $autosub.SKIPHIDDENDIRS
+					<option value="True" selected="selected">Enabled</option>
+					<option value="False">Disabled</option>
+				#else
+					<option value="True">Enabled</option>
+					<option value="False" selected="selected">Disabled</option>
+				#end if
+				</select></td>
+			</tr>
+			
+			<tr>
+				<td class="td-first-config config-checkbox"><a data-placement="right" data-toggle="tooltip" data-original-title="What items should match before a subtitle is downloaded via the API?">MinMatchScore</a></td>
+				<td class="pull-right config-checkbox">
+				#set $temp = $autosub.MINMATCHSCORE
+				#set $temp = $temp - 8
+				Source: 
+				#if $temp >= 0
+					<input type="checkbox" name="mmssource" checked value="1">
+				#else
+					<input type="checkbox" name="mmssource" value="1">
+					#set $temp = $temp + 8
+				#end if
+
+				#set $temp = $temp - 4
+				Quality: 
+				#if $temp >= 0
+					<input type="checkbox" name="mmsquality" checked value="1">
+				#else
+					<input type="checkbox" name="mmsquality" value="1">
+					#set $temp = $temp + 4
+				#end if
+
+				#set $temp = $temp - 2
+				Codec: 
+				#if $temp >= 0
+					<input type="checkbox" name="mmscodec" checked value="1">
+				#else
+					<input type="checkbox" name="mmscodec" value="1">
+					#set $temp = $temp + 2
+				#end if
+
+				#set $temp = $temp - 1
+				Releasegroup: 
+				#if $temp >= 0
+					<input type="checkbox" name="mmsrelease" checked value="1">
+				#else
+					<input type="checkbox" name="mmsrelease" value="1">
+				#end if
+				
+				</td>
+			</tr>
+		
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Change the interval of the ScanDisk thread, it scans the disk for missing subtitle files. Time is in seconds, default is 3600 seconds.">ScanDisk</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="scandisk" value="$autosub.SCHEDULERSCANDISK" /></td>
+			</tr>
+
+			<tr>
+				<td class="td-first-config"><a data-placement="right" data-toggle="tooltip" data-original-title="Change the interval of the CheckSub thread, it checks if there is a match on the Subtitleseeker API. Cannot not be set lower then 21600. Time is in seconds, default is 28800 seconds.">CheckSub</a></td>
+				<td class="pull-right"><input type="text" class="input-xxlarge" name="checksub" value="$autosub.SCHEDULERCHECKSUB" /></td>
+			</tr>
+		</table>
