@@ -3,6 +3,8 @@ import logging.handlers
 import time
 from autosub.version import autosubversion
 
+import autosub.Addic7ed
+
 ROOTPATH=None
 FALLBACKTOENG=None
 DOWNLOADENG=None
@@ -42,6 +44,7 @@ ADDIC7EDUSER=None
 ADDIC7EDPASSWD=None
 ADDIC7EDACCOUNT=None
 
+ADDIC7EDAPI = None
 WANTEDQUEUE=None
 WANTEDQUEUELOCK=False
 LASTESTDOWNLOAD=None
@@ -129,7 +132,7 @@ def Initialize():
     MAILPASSWORD, MAILSUBJECT, MAILENCRYPTION, \
     GROWLHOST, GROWLPORT, GROWLPASS, \
     TWITTERKEY, TWITTERSECRET, NMAAPI, NOTIFYMAIL, NOTIFYGROWL, NOTIFYTWITTER, NOTIFYNMA, \
-    WANTEDQUEUE, \
+    WANTEDQUEUE, ADDIC7EDAPI, \
     APIKEY, API, IMDBAPI, TIMEOUT, APICALLS_TVDB, \
     APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX_TVDB, APICALLSMAX_SUBSEEKER, APICALLS_SUBSEEKER, \
     SCHEDULERSCANDISK, SCHEDULERCHECKSUB, SCHEDULERDOWNLOADSUBS, DOWNLOADS_A7, DOWNLOADS_A7MAX, \
@@ -185,9 +188,18 @@ def Initialize():
     ENGLISH = 'English'
     DUTCH = 'Dutch'
     
-    #temp
-    #DOWNLOADDUTCH = False
     
+    # Set the download limit for the addic7ed account
+    if ADDIC7EDUSER and ADDIC7EDPASSWD:
+        addic7edapi = autosub.Addic7ed.Addic7edAPI()
+        ADDIC7EDACCOUNT = addic7edapi.determineAccountType() 
+        if ADDIC7EDACCOUNT == 'VIP':
+            DOWNLOADS_A7MAX = 55
+        elif ADDIC7EDACCOUNT == 'Regular':
+            DOWNLOADS_A7MAX = 30
+        #print 'Account type: %s' % ADDIC7EDACCOUNT
+
+     
     
 def initLogging(logfile):
     global LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, \

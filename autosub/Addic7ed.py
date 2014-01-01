@@ -535,12 +535,7 @@ class Addic7edAPI():
         addic7eduser = None
         addic7edpasswd = None
         self.logged_in = False
-        
-        if autosub.ADDIC7EDACCOUNT == 'VIP':
-            autosub.DOWNLOADS_A7MAX = 55
-        elif autosub.ADDIC7EDACCOUNT == 'Normal':
-            autosub.DOWNLOADS_A7MAX = 30
-        
+                
     def login(self, addic7eduser=None, addic7edpasswd=None):        
         log.debug('Addic7edAPI: Logging in')
         
@@ -652,7 +647,16 @@ class Addic7edAPI():
                 return True
         else:    
             return count
-
+    
+    def determineAccountType(self):
+        self.login()
+        
+        soup = self.get('/panel.php')
+        classTag = soup.select("table.tabel70 > tr > td  > table.tabel > tr")[7]        
+        account = classTag.select("td")[1].string
+        self.logout()
+        
+        return account
 
 '''Lookup table for a7 IDs (23/12/'12)
    Key = IMDB ID
