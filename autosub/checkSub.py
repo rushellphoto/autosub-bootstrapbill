@@ -90,13 +90,16 @@ class checkSub():
                     
                 if not DownloadSub(downloadItem, allResults):
                     continue
-                    
+
+                #Remove downloaded language
+                languages.remove(lang)
+                
                 if lang == autosub.DUTCH:
                     if (autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and autosub.ENGLISH in languages:
                         log.debug('checkSub: We found a dutch subtitle and fallback is true. Removing the english subtitle from the wantedlist.')
                         languages.remove(autosub.ENGLISH)
                 
-                    if lang == autosub.DUTCH and autosub.ENGLISHSUBDELETE == True:
+                    if autosub.ENGLISHSUBDELETE == True:
                         if os.path.exists(nlsrtfile) and os.path.exists(engsrtfile):
                             log.debug("checkSub: Trying to delete English subtitle.")
                             try:
@@ -105,13 +108,11 @@ class checkSub():
                             except:
                                 log.error("checkSub: Error while trying to remove subtitle %s." % engsrtfile)
                         else:
-                            log.info("checkSub: English subtitle not found.")
-                        break
+                            log.debug("checkSub: English subtitle not found.")
                 
-                    
-                languages.remove(lang)
                 if len(languages) == 0:
                     toDelete_wantedQueue.append(index)
+                break
                                         
         i = len(toDelete_wantedQueue) - 1
         while i >= 0:
