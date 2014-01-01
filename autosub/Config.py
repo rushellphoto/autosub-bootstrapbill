@@ -191,11 +191,6 @@ def ReadConfig(configfile):
         else:
             autosub.ADDIC7EDPASSWD = u""
         
-        if cfg.has_option("config", "addic7edaccount"):
-            autosub.ADDIC7EDACCOUNT = cfg.get("config", "addic7edaccount")
-        else:
-            autosub.ADDIC7EDACCOUNT = u"Normal"
-        
         
     else:
         # config section is missing
@@ -228,7 +223,6 @@ def ReadConfig(configfile):
         autosub.ADDIC7EDLANG = u"None"
         autosub.ADDIC7EDUSER = u""
         autosub.ADDIC7EDPASSWD = u""
-        autosub.ADDIC7EDACCOUNT = u"Normal"
     
     if autosub.CONFIGVERSION < version.configversion:
         upgradeConfig(autosub.CONFIGVERSION, version.configversion)
@@ -903,7 +897,6 @@ def saveConfigSection():
     cfg.set(section, "addic7edlang", autosub.ADDIC7EDLANG)
     cfg.set(section, "addic7eduser", autosub.ADDIC7EDUSER)
     cfg.set(section, "addic7edpasswd", autosub.ADDIC7EDPASSWD)
-    cfg.set(section, "addic7edaccount", autosub.ADDIC7EDACCOUNT)
     
     with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as cfile:
         cfg.write(cfile)

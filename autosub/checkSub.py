@@ -33,6 +33,15 @@ class checkSub():
         else:
             autosub.WANTEDQUEUELOCK = True
         
+        #     # Initiate the Addic7ed API
+        if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD:
+            try:
+                autosub.ADDIC7EDAPI = autosub.Addic7ed.Addic7edAPI()
+                a7Response= autosub.ADDIC7EDAPI.login()
+            except:
+                log.debug("checkSub: Couldn't connect with Addic7ed.com")
+                
+        
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
             title = wantedItem['title']
             season = wantedItem['season']
@@ -87,7 +96,7 @@ class checkSub():
                 downloadItem = wantedItem.copy()
                 downloadItem['downlang'] = lang
                     
-                if not DownloadSub(downloadItem, allResults):
+                if not DownloadSub(downloadItem, allResults, a7Response):
                     continue
 
                 #Remove downloaded language
@@ -112,6 +121,11 @@ class checkSub():
                 if len(languages) == 0:
                     toDelete_wantedQueue.append(index)
                 break
+         
+        if autosub.ADDIC7EDAPI:
+            autosub.ADDIC7EDAPI.logout()
+        
+         
                                         
         i = len(toDelete_wantedQueue) - 1
         while i >= 0:

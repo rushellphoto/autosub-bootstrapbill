@@ -206,21 +206,13 @@ def addic7ed(downloadDict):
     language = downloadDict['downlang']
     rlsgrp = downloadDict['releasegrp']
         
-    # Initiate the a7 API
-    try:
-        addic7edapi = autosub.Addic7ed.Addic7edAPI()
-        addic7edapi.login()
-    except:
-        return (None,None)
-    
-    # Fetch a7 ID for show
     a7ID = autosub.Addic7ed.geta7ID(title)
     
     if not a7ID:     
         return (None, None)
     
     params = {'show_id': a7ID, 'season': season}
-    soup = addic7edapi.get('/show/{show_id}&season={season}'.format(**params))
+    soup = autosub.ADDIC7EDAPI.get('/show/{show_id}&season={season}'.format(**params))
     if not soup:
         return (None,None)
     
@@ -274,8 +266,7 @@ def addic7ed(downloadDict):
             continue                
         #First try to get non-HI version
         try:
-            subtitleFile = addic7edapi.download(downloadLink)            
-            addic7edapi.logout()
+            subtitleFile = autosub.ADDIC7EDAPI.download(downloadLink)            
             releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode)
             if subtitleFile:
                 return StringIO(subtitleFile), releaseInfo
@@ -291,8 +282,7 @@ def addic7ed(downloadDict):
         
         log.debug("downloadSubs.addic7ed: Trying to download HI subtitle as fall back")      
         try:
-            subtitleFile = addic7edapi.download(downloadLink)            
-            addic7edapi.logout()
+            subtitleFile = autosub.ADDIC7EDAPI.download(downloadLink)            
             releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode, HI=True)
             if subtitleFile:
                 return StringIO(subtitleFile), releaseInfo
@@ -301,14 +291,12 @@ def addic7ed(downloadDict):
             log.debug("downloadSubs.addic7ed: Subtitle file at %s couldn't be retrieved" % downloadLink)
     
     
-    addic7edapi.logout()
     log.debug("downloadSubs.addic7ed: No suitable subtitle was found on Addic7ed.com")
     log.debug("downloadSubs.addic7ed: Try to find one on the other websites") 
-    addic7edapi.logout()
     return (None, None)  
           
 
-def DownloadSub(downloadDict, allResults):    
+def DownloadSub(downloadDict, allResults, a7Response):    
     
     log.debug("downloadSubs: Starting DownloadSub function")    
     
@@ -325,21 +313,19 @@ def DownloadSub(downloadDict, allResults):
         
         a7Hit = False # When a7 hit is found
 
-        language = downloadDict['downlang']        
+        language = downloadDict['downlang']   
         fileStringIO = None
         website = None
         release = None
  
         # First look in Addic7ed for a hit            
-        if autosub.ADDIC7EDLANG == language or autosub.ADDIC7EDLANG == 'Both':
-            # To avoid unnecessary a7 searching
-            if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD:
-                log.debug("downloadSubs: Going to Addic7ed.com to find subtitle %s" % destsrt)
-                fileStringIO, release = addic7ed(downloadDict)
-                if fileStringIO:
-                    website = 'addic7ed.com'
-                    log.debug("downloadSubs: Found subtitle on addic7ed.com")
-                    a7Hit = True
+        if (autosub.ADDIC7EDLANG == language or autosub.ADDIC7EDLANG == 'Both') and a7Response:
+            log.debug("downloadSubs: Going to Addic7ed.com to find subtitle %s" % destsrt)
+            fileStringIO, release = addic7ed(downloadDict)
+            if fileStringIO:
+                website = 'addic7ed.com'
+                log.debug("downloadSubs: Found subtitle on addic7ed.com")
+                a7Hit = True
         
         if allResults:
             for result in allResults:   
