@@ -32,7 +32,10 @@ def walkDir(path):
                 continue
             
             if re.search('@eaDir', dirname, re.IGNORECASE): 
-                log.debug("scanDisk: found a Synology indexing/thumbnail directory, skipping")
+                log.debug("scanDisk: found a Synology indexing directory, skipping this folder and all subfolders.")
+                tmpdirs = dirnames[:]
+                for dir in tmpdirs:
+                    dirnames.remove(dir)
                 continue
 
             for filename in filenames:
