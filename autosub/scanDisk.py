@@ -56,34 +56,43 @@ def walkDir(path):
                     
                     lang=[]
                     
-                    if autosub.DOWNLOADDUTCH:
-                        lang.append(autosub.DUTCH)
-                        if autosub.SUBNL != "":
-                            srtfilenl = os.path.splitext(filename)[0] + u"." + autosub.SUBNL + u".srt"
-                        else:
-                            srtfilenl = os.path.splitext(filename)[0] + u".srt"
-                        # If it already exists, then delete it again from wanted list
-                        if os.path.exists(os.path.join(dirname, srtfilenl)):
-                            lang.remove(autosub.DUTCH)
+                    #Check what the Dutch subtitle would be.
+                    if autosub.SUBNL != "":
+                        srtfilenl = os.path.splitext(filename)[0] + u"." + autosub.SUBNL + u".srt"
+                    else:
+                        srtfilenl = os.path.splitext(filename)[0] + u".srt"
                     
-                    if autosub.DOWNLOADENG or autosub.FALLBACKTOENG:
-                        lang.append(autosub.ENGLISH)
-                        if autosub.SUBENG == "":
-                            # Check for overlapping names
-                            if autosub.SUBNL != "" or not autosub.DOWNLOADDUTCH:
-                                srtfileeng = os.path.splitext(filename)[0] + u".srt"
-                            # Hardcoded fallback
-                            else:
-                                srtfileeng = os.path.splitext(filename)[0] + u".en.srt"
+                    #Check what the English subtitle would be.
+                    if autosub.SUBENG == "":
+                        # Check for overlapping names
+                        if autosub.SUBNL != "" or not autosub.DOWNLOADDUTCH:
+                            srtfileeng = os.path.splitext(filename)[0] + u".srt"
+                        # Hardcoded fallback
                         else:
-                            srtfileeng = os.path.splitext(filename)[0] + u"." + autosub.SUBENG + u".srt"
-                        if os.path.exists(os.path.join(dirname, srtfileeng)):
-                            lang.remove(autosub.ENGLISH)
+                            srtfileeng = os.path.splitext(filename)[0] + u".en.srt"
+                    else:
+                        srtfileeng = os.path.splitext(filename)[0] + u"." + autosub.SUBENG + u".srt"
+                    
+                    # Check which languages we want to download based on user settings.
+                    if autosub.DOWNLOADDUTCH:
+                        # If the Dutch subtitle doesn't exist, then add it to the wanted list.
+                        if not os.path.exists(os.path.join(dirname, srtfilenl)):
+                            lang.append(autosub.DUTCH)
+
+                    if autosub.DOWNLOADENG:
+                        # If the English subtitle doesn't exist, then add it to the wanted list.
+                        if not os.path.exists(os.path.join(dirname, srtfileeng)):
+                            lang.append(autosub.ENGLISH)
+                    
+                    if (autosub.FALLBACKTOENG and autosub.DOWNLOADDUTCH) and not autosub.DOWNLOADENG:
+                        # If the Dutch and English subtitles do not exist, then add English to the wanted list.
+                        if not os.path.exists(os.path.join(dirname, srtfilenl)) and not os.path.exists(os.path.join(dirname, srtfileeng)):
+                            lang.append(autosub.ENGLISH)
                             
                     print 'Desired subs %s' % lang
                     if not lang:
                         # autosub.WANTEDQUEUE empty
-                        return None
+                        continue
 
                     log.debug("scanDir: File %s is missing subtitle(s): %s" % (filename, ', '.join(map(str,lang))))
                     filenameResults = ProcessFilename(os.path.splitext(filename)[0], os.path.splitext(filename)[1])
