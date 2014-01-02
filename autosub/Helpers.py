@@ -331,8 +331,12 @@ def DisplayLogFile(loglevel):
 
 def ClearLogFile():
     if os.path.isfile(autosub.LOGFILE):
-        open(autosub.LOGFILE, 'w').close()
-        return None
+        try:
+            open(autosub.LOGFILE, 'w').close()
+            message = "Logfile has been cleared!"
+        except IOError:
+            message = "Logfile is currently being used by another process. Please try again later."
+        return message
 
 def ConvertTimestamp(datestring):
     date_object = time.strptime(datestring, "%Y-%m-%d %H:%M:%S")

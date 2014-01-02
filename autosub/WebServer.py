@@ -483,9 +483,8 @@ class Log:
     
     @cherrypy.expose
     def clearLog(self):
-        autosub.Helpers.ClearLogFile()
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
-        tmpl.message = "Logfile has been cleared!"
+        tmpl.message = autosub.Helpers.ClearLogFile()
         tmpl.displaymessage = "Yes"
         tmpl.modalheader = "Information"
         return str(tmpl)
