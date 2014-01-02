@@ -49,6 +49,7 @@ class checkSub():
             originalfile = wantedItem['originalFileLocationOnDisk']
             languages = wantedItem['lang']
             
+            
             if not Helpers.checkAPICallsTvdb() or not Helpers.checkAPICallsSubSeeker():
                 #Make sure that we are allow to connect to SubtitleSeeker and TvDB
                 log.warning("checkSub: out of api calls")
@@ -120,7 +121,6 @@ class checkSub():
                 
                 if len(languages) == 0:
                     toDelete_wantedQueue.append(index)
-                break
          
         if autosub.ADDIC7EDAPI:
             autosub.ADDIC7EDAPI.logout()
