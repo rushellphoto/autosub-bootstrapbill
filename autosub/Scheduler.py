@@ -1,4 +1,4 @@
-# Autosub autosub/Scheduler.py - http://code.google.com/p/auto-sub/
+# Autosub autosub/Scheduler.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Autosub Scheduler module
 #

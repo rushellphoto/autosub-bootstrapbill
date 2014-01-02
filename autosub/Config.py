@@ -1,4 +1,4 @@
-# Autosub Config.py - http://code.google.com/p/auto-sub/
+# Autosub Config.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Autosub config Module
 #

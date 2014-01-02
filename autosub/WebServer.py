@@ -1,3 +1,10 @@
+#
+# Autosub Webserver.py - https://code.google.com/p/autosub-bootstrapbill/
+#
+# The Webserver module
+#
+
+
 import cherrypy
 import logging
 
@@ -21,7 +28,7 @@ def redirect(abspath, *args, **KWs):
     assert abspath[0] == '/'
     raise cherrypy.HTTPRedirect(autosub.WEBROOT + abspath, *args, **KWs)
 
-# TODO: Create webdesign
+
 class PageTemplate (Template):
     #Placeholder for future, this object can be used to add stuff to the template
     pass

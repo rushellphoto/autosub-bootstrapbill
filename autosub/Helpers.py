@@ -1,4 +1,4 @@
-# Autosub Helpers.py - http://code.google.com/p/auto-sub/
+# Autosub Helpers.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Autosub helper functions
 #

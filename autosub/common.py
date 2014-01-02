@@ -1,4 +1,4 @@
-# Autosub common.py - http://code.google.com/p/auto-sub/
+# Autosub common.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Autosub checkSub module
 #

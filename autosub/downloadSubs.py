@@ -1,8 +1,8 @@
-# Autosub downloadSubs.py - http://code.google.com/p/auto-sub/
+# Autosub downloadSubs.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Autosub downloadSubs module
 # Scrapers are used for websites:
-# Podnapisi.net, Subscene.com, Undertexter.se, Opensubtitles.org, SubSeeker's Mirror of BD
+# Podnapisi.net, Subscene.com, Undertexter.se, SubSeeker's Mirror of BD
 # and addic7ed.com
 #
 import logging
@@ -25,9 +25,6 @@ import autosub.Helpers
 
 log = logging.getLogger('thelogger')
 
-#TODO: Remove DOWNLOADQUEUELOCK everywhere
-#TODO: Remove DownloadSubs threath
-# Think about: keep url hardcoded here or set __init__?
 
 # Settings
 log = logging.getLogger('thelogger')
@@ -205,6 +202,7 @@ def addic7ed(downloadDict):
     codec = downloadDict['codec']
     language = downloadDict['downlang']
     rlsgrp = downloadDict['releasegrp']
+    
         
     a7ID = autosub.Addic7ed.geta7ID(title)
     
@@ -265,10 +263,12 @@ def addic7ed(downloadDict):
                 FallBackDownload = hit[:]
             continue                
         #First try to get non-HI version
+
         try:
             subtitleFile = autosub.ADDIC7EDAPI.download(downloadLink)            
             releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode)
             if subtitleFile:
+                autosub.DOWNLOADS_A7 += 1
                 return StringIO(subtitleFile), releaseInfo
             return subtitleFile, releaseInfo
         except:
@@ -279,12 +279,13 @@ def addic7ed(downloadDict):
     if FallBackDownload:
         originalVersion = FallBackDownload[0]
         downloadLink = FallBackDownload[2]
-        
         log.debug("downloadSubs.addic7ed: Trying to download HI subtitle as fall back")      
-        try:
+
+        try:            
             subtitleFile = autosub.ADDIC7EDAPI.download(downloadLink)            
             releaseInfo = autosub.Addic7ed.makeReleaseName(originalVersion, title, season, episode, HI=True)
             if subtitleFile:
+                autosub.DOWNLOADS_A7 += 1
                 return StringIO(subtitleFile), releaseInfo
             return subtitleFile, releaseInfo
         except:

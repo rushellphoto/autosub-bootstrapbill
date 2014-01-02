@@ -1,4 +1,4 @@
-# Autosub Db.py - http://code.google.com/p/auto-sub/
+# Autosub checkSub.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Autosub checkSub module
 #
@@ -33,15 +33,16 @@ class checkSub():
         else:
             autosub.WANTEDQUEUELOCK = True
         
-        #     # Initiate the Addic7ed API
+        # Initiate the Addic7ed API and check the current number of downloads
         if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD:
             try:
                 autosub.ADDIC7EDAPI = autosub.Addic7ed.Addic7edAPI()
-                a7Response= autosub.ADDIC7EDAPI.login()
+                a7Response= autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
             except:
                 log.debug("checkSub: Couldn't connect with Addic7ed.com")
+            
         else:
-            a7Response = False     
+            a7Response = False
         
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
             title = wantedItem['title']
@@ -49,7 +50,7 @@ class checkSub():
             episode = wantedItem['episode']
             originalfile = wantedItem['originalFileLocationOnDisk']
             languages = wantedItem['lang']
-            
+                        
             
             if not Helpers.checkAPICallsTvdb() or not Helpers.checkAPICallsSubSeeker():
                 #Make sure that we are allow to connect to SubtitleSeeker and TvDB
@@ -72,20 +73,23 @@ class checkSub():
                 engsrtfile = os.path.splitext(originalfile)[0] + u"." + autosub.SUBENG + u".srt"
 
             
-            #lets try to find a showid
+            #lets try to find a showid; no showid? skip this item
             showid = Helpers.getShowid(title)
-            #no showid? skip this item
             if not showid:
                 continue
             
-            langtmp = languages[:]
-            for lang in langtmp:
+            for lang in languages[:]:
                 log.debug("checkSub: trying to get a downloadlink for %s, language is %s" % (originalfile, lang))
                 # get all links higher than the minmatch as input for downloadSub
-                
                 # Returns a list of 4-element tuples
                 allResults = autosub.Subtitleseeker.getSubLinks(showid, lang, wantedItem)                
 
+                # Check if Addic7ed download limit has been reached
+                if a7Response and autosub.DOWNLOADS_A7 >= autosub.DOWNLOADS_A7MAX:
+                    a7Response = False            
+                    log.debug("checkSub: You have reached your 24h limit of %s  Addic7ed downloads!" % autosub.DOWNLOADS_A7MAX)
+
+                
                 if lang == autosub.DUTCH:
                     wantedItem['destinationFileLocationOnDisk'] = nlsrtfile
                 elif lang == autosub.ENGLISH:
@@ -100,6 +104,8 @@ class checkSub():
                     
                 if not DownloadSub(downloadItem, allResults, a7Response):
                     continue
+                
+                log.debug("checkSub: Your current Addic7ed download count is: %s" % autosub.DOWNLOADS_A7)
 
                 #Remove downloaded language
                 languages.remove(lang)

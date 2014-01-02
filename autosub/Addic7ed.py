@@ -1,10 +1,8 @@
 #
-# Autosub Addic7ed.py - http://code.google.com/p/auto-sub/
+# Autosub Addic7ed.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Addic7ed method specific module
 #
-
-import os
 
 import re
 import library.requests as requests
@@ -595,15 +593,10 @@ class Addic7edAPI():
         return BeautifulSoup(r.content) # , 'html5lib')
 
     def download(self, downloadlink):
-        count = self.checkCurrentDownloads(fullSession=False)
-        if count >= autosub.DOWNLOADS_A7MAX:
-            log.error("Addic7edAPI: You have reached your 24h limit of %s downloads!" % autosub.DOWNLOADS_A7MAX)
-            return None            
         if not self.logged_in:
             log.error("Addic7edAPI: You are not properly logged in. Check your credentials!")
             return None
         
-        log.debug("Addic7edAPI: Your current download count is: %s" % count)
         try:
             r = self.session.get(self.server + downloadlink, timeout=10, headers={'Referer': autosub.USERAGENT})
         except requests.Timeout:
@@ -621,31 +614,25 @@ class Addic7edAPI():
         time.sleep(6) #Max 0.5 connections each second
         return r.content
     
-    def checkCurrentDownloads(self, fullSession=True):      
-        if fullSession:
-            self.login()
+    def checkCurrentDownloads(self, logout=True):      
+        self.login()
             
-        soup = self.get('/panel.php')
-        countTag = soup.select('a[href^="mydownloads.php"]')
-        #classTag = soup.select('a[href^="mydownloads.php"]')
-        
         try:
+            soup = self.get('/panel.php')
+            countTag = soup.select('a[href^="mydownloads.php"]')
             pattern = re.compile('(\d*).*of.*\d*', re.IGNORECASE)
             myDownloads = countTag[0].text if countTag else False
             count = re.search(pattern, myDownloads).group(1)
-            count = int(count)
+            autosub.DOWNLOADS_A7 = int(count)
         except:
             log.error("Addic7edAPI: Couldn't retrieve current download count")
             return False
         
-        if fullSession:
+        if logout:
             self.logout()
-            if count != autosub.DOWNLOADS_A7:
-                autosub.DOWNLOADS_A7 = count
-                return True
-        else:    
-            return count
-    
+        
+        return True
+            
     def determineAccountType(self):
         self.login()        
 

@@ -1,5 +1,5 @@
 #
-# Autosub Subtitleseeker.py - http://code.google.com/p/auto-sub/
+# Autosub Subtitleseeker.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Subtitleseeker API module
 #

@@ -1,5 +1,5 @@
 #
-# Autosub Tvdb.py - http://code.google.com/p/auto-sub/
+# Autosub Tvdb.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Tvdb API module
 #

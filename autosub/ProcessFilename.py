@@ -1,3 +1,8 @@
+# Autosub ProcessFilename.py - https://code.google.com/p/autosub-bootstrapbill/
+#
+# The Autosub ProcessFilename module
+#
+
 from autosub.common import seperator, source, source_syn, quality, quality_syn, quality_fileext, codec, codec_syn, codec_fileext, releasegrp, releasegrp_syn, releasegrp_fallback
 from autosub.common import show_regex, episode_regex
 from autosub.Helpers import CleanSerieName
