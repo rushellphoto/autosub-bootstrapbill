@@ -9,24 +9,21 @@ so that we lazy users can enjoy automated scripts like this.
 
 Via SubtitleSeeker.com AutoSub indexes other subtitle
 websites: these are:
-- Opensubtitles.org  
 - Podnapisi.net
 - Undertexter.se 
 - Subscene.com
 - a mirror of Bierdopjes database, hosted on SubtitleSeeker.com itself
 
-An addition, it scrapes the full Addic7ed.com webpage directly (ie not using the SubtitleSeeker API).
+In addition, it scrapes the full Addic7ed.com webpage directly (ie not using the SubtitleSeeker API).
 To use this scraper, however, a login for Addic7ed.com is required!
-Also, the website sets a daily 15 download limit per user.
-
+Also, the website sets a daily download limit per user. Depending on your Addic7ed account, 
+you can download 30 (Regular) or 55 (VIP) subtitles a day.
 
 
 AutoSub is an easy and straightforward script that scans your TV contents. 
 If no SRT found it will attempt to download one from SubtitleSeeker.com. 
 Where the script will attempt to match the correct version of the subtitle with the file located on the disk. 
 Once every day it will do a full rescan of your local content versus the SubtitleSeeker API.
-
-If no dutch version can be found it can (based on a setting) download the english version instead.
 
 To use:
 
@@ -43,6 +40,13 @@ Make sure you have python installed. Also you need the python-cheetah package:
 Enjoy your subtitles!
 
 
-The current version of auto-sub (0.5.9) is an adaptation of the original auto-sub (last version 0.5.8). 
+Requirements for running AutoSub:
+- Install Cheetah : https://pypi.python.org/pypi/Cheetah/2.4.4
+- Python2.7
+
+You can use a version lower than python2.7 but as an additional dependency, you have to install
+the python html5lib module: https://pypi.python.org/pypi/html5lib/1.0b3
+
+
 
 
