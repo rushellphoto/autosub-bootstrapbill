@@ -42,7 +42,6 @@ UNDERTEXTERLANG=None
 ADDIC7EDLANG=None
 ADDIC7EDUSER=None
 ADDIC7EDPASSWD=None
-ADDIC7EDACCOUNT=None
 
 ADDIC7EDAPI = None
 WANTEDQUEUE=None
@@ -140,7 +139,7 @@ def Initialize():
     DBFILE, MOBILEUSERAGENTS, MOBILEAUTOSUB, NMAPRIORITY, \
     USERAGENT, VERSIONURL, \
     ENGLISH, DUTCH, PODNAPISILANG, SUBSCENELANG, BIERDOPJEMIRRORLANG, OPENSUBTITLESLANG, UNDERTEXTERLANG, \
-    ADDIC7EDLANG, ADDIC7EDUSER, ADDIC7EDPASSWD, ADDIC7EDACCOUNT, NOTIFYBOXCAR, BOXCARUSER, \
+    ADDIC7EDLANG, ADDIC7EDUSER, ADDIC7EDPASSWD, NOTIFYBOXCAR, BOXCARUSER, \
     NOTIFYPLEX, PLEXSERVERHOST, PLEXSERVERPORT
 
     
@@ -188,16 +187,15 @@ def Initialize():
     ENGLISH = 'English'
     DUTCH = 'Dutch'
     
+    # Default value
+    DOWNLOADS_A7MAX = 30
     
     # Set the download limit for the addic7ed account
     if ADDIC7EDUSER and ADDIC7EDPASSWD:
         addic7edapi = autosub.Addic7ed.Addic7edAPI()
-        ADDIC7EDACCOUNT = addic7edapi.determineAccountType() 
-        if ADDIC7EDACCOUNT == 'VIP':
+        addic7edaccount = addic7edapi.determineAccountType() 
+        if addic7edaccount == 'VIP':
             DOWNLOADS_A7MAX = 55
-        elif ADDIC7EDACCOUNT == 'Regular':
-            DOWNLOADS_A7MAX = 30
-        #print 'Account type: %s' % ADDIC7EDACCOUNT
 
      
     

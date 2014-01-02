@@ -34,7 +34,7 @@ class checkSub():
             autosub.WANTEDQUEUELOCK = True
         
         # Initiate the Addic7ed API and check the current number of downloads
-        if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD:
+        if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD and autosub.ADDIC7EDLANG != 'None':
             try:
                 autosub.ADDIC7EDAPI = autosub.Addic7ed.Addic7edAPI()
                 a7Response= autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
@@ -105,7 +105,8 @@ class checkSub():
                 if not DownloadSub(downloadItem, allResults, a7Response):
                     continue
                 
-                log.debug("checkSub: Your current Addic7ed download count is: %s" % autosub.DOWNLOADS_A7)
+                if a7Response:
+                    log.debug("checkSub: Your current Addic7ed download count is: %s" % autosub.DOWNLOADS_A7)
 
                 #Remove downloaded language
                 languages.remove(lang)
