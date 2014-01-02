@@ -40,7 +40,8 @@ class checkSub():
                 a7Response= autosub.ADDIC7EDAPI.login()
             except:
                 log.debug("checkSub: Couldn't connect with Addic7ed.com")
-                
+        else:
+            a7Response = False     
         
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
             title = wantedItem['title']
@@ -105,10 +106,10 @@ class checkSub():
                 
                 if lang == autosub.DUTCH:
                     if (autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and autosub.ENGLISH in languages:
-                        log.debug('checkSub: We found a dutch subtitle and fallback is true. Removing the english subtitle from the wantedlist.')
+                        log.debug('checkSub: We found a Dutch subtitle and fallback is true. Removing the English subtitle from the wantedlist.')
                         languages.remove(autosub.ENGLISH)
                 
-                    if autosub.ENGLISHSUBDELETE == True:
+                    if autosub.ENGLISHSUBDELETE:
                         if os.path.exists(nlsrtfile) and os.path.exists(engsrtfile):
                             log.debug("checkSub: Trying to delete English subtitle.")
                             try:
@@ -121,11 +122,10 @@ class checkSub():
                 
                 if len(languages) == 0:
                     toDelete_wantedQueue.append(index)
+                    break
          
         if autosub.ADDIC7EDAPI:
             autosub.ADDIC7EDAPI.logout()
-        
-         
                                         
         i = len(toDelete_wantedQueue) - 1
         while i >= 0:
