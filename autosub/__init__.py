@@ -189,14 +189,6 @@ def Initialize():
     
     # Default value
     DOWNLOADS_A7MAX = 30
-    
-    # Set the download limit for the addic7ed account
-    if ADDIC7EDUSER and ADDIC7EDPASSWD:
-        addic7edapi = autosub.Addic7ed.Addic7edAPI()
-        addic7edaccount = addic7edapi.determineAccountType() 
-        if addic7edaccount == 'VIP':
-            DOWNLOADS_A7MAX = 55
-
      
     
 def initLogging(logfile):

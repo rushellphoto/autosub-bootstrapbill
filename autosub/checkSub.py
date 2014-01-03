@@ -33,17 +33,18 @@ class checkSub():
         else:
             autosub.WANTEDQUEUELOCK = True
         
+        
         # Initiate the Addic7ed API and check the current number of downloads
+        a7Response = False
         if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD and autosub.ADDIC7EDLANG != 'None':
             try:
                 autosub.ADDIC7EDAPI = autosub.Addic7ed.Addic7edAPI()
-                a7Response= autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
+                # Sets autosub.DOWNLOADS_A7 and autosub.DOWNLOADS_A7MAX
+                # and gives a True response if it's ok to download from a7
+                a7Response = autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
             except:
                 log.debug("checkSub: Couldn't connect with Addic7ed.com")
-            
-        else:
-            a7Response = False
-        
+         
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
             title = wantedItem['title']
             season = wantedItem['season']

@@ -619,13 +619,20 @@ class Addic7edAPI():
             
         try:
             soup = self.get('/panel.php')
+            # Get Download Count
             countTag = soup.select('a[href^="mydownloads.php"]')
             pattern = re.compile('(\d*).*of.*\d*', re.IGNORECASE)
             myDownloads = countTag[0].text if countTag else False
             count = re.search(pattern, myDownloads).group(1)
             autosub.DOWNLOADS_A7 = int(count)
+            
+            # Get account type and set download max
+            classTag = soup.select("tr")[20]
+            account = classTag.select("td")[1].string
+            if account == 'VIP':
+                autosub.DOWNLOADS_A7MAX = 55
         except:
-            log.error("Addic7edAPI: Couldn't retrieve current download count")
+            log.error("Addic7edAPI: Couldn't retrieve Addic7ed MyPanel data")
             return False
         
         if logout:
@@ -633,6 +640,7 @@ class Addic7edAPI():
         
         return True
             
+    '''
     def determineAccountType(self):
         self.login()        
 
@@ -642,6 +650,7 @@ class Addic7edAPI():
                 
         self.logout()
         return account
+    '''
 
 '''Lookup table for a7 IDs (23/12/'12)
    Key = IMDB ID
