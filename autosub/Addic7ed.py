@@ -585,6 +585,8 @@ class Addic7edAPI():
             r = self.session.get(self.server + url, timeout=10)
         except requests.Timeout:
             log.debug('Addic7edAPI: Timeout after 10 seconds')
+            return None
+        
         if r.status_code != 200:
             log.error('Addic7edAPI: Request failed with status code %d' % r.status_code)
 
