@@ -5,7 +5,7 @@
 #import re
 #from types import *
 #from autosub.Db import lastDown
-#from autosub.Helpers import ConvertTimestamp, ConvertTimestampTable
+#from autosub.Helpers import ConvertTimestamp
 #from autosub.Helpers import getAttr
 
 #include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
@@ -83,7 +83,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #end for
 			</td>
 #if $type($var['timestamp']) == UnicodeType:
-			<td sorttable_customkey="$ConvertTimestampTable($var['timestamp'])">$ConvertTimestamp($var['timestamp'])</td>
+			<td>$ConvertTimestamp($var['timestamp'])</td>
 #else
 			<td>Unknown</td>
 #end if	
@@ -188,7 +188,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 					<img src="$imageurl" alt="$var['language']" />
 				</td>
 #if $type($var['timestamp']) == UnicodeType:
-				<td sorttable_customkey="$ConvertTimestampTable($var['timestamp'])">$ConvertTimestamp($var['timestamp'])</td>
+				<td>$ConvertTimestamp($var['timestamp'])</td>
 #else
 				<td>Unknown</td>
 #end if
