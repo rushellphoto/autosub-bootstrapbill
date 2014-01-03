@@ -601,6 +601,8 @@ class Addic7edAPI():
             r = self.session.get(self.server + downloadlink, timeout=10, headers={'Referer': autosub.USERAGENT})
         except requests.Timeout:
             log.error('Addic7edAPI: Timeout after 10 seconds')
+            return None
+        
         if r.status_code != 200:
             log.error('Addic7edAPI: Request failed with status code %d' % r.status_code)
         else:
