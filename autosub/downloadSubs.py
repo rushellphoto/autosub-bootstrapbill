@@ -218,6 +218,9 @@ def addic7ed(downloadDict):
     for row in soup('tr', class_='epeven completed'):
         releaseInfo = {}
         cells = row('td')
+        #Check if line is intact
+        if not len(cells) == 11:
+            continue
         # filter on Completed, wanted language and episode
         if cells[5].string != 'Completed':
             continue       
