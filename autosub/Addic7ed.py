@@ -51,95 +51,94 @@ codec = [re.compile("([xh]*264|xvid|dvix)" , re.IGNORECASE)]
 
 #Note: x264 is the opensource implementation of h264.
 codec_syn = {u'x264' : u'h264',
-               u'264' : u'h264'}
+             u'264' : u'h264'}
 
 #The following 2 variables create the regex used for guessing the releasegrp. Functions should not call them!
 _rlsgrps_rest = ['0TV',
-                'aAF',
-                'BTN',
-                'BWB',
-                'CLUE',
-                'CP',
-                'DEMAND',
-                'DNR',
-                'EbP',
-                'GFY',
-                'GreenBlade',
-                'HoodBag',
-                'HAGGiS',
-                'hV',
-                'KYER',
-                'LFF',
-                'LP',
-                'MMI',
-                'mSD',
-                'NBS',
-                'NFT',
-                'NIN',
-                'nodlabs',
-                'OOO',
-                'ORPHEUS',
-                'P0W4',
-                'P0W4HD',
-                'playXD',
-                'RANDi',
-                'REWARD',
-                'ROVERS',
-                'RRH',
-                'SAiNTS',
-                'SAPHiRE',
-                'SCT',
-                'SiNNERS',
-                'SkyM',
-                'SLOMO',
-                'sozin',
-                'sundox',
-                'TjHD',
-                'TOPAZ', 
-                'TOKUS',
-                'T00NG0D',
-                'VASKITTU',
-                'UP',
-                'XS']
+                 'aAF',
+                 'BTN',
+                 'BWB',
+                 'CLUE',
+                 'CP',
+                 'DEMAND',
+                 'DNR',
+                 'EbP',
+                 'GFY',
+                 'GreenBlade',
+                 'HoodBag',
+                 'HAGGiS',
+                 'hV',
+                 'KYER',
+                 'LFF',
+                 'LP',
+                 'MMI',
+                 'mSD',
+                 'NBS',
+                 'NFT',
+                 'NIN',
+                 'nodlabs',
+                 'OOO',
+                 'ORPHEUS',
+                 'P0W4',
+                 'P0W4HD',
+                 'playXD',
+                 'RANDi',
+                 'REWARD',
+                 'ROVERS',
+                 'RRH',
+                 'SAiNTS',
+                 'SAPHiRE',
+                 'SCT',
+                 'SiNNERS',
+                 'SkyM',
+                 'SLOMO',
+                 'sozin',
+                 'sundox',
+                 'TjHD',
+                 'TOPAZ',
+                 'TOKUS',
+                 'T00NG0D',
+                 'VASKITTU',
+                 'UP',
+                 'XS']
 
 _rlsgrps_HD = ['DIMENSION',
-              'IMMERSE',
-              'ORENJi',
-              'EVOLVE',
-              'CTU',
-              'KILLERS',
-              '2HD',
-              'MOMENTUM']
+               'IMMERSE',
+               'ORENJi',
+               'EVOLVE',
+               'CTU',
+               'KILLERS',
+               '2HD',
+               'MOMENTUM']
 
 _rlsgrps_SD = ['LOL',
-             'ASAP',
-             'FQM',
-             'XOR',
-             'NoTV',
-             'FoV',
-             'FEVER',
-             'AVS',
-             'COMPULSiON']
+               'ASAP',
+               'FQM',
+               'XOR',
+               'NoTV',
+               'FoV',
+               'FEVER',
+               'AVS',
+               'COMPULSiON']
 
 _rlsgrps_xvid = ['AFG']
 
 _rlsgrps_h264 = ['TLA',
-                'BiA',
-                'BAJSKOR']
+                 'BiA',
+                 'BAJSKOR']
 
 _rlsgrps_webdl = ['YFN',
-                'FUM',
-                'BS',
-                'ECI',
-                'NTb',
-                'CtrlHD',
-                'NFHD',
-                'KiNGS',
-                'POD',
-                'TVSmash'
-                'HWD'
-                'PCSYNDICATE']
-
+                  'FUM',
+                  'BS',
+                  'ECI',
+                  'NTb',
+                  'CtrlHD',
+                  'NFHD',
+                  'KiNGS',
+                  'POD',
+                  'TVSmash',
+                  'HWD',
+                  'PCSYNDICATE']
 
 def _regexRls(releaseGroupList, list=False):
     releasegrp_pre = '(' + '|'.join(releaseGroupList) + ')'
@@ -348,11 +347,19 @@ def _MakeTwinRelease(originalDict):
     qual = originalDict['quality']
     source = originalDict['source']
     
-    rlsSwitchDict = {u'dimension' : u'lol', u'lol': u'dimension',
-                     u'immerse': u'asap', u'asap' : u'immerse',
-                     u'2hd' : u'2hd', u'bia' : u'bia', u'fov' : u'fov'}
-    qualSwitchDict_hdtv = {u'sd' : u'720p', u'720p' : u'sd'}
-    qualSwitchDict_webdl =  {u'1080p' : u'720p', u'720p' : u'1080p'}
+    rlsSwitchDict = {u'dimension' : u'lol',
+                     u'lol': u'dimension',
+                     u'immerse': u'asap',
+                     u'asap' : u'immerse',
+                     u'2hd' : u'2hd',
+                     u'bia' : u'bia',
+                     u'fov' : u'fov'}
+    
+    qualSwitchDict_hdtv = {u'sd' : u'720p',
+                           u'720p' : u'sd'}
+    
+    qualSwitchDict_webdl =  {u'1080p' : u'720p',
+                             u'720p' : u'1080p'}
     
     twinDict = originalDict.copy()
     if rlsgroup in rlsSwitchDict.keys():

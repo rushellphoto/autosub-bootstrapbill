@@ -129,7 +129,7 @@ class Config:
         autosub.UNDERTEXTERLANG = undertexterlang
         autosub.ADDIC7EDLANG = addic7edlang
         autosub.ADDIC7EDUSER = addic7eduser
-        autosub.ADDIC7EDPASSWD = addic7edpasswd
+        autosub.ADDIC7EDPASSWD = addic7edpasswd.replace("%","%%")
         
         autosub.MINMATCHSCORE = 0
         if mmssource:
