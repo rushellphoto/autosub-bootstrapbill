@@ -54,138 +54,99 @@ codec_syn = {u'x264' : u'h264',
                u'264' : u'h264'}
 
 #The following 2 variables create the regex used for guessing the releasegrp. Functions should not call them!
-_releasegrps = ['0TV',
-               '2HD',
-               'ASAP',
-               'aAF',
-               'AFG',
-               'AVS',
-               'BAJSKORV',
-               'BiA',
-               'BS',
-               'BTN',
-               'BWB',
-               'CLUE',
-               'CP',
-               'COMPULSiON',
-               'CtrlHD',
-               'CTU',
-               'DEMAND',
-               'DIMENSION',
-               'DNR',
-               'EbP',
-               'ECI',
-               'EVOLVE',
-               'FEVER',
-               'FOV',
-               'FQM',
-               'FUM',
-               'GFY',
-               'GreenBlade',
-               'HoodBag',
-               'HAGGiS',
-               'hV',
-               'HWD',
-               'IMMERSE',
-               'KiNGS',
-               'KILLERS'
-               'KYER',
-               'LFF',
-               'LOL',
-               'LP',
-               'MMI',
-               'MOMENTUM',
-               'mSD',
-               'NBS',
-               'NFHD',
-               'NFT',
-               'NIN',
-               'nodlabs',
-               'NoTV',
-               'NTb',
-               'OOO',
-               'ORENJi',
-               'ORPHEUS',
-               'PCSYNDICATE',
-               'P0W4',
-               'P0W4HD',
-               'playXD',
-               'POD',
-               'RANDi',
-               'REWARD',
-               'ROVERS',
-               'RRH',
-               'SAiNTS',
-               'SAPHiRE',
-               'SCT',
-               'SiNNERS',
-               'SkyM',
-               'SLOMO',
-               'sozin',
-               'sundox',
-               'TjHD',
-               'TOPAZ', 
-               'TLA',
-               'TOKUS',
-               'T00NG0D',
-               'TVSMASH',
-               'VASKITTU',
-               'UP',
-               'XOR',
-               'XS',
-               'YFN']
+_rlsgrps_rest = ['0TV',
+                'aAF',
+                'BTN',
+                'BWB',
+                'CLUE',
+                'CP',
+                'DEMAND',
+                'DNR',
+                'EbP',
+                'GFY',
+                'GreenBlade',
+                'HoodBag',
+                'HAGGiS',
+                'hV',
+                'KYER',
+                'LFF',
+                'LP',
+                'MMI',
+                'mSD',
+                'NBS',
+                'NFT',
+                'NIN',
+                'nodlabs',
+                'OOO',
+                'ORPHEUS',
+                'P0W4',
+                'P0W4HD',
+                'playXD',
+                'RANDi',
+                'REWARD',
+                'ROVERS',
+                'RRH',
+                'SAiNTS',
+                'SAPHiRE',
+                'SCT',
+                'SiNNERS',
+                'SkyM',
+                'SLOMO',
+                'sozin',
+                'sundox',
+                'TjHD',
+                'TOPAZ', 
+                'TOKUS',
+                'T00NG0D',
+                'VASKITTU',
+                'UP',
+                'XS']
 
-'''
-_releasegrpsHD = ['DIMENSION',
-                  'IMMERSE',
-                  'ORENJi',
-                  'EVOLVE',
-                  'CTU',
-                  'KILLERS',
-                  '2HD',
-                  'MOMENTUM']
+_rlsgrps_HD = ['DIMENSION',
+              'IMMERSE',
+              'ORENJi',
+              'EVOLVE',
+              'CTU',
+              'KILLERS',
+              '2HD',
+              'MOMENTUM']
 
-_rlsgroupsSD = ['LOL',
-                'ASAP',
-                'FQM',
-                'XOR',
-                'NoTV',
-                'FoV',
-                'FEVER',
-                'AVS',
-                'COMPULSiON']
+_rlsgrps_SD = ['LOL',
+             'ASAP',
+             'FQM',
+             'XOR',
+             'NoTV',
+             'FoV',
+             'FEVER',
+             'AVS',
+             'COMPULSiON']
 
-_rlsgroups_xvid = ['AFG']
+_rlsgrps_xvid = ['AFG']
 
-_rlsgroups_h264 = ['TLA',
-                  'BiA',
-                  'BAJSKOR']
+_rlsgrps_h264 = ['TLA',
+                'BiA',
+                'BAJSKOR']
 
-_rlsgroupsWebdl = ['YFN',
-                   'FUM',
-                   'BS',
-                   'ECI',
-                   'NTb',
-                   'CtrlHD',
-                   'NFHD',
-                   'KiNGS',
-                   'POD',
-                   'TVSmash'
-                   'HWD'
-                   'PCSYNDICATE']
-'''
+_rlsgrps_webdl = ['YFN',
+                'FUM',
+                'BS',
+                'ECI',
+                'NTb',
+                'CtrlHD',
+                'NFHD',
+                'KiNGS',
+                'POD',
+                'TVSmash'
+                'HWD'
+                'PCSYNDICATE']
 
 
-_releasegrp_pre = '(' + '|'.join(_releasegrps) + ')'
-
-releasegrp = [re.compile(_releasegrp_pre, re.IGNORECASE)]
-
-rlsgroupsHD = re.compile("(DIMENSION|IMMERSE|ORENJi|EVOLVE|CTU|KILLERS|2HD|MOMENTUM)" , re.IGNORECASE)
-rlsgroupsSD = re.compile("(LOL|ASAP|FQM|XOR|NoTV|FoV|FEVER|AVS|COMPULSiON)" , re.IGNORECASE)
-rlsgroups_xvid = re.compile("(AFG)" , re.IGNORECASE)
-rlsgroups_h264 = re.compile("(TLA|BiA|BAJSKORV)" , re.IGNORECASE)        
-rlsgroupsWebdl = re.compile("(YFN|FUM|BS|ECI|NTb|CtrlHD|NFHD|KiNGS|POD|TVSmash|HWD|PCSYNDICATE)" , re.IGNORECASE)
-
+def _regexRls(releaseGroupList, list=False):
+    releasegrp_pre = '(' + '|'.join(releaseGroupList) + ')'
+    regexReleasegrp = [re.compile(releasegrp_pre, re.IGNORECASE)]
+    
+    if list: return regexReleasegrp
+    else: return regexReleasegrp.pop()
 
 def _returnHits(regex, version_info):
     # Should have been filter out beforehand
@@ -219,6 +180,7 @@ def _getSource(file_info):
 def _getQuality(file_info, HD):
     results = _checkSynonyms(quality_syn,
                             _returnHits(quality, file_info))
+ 
     '''
     This can cause conflicts with releasegroups
     Leave it out and see what happens
@@ -236,7 +198,8 @@ def _getCodec(file_info):
     return results
 
 def _getReleasegrp(file_info):
-    results = _returnHits(releasegrp, file_info)
+    _allRlsgrps = _rlsgrps_rest + _rlsgrps_HD + _rlsgrps_SD + _rlsgrps_xvid + _rlsgrps_h264 + _rlsgrps_webdl
+    results = _returnHits(_regexRls(_allRlsgrps, list=True), file_info)
     
     return results
 
@@ -255,6 +218,7 @@ def _ParseVersionInfo(version_info, HD):
 
     
 def _checkIfParseable(parametersList):
+    # only 1 paramter list can contain more than 1 element
     for index,parameter in enumerate(parametersList):
         if len(parameter) > 1:
             tempLists = parametersList[:]
@@ -267,7 +231,7 @@ def _checkIfParseable(parametersList):
 
 def _checkConflicts(versionDicts):
 # Check if data is consistent in the dict
-# If inconsistent, remove particalr dict
+# If inconsistent, remove this dict
     toDelete = []
     for index, versionDict in enumerate(versionDicts):
         source = versionDict['source']
@@ -296,27 +260,23 @@ def _checkConflicts(versionDicts):
 
         # Based on releasegroup
         if releasegroup:
-            if re.match(rlsgroupsHD, releasegroup) or \
-                re.match(rlsgroupsSD, releasegroup) or \
-                re.match(rlsgroups_h264, releasegroup) or \
-                re.match(rlsgroups_xvid, releasegroup):
+            if re.match(_regexRls(_rlsgrps_HD + _rlsgrps_SD + _rlsgrps_xvid + _rlsgrps_h264), releasegroup):
                 if source == u'web-dl':
                     toDelete.append(index)
                     continue
-            if re.match(rlsgroupsHD, releasegroup) or \
-                re.match(rlsgroups_h264, releasegroup):
+            if re.match(_regexRls(_rlsgrps_HD + _rlsgrps_h264) , releasegroup):
                 if codec == u'xvid':
                     toDelete.append(index)
                     continue
-            if re.match(rlsgroupsHD, releasegroup):
+            if re.match(_regexRls(_rlsgrps_HD), releasegroup):
                 if quality == u'sd':
                     toDelete.append(index)
                     continue
-            if re.match(rlsgroups_xvid, releasegroup):
+            if re.match(_regexRls(_rlsgrps_xvid), releasegroup):
                 if codec == u'h264':
                     toDelete.append(index)
                     continue
-            if re.match(rlsgroupsSD, releasegroup):
+            if re.match(_regexRls(_rlsgrps_SD), releasegroup):
                 if quality == u'720p' or quality == u'1080p':
                     toDelete.append(index)
                     continue
@@ -354,28 +314,22 @@ def _addInfo(versionDicts):
 
         # Based on specific Releasegroups  
         if releasegroup:  
-            if re.match(rlsgroupsHD, releasegroup) or \
-                re.match(rlsgroupsSD, releasegroup) or \
-                re.match(rlsgroups_h264, releasegroup) or \
-                re.match(rlsgroupsWebdl, releasegroup):
+            if re.match(_regexRls(_rlsgrps_HD + _rlsgrps_SD + _rlsgrps_h264 + _rlsgrps_webdl), releasegroup):
                 if not codec:
                     versionDicts[index]['codec'] = u'h264'
-            if re.match(rlsgroups_xvid, releasegroup):
+            if re.match(_regexRls(_rlsgrps_xvid), releasegroup):
                 if not codec:
                     versionDicts[index]['codec'] = u'xvid'
-            if re.match(rlsgroupsHD, releasegroup) or \
-                re.match(rlsgroupsSD, releasegroup) or \
-                re.match(rlsgroups_h264, releasegroup) or \
-                re.match(rlsgroups_xvid, releasegroup):
+            if re.match(_regexRls(_rlsgrps_HD + _rlsgrps_SD + _rlsgrps_xvid + _rlsgrps_h264), releasegroup):
                 if not source:
                     versionDicts[index]['source'] = u'hdtv'  
-            if re.match(rlsgroupsWebdl, releasegroup):
+            if re.match(_regexRls(_rlsgrps_webdl), releasegroup):
                 if not source:
                     versionDicts[index]['source'] = u'web-dl'
-            if re.match(rlsgroupsHD, releasegroup):
+            if re.match(_regexRls(_rlsgrps_HD), releasegroup):
                 if not quality:
                     versionDicts[index]['quality'] = u'720p'
-            if re.match(rlsgroupsSD, releasegroup):
+            if re.match(_regexRls(_rlsgrps_SD), releasegroup):
                 if not quality:
                     versionDicts[index]['quality'] = u'sd'
 
@@ -384,6 +338,11 @@ def _addInfo(versionDicts):
 
 def _MakeTwinRelease(originalDict):
     # This modules creates the SD/HD counterpart for releases with specific releasegroups
+    # DIMENSION <> LOL
+    # IMMERSE <> ASAP
+    # 2HD <> 2HD 720p
+    # BiA <> BiA 720p
+    # FoV <> FoV 720p
     
     rlsgroup = originalDict['releasegrp']
     qual = originalDict['quality']
@@ -395,11 +354,6 @@ def _MakeTwinRelease(originalDict):
     qualSwitchDict_hdtv = {u'sd' : u'720p', u'720p' : u'sd'}
     qualSwitchDict_webdl =  {u'1080p' : u'720p', u'720p' : u'1080p'}
     
-    # DIMENSION <> LOL
-    # IMMERSE <> ASAP
-    # 2HD <> 2HD 720p
-    # BiA <> BiA 720p
-    # FoV <> FoV 720p
     twinDict = originalDict.copy()
     if rlsgroup in rlsSwitchDict.keys():
         twinDict['releasegrp'] = rlsSwitchDict[rlsgroup]
@@ -511,14 +465,25 @@ def geta7ID(showTitle):
         log.error('geta7ID: failed to retrieve a7 show list')
         return None
     
-    offShowName = re.compile('%s.*' % offShowName, re.IGNORECASE)
+    
+    # First clip of year or US, UK from the name
+    show_regex = [re.compile('(.+)\s+\(?\d{4}\)?', re.IGNORECASE),
+                  re.compile('(.+)\s+\(?us\)?', re.IGNORECASE),
+                  re.compile('(.+)\s+\(?uk\)?', re.IGNORECASE)]
+    
+    searchName = offShowName
+    
+    for reg in show_regex:
+        m = re.match(reg, offShowName)
+        if m:
+            searchName = m.group(1)
+            break
     
     for show in show_ids:
-        m = re.match(offShowName, show)
-        if m:
-            show_id = show_ids[show]
-            log.debug('geta7ID: showid for %s from Addic7ed.com search %s' % (showTitle, show_id))
-            return show_id
+            if re.match(searchName, show):
+                show_id = show_ids[show]
+                log.debug('geta7ID: showid for %s from Addic7ed.com search %s' % (showTitle, show_id))
+                return show_id
     log.error("geta7ID: Addic7ed ID for %s wasn't found" % showTitle)
     return None
 
@@ -592,7 +557,7 @@ class Addic7edAPI():
 
         log.debug("Addic7edAPI: Resting for 6 seconds to prevent errors")
         time.sleep(6) #Max 0.5 connections each second
-        return BeautifulSoup(r.content) # , 'html5lib')
+        return BeautifulSoup(r.content)
 
     def download(self, downloadlink):
         if not self.logged_in:
@@ -643,23 +608,12 @@ class Addic7edAPI():
             self.logout()
         
         return True
-            
-    '''
-    def determineAccountType(self):
-        self.login()        
-
-        soup = self.get('/panel.php')        
-        classTag = soup.select("tr")[20]
-        account = classTag.select("td")[1].string
-                
-        self.logout()
-        return account
-    '''
 
 '''Lookup table for a7 IDs (23/12/'12)
    Key = IMDB ID
    Value = a7 ID
 '''
+    
 a7IdDict = {
           '0472027' : '328',
           '0437005' : '909',
