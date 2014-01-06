@@ -55,6 +55,43 @@ class idCache():
         connection.commit()
         connection.close()
             
+class a7idCache():
+    def __init__(self):
+        self.query_getId = 'select a7_id from a7id_cache where imdb_id = ?'
+        self.query_setId = 'insert into a7id_cache values (?,?)'
+        self.query_flush = 'delete from a7id_cache'
+        
+    def getId(self, imdb_id):
+        imdb_id = imdb_id
+        
+        connection=sqlite3.connect(autosub.DBFILE)
+        cursor=connection.cursor()
+        cursor.execute(self.query_getId, [imdb_id])
+        a7_id = None
+        
+        for row in cursor:
+            a7_id = row[0]
+        
+        connection.close()
+        if a7_id:
+            return a7_id
+    
+    def setId(self, a7_id, imdb_id):
+        imdb_id = imdb_id
+        
+        connection=sqlite3.connect(autosub.DBFILE)
+        cursor=connection.cursor()
+        cursor.execute(self.query_setId,[a7_id, imdb_id])
+        connection.commit()
+        connection.close()
+    
+    def flushCache(self):
+        connection=sqlite3.connect(autosub.DBFILE)
+        cursor=connection.cursor()
+        cursor.execute(self.query_flush)
+        connection.commit()
+        connection.close()
+            
 class lastDown():
     def __init__(self):
         self.query_get = 'select * from last_downloads'
@@ -106,6 +143,7 @@ def createDatabase():
         cursor=connection.cursor()
         
         cursor.execute("CREATE TABLE id_cache (imdb_id TEXT, show_name TEXT);")
+        cursor.execute("CREATE TABLE a7id_cache (a7_id TEXT, imdb_id TEXT);")
         cursor.execute("CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, show_name TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT);")
         cursor.execute("CREATE TABLE info (database_version NUMERIC);")
         connection.commit()
@@ -160,6 +198,14 @@ def upgradeDb(from_version, to_version):
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (4,3))
             connection.commit()
             connection.close()
+        if from_version == 4 and to_version == 5:
+            connection=sqlite3.connect(autosub.DBFILE)
+            cursor=connection.cursor()
+            cursor.execute("CREATE TABLE a7id_cache (a7_id TEXT, imdb_id TEXT);")
+            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (5,4))
+            connection.commit()
+            connection.close()
+            
 
 def getDbVersion():
     try:

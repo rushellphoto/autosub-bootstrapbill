@@ -3,8 +3,6 @@ import logging.handlers
 import time
 from autosub.version import autosubversion
 
-import autosub.Addic7ed
-
 ROOTPATH=None
 FALLBACKTOENG=None
 DOWNLOADENG=None

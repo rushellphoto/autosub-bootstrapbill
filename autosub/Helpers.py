@@ -18,7 +18,11 @@ from autosub.version import autosubversion
 import autosub
 import Tvdb
 
-from autosub.Db import idCache
+from autosub.Db import idCache, a7idCache
+from autosub.ID_lookup import a7IdDict
+from autosub.Addic7ed import Addic7edAPI
+
+
 # Settings
 log = logging.getLogger('thelogger')
 
@@ -296,12 +300,54 @@ def getShowid(show_name):
     if show_id:
         log.debug('getShowid: showid from api %s' %show_id)
         idCache().setId(show_id, show_name)
-        log.info('getShowid: %r added to cache with %s' %(show_name, show_id))
+        log.info('getShowid: %s added to cache with %s' %(show_name, show_id))
         
-        return show_id
+        return str(show_id)
     
     log.error('getShowid: showid not found for %s' %show_name)
     idCache().setId(-1, show_name)
+    
+def geta7id(showTitle, imdb_id):
+    
+    #imdb_id = getShowid(showTitle)
+    #imdb_id = str(imdb_id)
+
+    log.debug('geta7id: trying to get addic7ed ID for show %s with IMDB ID %s' % (showTitle, imdb_id))
+    
+    # user defined ID mapping (to do) 
+    #show_id = nameMapping(show_name)
+    #if show_id:
+    #    log.debug('getShowid: showid from namemapping %s' %show_id)
+    #    return show_id
+
+    # From lookup table
+    if imdb_id in a7IdDict.keys():
+        a7_id = a7IdDict[imdb_id]
+        log.debug('geta7ID: showid from lookup table %s' % a7_id)
+        return a7_id 
+    
+    
+    # From cache
+    a7_id = a7idCache().getId(imdb_id)
+    if a7_id:
+        log.debug('geta7id: addic7ed ID from cache %s' %a7_id)
+        if a7_id == -1:
+            log.error('geta7id: addic7ed ID not found for %s' %a7_id)
+            return
+        return a7_id
+    
+    # From Addic7ed show overview page
+    a7_id = Addic7edAPI().geta7ID(imdb_id)  
+    if a7_id:
+        log.debug('geta7id: addic7ed ID from Addic7ed show overview page %s' %a7_id)
+        a7idCache().setId(a7_id, imdb_id)
+        log.info('geta7id: %s added to cache with %s' %(a7_id, imdb_id))       
+        return a7_id
+    
+    log.error('geta7id: addic7ed ID not found for %s' %showTitle)
+    
+    a7idCache().setId(-1, imdb_id)
+    
 
 def DisplayLogFile(loglevel):
     maxLines = 500

@@ -191,7 +191,7 @@ def bierdopje(subSeekerLink):
     return subtitleFile
                 
 
-def addic7ed(downloadDict):    
+def addic7ed(downloadDict, imdb_id):    
 
     # Info about episode file
     title = downloadDict['title']
@@ -204,7 +204,7 @@ def addic7ed(downloadDict):
     rlsgrp = downloadDict['releasegrp']
     
         
-    a7ID = autosub.Addic7ed.geta7ID(title)
+    a7ID = autosub.Helpers.geta7id(title, imdb_id)
     
     if not a7ID:     
         return (None, None)
@@ -300,7 +300,7 @@ def addic7ed(downloadDict):
     return (None, None)  
           
 
-def DownloadSub(downloadDict, allResults, a7Response):    
+def DownloadSub(downloadDict, allResults, a7Response, imdb_id):    
     
     log.debug("downloadSubs: Starting DownloadSub function")    
     
@@ -325,7 +325,7 @@ def DownloadSub(downloadDict, allResults, a7Response):
         # First look in Addic7ed for a hit            
         if (autosub.ADDIC7EDLANG == language or autosub.ADDIC7EDLANG == 'Both') and a7Response:
             log.debug("downloadSubs: Going to Addic7ed.com to find subtitle %s" % destsrt)
-            fileStringIO, release = addic7ed(downloadDict)
+            fileStringIO, release = addic7ed(downloadDict, imdb_id)
             if fileStringIO:
                 website = 'addic7ed.com'
                 log.debug("downloadSubs: Found subtitle on addic7ed.com")

@@ -103,7 +103,7 @@ class checkSub():
                 downloadItem = wantedItem.copy()
                 downloadItem['downlang'] = lang
                     
-                if not DownloadSub(downloadItem, allResults, a7Response):
+                if not DownloadSub(downloadItem, allResults, a7Response, showid):
                     continue
                 
                 if a7Response:
