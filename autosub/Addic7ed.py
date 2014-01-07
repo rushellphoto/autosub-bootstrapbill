@@ -24,12 +24,12 @@ log = logging.getLogger('thelogger')
 #The second (and following) regex contains nonstandard naming (either typo's or other renaming tools (like sickbeard)) 
 #Nonstandard naming should be renamed using the syn dictionary. 
 
-source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|bluray|dvdrip|webrip)", re.IGNORECASE),
+_source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|bluray|dvdrip|webrip)", re.IGNORECASE),
           re.compile("(tv|dvd|bdrip|web)", re.IGNORECASE)]
 
 #A dictionary containing as keys, the nonstandard naming. Followed by there standard naming.
 #Very important!!! Should be unicode and all LOWERCASE!!!
-source_syn = {u'tv' : u'hdtv',
+_source_syn = {u'tv' : u'hdtv',
               u'ahdtv' : u'hdtv',
               u'dvd' : u'dvdrip',
               u'bdrip': u'bluray',
@@ -37,20 +37,20 @@ source_syn = {u'tv' : u'hdtv',
               u'web' : u'web-dl'}
 
 
-quality = [re.compile("(1080p|720p|480p)" , re.IGNORECASE), 
+_quality = [re.compile("(1080p|720p|480p)" , re.IGNORECASE), 
            re.compile("(1080[i]*|720|480|HD|SD)", re.IGNORECASE)]
 
-quality_syn = {u'1080' : u'1080p',
+_quality_syn = {u'1080' : u'1080p',
                u'1080i' : u'1080p',
                u'720' : u'720p',
                u'480p' : u'sd',
                u'480' : u'sd', 
                u'hd': u'720p'}
                
-codec = [re.compile("([xh]*264|xvid|dvix)" , re.IGNORECASE)]
+_codec = [re.compile("([xh]*264|xvid|dvix)" , re.IGNORECASE)]
 
 #Note: x264 is the opensource implementation of h264.
-codec_syn = {u'x264' : u'h264',
+_codec_syn = {u'x264' : u'h264',
              u'264' : u'h264'}
 
 #The following 2 variables create the regex used for guessing the releasegrp. Functions should not call them!
@@ -173,13 +173,13 @@ def _checkSynonyms(synonyms, results):
 
 
 def _getSource(file_info):
-    results = _checkSynonyms(source_syn,
-                            _returnHits(source, file_info))
+    results = _checkSynonyms(_source_syn,
+                            _returnHits(_source, file_info))
     return results
 
 def _getQuality(file_info, HD):
-    results = _checkSynonyms(quality_syn,
-                            _returnHits(quality, file_info))
+    results = _checkSynonyms(_quality_syn,
+                            _returnHits(_quality, file_info))
  
     '''
     This can cause conflicts with releasegroups
@@ -192,8 +192,8 @@ def _getQuality(file_info, HD):
     return results
 
 def _getCodec(file_info):
-    results = _checkSynonyms(codec_syn,
-                            _returnHits(codec, file_info))
+    results = _checkSynonyms(_codec_syn,
+                            _returnHits(_codec, file_info))
     
     return results
 
@@ -379,7 +379,7 @@ def _MakeTwinRelease(originalDict):
         return None  
     
 
-def ReconstructRelease(version_info, HD, downloadUrl, hearingImpaired):
+def ReconstructRelease(version_info, HD):
     # This method reconstructs the original releasename    
     # First split up all components
     parametersList = _ParseVersionInfo(version_info, HD)
@@ -397,16 +397,11 @@ def ReconstructRelease(version_info, HD, downloadUrl, hearingImpaired):
     for x in [sources, qualities, codecs, releasegroups]:
         if not x: x.append(None)
        
-    
-    downloadUrl = [downloadUrl]
-    hearingImpaired = [hearingImpaired]
-    version_info = [version_info]
-    
     # Make version dictionaries
     # Do a cartessian product    
     versionDicts = [
-    {'source': sour, 'quality': qual, 'codec': cod, 'releasegrp': rls, 'a7': vers, 'url': url, 'HI': hi}
-    for sour, qual, cod, rls, vers, url, hi  in product(sources, qualities, codecs, releasegroups, version_info, downloadUrl, hearingImpaired)
+    {'source': sour, 'quality': qual, 'codec': cod, 'releasegrp': rls}
+    for sour, qual, cod, rls in product(sources, qualities, codecs, releasegroups)
     ]
     
     
@@ -559,7 +554,6 @@ class Addic7edAPI():
     
     def geta7ID(self, imdbID):
         # Last resort: lookup official name and try to match with a7 show list
-
         # Get the official show name
         if autosub.Helpers.checkAPICallsTvdb(use=False): 
             offShowName = autosub.Tvdb.getShowName(imdbID)
