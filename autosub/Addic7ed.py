@@ -113,6 +113,8 @@ _rlsgrps_HD = ['DIMENSION',
 
 _rlsgrps_SD = ['LOL',
                'ASAP',
+               'BiA',
+               'FoV',
                'FQM',
                'XOR',
                'NoTV',
@@ -124,7 +126,6 @@ _rlsgrps_SD = ['LOL',
 _rlsgrps_xvid = ['AFG']
 
 _rlsgrps_h264 = ['TLA',
-                 'BiA',
                  'BAJSKOR']
 
 _rlsgrps_webdl = ['YFN',
