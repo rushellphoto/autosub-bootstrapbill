@@ -180,15 +180,7 @@ def _getSource(file_info):
 def _getQuality(file_info, HD):
     results = _checkSynonyms(_quality_syn,
                             _returnHits(_quality, file_info))
- 
-    '''
-    This can cause conflicts with releasegroups
-    Leave it out and see what happens
-    if not results:
-        # CheckBOX HD on a7
-        if HD:
-            results.append(u'720p')
-    '''
+
     return results
 
 def _getCodec(file_info):
