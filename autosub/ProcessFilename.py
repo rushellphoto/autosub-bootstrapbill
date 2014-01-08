@@ -11,7 +11,7 @@ import logging
 
 log = logging.getLogger('thelogger')
 
-_noextrainfo = 0
+global _noextrainfo = 0
 
 def _checkTitle(title):
     if not title:
