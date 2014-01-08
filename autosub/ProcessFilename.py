@@ -11,6 +11,8 @@ import logging
 
 log = logging.getLogger('thelogger')
 
+_noextrainfo = 0
+
 def _checkTitle(title):
     if not title:
         log.debug("ProcessFileName: Invalid title. AutoSub needs a showtitle in the video file! S01E02.mkv file are not supported...")
@@ -62,6 +64,8 @@ def _checkSynonyms(synonyms, result):
 def _getSource(file_info):
     result = _checkSynonyms(source_syn,
                             _returnHit(source, file_info))
+    if not result:
+        _noextrainfo += 1
     return result
 
 def _getQuality(file_info, fileext):
@@ -69,6 +73,7 @@ def _getQuality(file_info, fileext):
                             _returnHit(quality, file_info))
     
     if not result:
+        _noextrainfo += 1
         if fileext in quality_fileext.keys():
             result = quality_fileext[fileext]
     
@@ -82,6 +87,7 @@ def _getCodec(file_info, fileext):
                             _returnHit(codec, file_info))
     
     if not result:
+        _noextrainfo += 1
         if fileext in codec_fileext.keys():
             result = codec_fileext[fileext]
     
@@ -91,6 +97,7 @@ def _getReleasegrp(file_info):
     result = _returnHit(releasegrp, file_info)
     
     if not result:
+        _noextrainfo += 1
         resultdict = _returnGroup(releasegrp_fallback, file_info)
         if 'releasegrp' in resultdict.keys():
             result = resultdict['releasegrp']
