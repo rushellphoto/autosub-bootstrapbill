@@ -105,6 +105,9 @@ def walkDir(path):
                                 season = filenameResults['season']
                                 episode = filenameResults['episode']
 
+                                if not filenameResults['releasegrp'] and not filenameResults['source'] and not filenameResults['quality'] and not filenameResults['source']:
+                                    continue
+
                                 if autosub.Helpers.SkipShow(title, season, episode) == True:
                                     log.debug("scanDir: SkipShow returned True")
                                     log.info("scanDir: Skipping %s - Season %s Episode %s" % (title, season, episode))

@@ -149,7 +149,6 @@ def getSubLinks(showid, lang, releaseDetails, a7Response):
     releaseDetails -- Dict containing the quality, releasegrp, source season and episode.
     """
 
-
     sourceWebsites, scoreListSubSeeker, scoreListAddic7ed, fullScoreList  = [],[],[],[]
     if autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
         sourceWebsites.append('podnapisi.net')
