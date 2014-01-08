@@ -21,7 +21,7 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
     # Get the scored list for all SubtitleSeeker hits
     api = autosub.API
 
-    if showid == -1:
+    if int(showid) == -1:
         return None
     quality = None
     releasegrp = None
@@ -77,7 +77,7 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
 def Addic7ed(imdb_id, language, releaseDetails):
 
     # Info about episode file
-    if imdb_id == -1:
+    if int(imdb_id) == -1:
         return None
 
     title = releaseDetails['title']

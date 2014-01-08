@@ -32,7 +32,7 @@ class checkSub():
             return False
         else:
             autosub.WANTEDQUEUELOCK = True
-        
+
         
         # Initiate the Addic7ed API and check the current number of downloads
         a7Response = False
