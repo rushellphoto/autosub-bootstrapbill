@@ -11,8 +11,6 @@ import logging
 
 log = logging.getLogger('thelogger')
 
-global _noextrainfo
-_noextrainfo = 0
 
 def _checkTitle(title):
     if not title:
@@ -66,7 +64,8 @@ def _getSource(file_info):
     result = _checkSynonyms(source_syn,
                             _returnHit(source, file_info))
     if not result:
-        _noextrainfo += 1
+        pass
+        #_noextrainfo += 1
     return result
 
 def _getQuality(file_info, fileext):
@@ -74,7 +73,7 @@ def _getQuality(file_info, fileext):
                             _returnHit(quality, file_info))
     
     if not result:
-        _noextrainfo += 1
+        #_noextrainfo += 1
         if fileext in quality_fileext.keys():
             result = quality_fileext[fileext]
     
@@ -88,7 +87,7 @@ def _getCodec(file_info, fileext):
                             _returnHit(codec, file_info))
     
     if not result:
-        _noextrainfo += 1
+        #_noextrainfo += 1
         if fileext in codec_fileext.keys():
             result = codec_fileext[fileext]
     
@@ -98,7 +97,7 @@ def _getReleasegrp(file_info):
     result = _returnHit(releasegrp, file_info)
     
     if not result:
-        _noextrainfo += 1
+        #_noextrainfo += 1
         resultdict = _returnGroup(releasegrp_fallback, file_info)
         if 'releasegrp' in resultdict.keys():
             result = resultdict['releasegrp']
@@ -125,7 +124,7 @@ def ProcessFilename(filename, fileext):
     season = None
     episode = None
     file_info = None
-    
+
     if show_info:
         if 'title' in show_info.keys(): title = _checkTitle(show_info['title'])
         if 'season' in show_info.keys(): season = _returnSceneNumber(show_info['season'])
@@ -134,11 +133,12 @@ def ProcessFilename(filename, fileext):
         
         if file_info:
             file_info = file_info.lower()
-      
+
     source = _getSource(file_info)
     quality = _getQuality(file_info, fileext)
     codec = _getCodec(file_info, fileext)
     releasegrp = _getReleasegrp(file_info)
+
     
     if title and season and episode:
         show_dict = {}
