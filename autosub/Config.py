@@ -610,6 +610,7 @@ def ReadConfig(configfile):
             "house of cards 2013" :"1856010",
             "how i met your mother" : "0460649",
             "How To Survive The End Of The World" : "3377330",
+            "Intelligence us" : "2693776",
             "king" :"1804880",
             "kings of crash" : "2623754",
             "Last Man Standing" : "1828327",
