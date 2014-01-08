@@ -11,6 +11,7 @@ import logging
 
 log = logging.getLogger('thelogger')
 
+_noextrainfo = 0
 
 def _checkTitle(title):
     if not title:
@@ -64,8 +65,8 @@ def _getSource(file_info):
     result = _checkSynonyms(source_syn,
                             _returnHit(source, file_info))
     if not result:
-        pass
-        #_noextrainfo += 1
+        global _noextrainfo
+        _noextrainfo += 1
     return result
 
 def _getQuality(file_info, fileext):
@@ -73,7 +74,8 @@ def _getQuality(file_info, fileext):
                             _returnHit(quality, file_info))
     
     if not result:
-        #_noextrainfo += 1
+        global _noextrainfo
+        _noextrainfo += 1
         if fileext in quality_fileext.keys():
             result = quality_fileext[fileext]
     
@@ -87,7 +89,8 @@ def _getCodec(file_info, fileext):
                             _returnHit(codec, file_info))
     
     if not result:
-        #_noextrainfo += 1
+        global _noextrainfo
+        _noextrainfo += 1
         if fileext in codec_fileext.keys():
             result = codec_fileext[fileext]
     
@@ -97,7 +100,8 @@ def _getReleasegrp(file_info):
     result = _returnHit(releasegrp, file_info)
     
     if not result:
-        #_noextrainfo += 1
+        global _noextrainfo
+        _noextrainfo += 1
         resultdict = _returnGroup(releasegrp_fallback, file_info)
         if 'releasegrp' in resultdict.keys():
             result = resultdict['releasegrp']
@@ -125,6 +129,9 @@ def ProcessFilename(filename, fileext):
     episode = None
     file_info = None
 
+    global _noextrainfo
+    _noextrainfo = 0
+
     if show_info:
         if 'title' in show_info.keys(): title = _checkTitle(show_info['title'])
         if 'season' in show_info.keys(): season = _returnSceneNumber(show_info['season'])
@@ -139,8 +146,7 @@ def ProcessFilename(filename, fileext):
     codec = _getCodec(file_info, fileext)
     releasegrp = _getReleasegrp(file_info)
 
-    
-    if title and season and episode:
+    if title and season and episode and _noextrainfo < 4:
         show_dict = {}
         show_dict['title'] = title
         show_dict['season'] = season
