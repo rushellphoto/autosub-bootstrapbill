@@ -285,7 +285,7 @@ def getShowid(show_name):
     show_id = idCache().getId(show_name)
     if show_id:
         log.debug('getShowid: showid from cache %s' %show_id)
-        if show_id == -1:
+        if int(show_id) == -1:
             log.error('getShowid: showid not found for %s' %show_name)
             return
         return show_id
@@ -331,7 +331,7 @@ def geta7id(showTitle, imdb_id):
     a7_id = a7idCache().getId(imdb_id)
     if a7_id:
         log.debug('geta7id: addic7ed ID from cache %s' %a7_id)
-        if a7_id == -1:
+        if int(a7_id) == -1:
             log.error('geta7id: addic7ed ID not found for %s' %a7_id)
             return
         return a7_id

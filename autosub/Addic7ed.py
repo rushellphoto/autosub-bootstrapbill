@@ -553,6 +553,10 @@ class Addic7edAPI():
         else:
             log.warning("geta7IDApi: Out of TvDB API calls")
             return None
+
+        if isinstance(offShowName, bool):
+            log.debug("geta7IDApi: IMDb ID %s returned %s as showname" (imdbID, offShowName))
+            return None
         
         show_ids={}
         try:
