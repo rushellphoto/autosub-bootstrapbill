@@ -50,7 +50,7 @@ def walkDir(path):
                 if re.search('sample', filename): continue
 
                 if not platform.system() == 'Windows':
-                    # Get best ascii compatible character for special characters (é,ü etc.)
+                    # Get best ascii compatible character for special characters
                     correctedFilename = ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
                     if filename != correctedFilename:
                         os.rename(os.path.join(dirname, filename), os.path.join(dirname, correctedFilename))
