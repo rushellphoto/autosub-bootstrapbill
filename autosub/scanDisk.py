@@ -52,13 +52,19 @@ def walkDir(path):
                 if not platform.system() == 'Windows':
                     # Get best ascii compatible character for special characters
 
-                    if isinstance(filename, str):
-                        filename = unicode(filename.decode('utf-8'))
-                    correctedFilename = ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
-                    if filename != correctedFilename:
-                        os.rename(os.path.join(dirname, filename), os.path.join(dirname, correctedFilename))
-                        log.info("scanDir: Renamed file %s" % correctedFilename)
-                        filename = correctedFilename
+                    try:
+                        if isinstance(filename, str):
+                            filename = unicode(filename.decode('utf-8'))
+                        correctedFilename = ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
+                        if filename != correctedFilename:
+                            os.rename(os.path.join(dirname, filename), os.path.join(dirname, correctedFilename))
+                            log.info("scanDir: Renamed file %s" % correctedFilename)
+                            filename = correctedFilename
+                    except:
+                        log.error("scanDir: Skipping directory %s" % dirname)
+		                log.error("scanDir: Skipping file %s" % filename)
+		                continue
+
 
                 # What subtitle files should we expect?
 
@@ -158,10 +164,11 @@ class scanDisk():
                 continue
             
             # Temporary to try and figure out the problem
-            #try:
-            walkDir(seriespath)
-            #except:
-            #    walkDir(str(seriespath))
+            try:
+                walkDir(seriespath)
+            except:
+                log.error("scanDir: Something went wrong when traversing directory %s" % seriespath)
+                #walkDir(str(seriespath))
                                           
         log.debug("scanDir: Finished round of local disk checking")
         autosub.WANTEDQUEUELOCK = False
