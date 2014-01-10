@@ -24,6 +24,11 @@ log = logging.getLogger('thelogger')
 #The second (and following) regex contains nonstandard naming (either typo's or other renaming tools (like sickbeard)) 
 #Nonstandard naming should be renamed using the syn dictionary. 
 
+_show = [re.compile('(.+)\s+\(?(\d{4})\)?', re.IGNORECASE),
+              re.compile('(.+)\s+\(?(us)\)?', re.IGNORECASE),
+              re.compile('(.+)\s+\(?(uk)\)?', re.IGNORECASE)]
+
+
 _source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|bluray|dvdrip|webrip)", re.IGNORECASE),
           re.compile("(tv|dvd|bdrip|web)", re.IGNORECASE)]
 
@@ -195,6 +200,18 @@ def _getReleasegrp(file_info):
     results = _returnHits(_regexRls(_allRlsgrps, list=True), file_info)
     
     return results
+
+
+def _getShow(title):
+    searchName = title
+    suffix = ''
+    for reg in _show:
+        m = re.match(reg, title)
+        if m:
+            searchName = m.group(1)
+            suffix = m.group(2)
+            break
+    return searchName, suffix
 
 
 def _ParseVersionInfo(version_info, HD):
@@ -545,7 +562,7 @@ class Addic7edAPI():
         
         return True    
     
-    def geta7ID(self, imdbID):
+    def geta7ID(self, imdbID, localShowName):
         # Last resort: lookup official name and try to match with a7 show list
         # Get the official show name
         if autosub.Helpers.checkAPICallsTvdb(use=False): 
@@ -565,7 +582,7 @@ class Addic7edAPI():
                 show_ids[html_show.string.lower()] = int(html_show['href'][6:])
             print 
         except:
-            log.error('geta7ID: failed to retrieve a7 show list')
+            log.error('geta7IDApi: failed to retrieve a7 show list')
             return None
         
         
@@ -573,24 +590,28 @@ class Addic7edAPI():
         show_regex = [re.compile('(.+)\s+\(?(\d{4})\)?', re.IGNORECASE),
                       re.compile('(.+)\s+\(?(us)\)?', re.IGNORECASE),
                       re.compile('(.+)\s+\(?(uk)\)?', re.IGNORECASE)]
-        
-        # Default Search name is the official show name
-        searchName = offShowName
-        suffix = ''
-        for reg in show_regex:
-            m = re.match(reg, offShowName)
-            if m:
-                searchName = m.group(1)
-                suffix = m.group(2)
-                break
-        
+
+
+        searchName_off, suffix_off = _getShow(offShowName)
+        searchName_local, suffix_local = _getShow(localShowName)
         for show in show_ids:
-            m = re.match('%s(.*)' % searchName, show, re.I)
+            # First try it with the official show name from TvDB
+            m = re.match('%s(.*)' % searchName_off, show, re.I)
             if m:
                 # Get False-Positive UK titles out; assumes UK is always indicated
-                if not re.search('UK', suffix, re.I) and re.search('UK', m.group(1), re.I):
+                if not re.search('UK', suffix_off, re.I) and re.search('UK', m.group(1), re.I):
                     continue
                 a7_id = show_ids[show]
+                log.debug("geta7IDApi: a7 ID %s found using the official show name %s" % (a7_id, offShowName))
                 return a7_id
-        
+            # Else try it with the show name from the episode file
+            n = re.match('%s(.*)' % searchName_local, show, re.I)
+            if n:
+                # Get False-Positive UK titles out; assumes UK is always indicated
+                if not re.search('UK', suffix_local, re.I) and re.search('UK', n.group(1), re.I):
+                    continue
+                a7_id = show_ids[show]
+                log.debug("geta7IDApi: a7 ID %s found using filename show name %s" % (a7_id, localShowName))
+                return a7_id
+
         return

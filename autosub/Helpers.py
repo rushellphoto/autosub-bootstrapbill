@@ -305,7 +305,7 @@ def getShowid(show_name):
         return str(show_id)
     
     log.error('getShowid: showid not found for %s' %show_name)
-    idCache().setId(-1, show_name)
+    #idCache().setId(-1, show_name)
     
 def geta7id(showTitle, imdb_id):
     
@@ -332,12 +332,12 @@ def geta7id(showTitle, imdb_id):
     if a7_id:
         log.debug('geta7id: addic7ed ID from cache %s' %a7_id)
         if int(a7_id) == -1:
-            log.error('geta7id: addic7ed ID not found for %s' %a7_id)
+            log.error('geta7id: addic7ed ID not found for %s' %showTitle)
             return
         return a7_id
     
     # From Addic7ed show overview page
-    a7_id = Addic7edAPI().geta7ID(imdb_id)  
+    a7_id = Addic7edAPI().geta7ID(imdb_id, showTitle)
     if a7_id:
         log.debug('geta7id: addic7ed ID from Addic7ed show overview page %s' %a7_id)
         a7idCache().setId(a7_id, imdb_id)
@@ -346,7 +346,7 @@ def geta7id(showTitle, imdb_id):
     
     log.error('geta7id: addic7ed ID not found for %s' %showTitle)
     
-    a7idCache().setId(-1, imdb_id)
+    #a7idCache().setId(-1, imdb_id)
     
 
 def DisplayLogFile(loglevel):
