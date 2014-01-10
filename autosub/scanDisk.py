@@ -62,8 +62,8 @@ def walkDir(path):
                             filename = correctedFilename
                     except:
                         log.error("scanDir: Skipping directory %s" % dirname)
-		                log.error("scanDir: Skipping file %s" % filename)
-		                continue
+                        log.error("scanDir: Skipping file %s" % filename)
+                        continue
 
 
                 # What subtitle files should we expect?
@@ -154,7 +154,7 @@ class scanDisk():
             return False
         else:
             autosub.WANTEDQUEUELOCK = True
-        
+
         autosub.WANTEDQUEUE = []
 
         seriespaths = [x.strip() for x in autosub.ROOTPATH.split(',')]
@@ -162,15 +162,15 @@ class scanDisk():
             if not os.path.exists(seriespath):
                 log.error("scanDir: Root path %s does not exist, aborting..." % seriespath)
                 continue
-            
+
             # Temporary to try and figure out the problem
             try:
                 walkDir(seriespath)
             except:
                 log.error("scanDir: Something went wrong when traversing directory %s" % seriespath)
                 #walkDir(str(seriespath))
-                                          
+
         log.debug("scanDir: Finished round of local disk checking")
         autosub.WANTEDQUEUELOCK = False
- 
+
         return True
