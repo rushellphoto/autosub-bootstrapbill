@@ -18,7 +18,7 @@ except:
 import threading
 import time
 import autosub.Config
-from autosub.Db import idCache, lastDown
+from autosub.Db import idCache, lastDown, a7idCache
 
 import autosub.notify as notify
 
@@ -216,6 +216,7 @@ class Config:
     @cherrypy.expose
     def flushCache(self):
         idCache().flushCache()
+        a7idCache().flushCache()
         message = 'ID Cache flushed'
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
         tmpl.message = message

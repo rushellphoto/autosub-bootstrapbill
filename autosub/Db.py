@@ -205,6 +205,15 @@ def upgradeDb(from_version, to_version):
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (5,4))
             connection.commit()
             connection.close()
+        if from_version == 5 and to_version == 6:
+            #Clear id cache once, so we don't get invalid reports about non working IMDB/A7 ID's
+            connection=sqlite3.connect(autosub.DBFILE)
+            cursor=connection.cursor()
+            cursor.execute("delete from id_cache;")
+            cursor.execute("delete from a7id_cache;")
+            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (6,5))
+            connection.commit()
+            connection.close()
             
 
 def getDbVersion():
