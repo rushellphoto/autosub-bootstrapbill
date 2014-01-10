@@ -146,7 +146,7 @@ def ProcessFilename(filename, fileext):
     codec = _getCodec(file_info, fileext)
     releasegrp = _getReleasegrp(file_info)
 
-    if title and season and episode and _noextrainfo < 4:
+    if title and season and episode: #and _noextrainfo < 4:
         show_dict = {}
         show_dict['title'] = title
         show_dict['season'] = season
