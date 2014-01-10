@@ -83,7 +83,11 @@ class Config:
             autosub.Config.SaveToConfig('skipshow',title,season)
             autosub.Config.applyskipShow()
             
-            tmpl.message = "<strong>%s</strong> season <strong>%s</strong> will be skipped.<br> This will happen the next time that Auto-Sub checks for subtitles" % (title.title(), season)
+            if season == '0':
+                tmpl.message = "<strong>%s</strong> will be skipped.<br> This will happen the next time that Auto-Sub checks for subtitles" % title.title()
+            else:
+                tmpl.message = "<strong>%s</strong> season <strong>%s</strong> will be skipped.<br> This will happen the next time that Auto-Sub checks for subtitles" % (title.title(), season)
+            
             tmpl.displaymessage = "Yes"
             tmpl.modalheader = "Information"
             return str(tmpl)
