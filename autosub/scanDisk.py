@@ -51,6 +51,9 @@ def walkDir(path):
 
                 if not platform.system() == 'Windows':
                     # Get best ascii compatible character for special characters
+
+                    if isinstance(filename, str):
+                        filename = unicode(filename.decode('utf-8'))
                     correctedFilename = ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
                     if filename != correctedFilename:
                         os.rename(os.path.join(dirname, filename), os.path.join(dirname, correctedFilename))
@@ -154,10 +157,11 @@ class scanDisk():
                 log.error("scanDir: Root path %s does not exist, aborting..." % seriespath)
                 continue
             
-            try:
-                walkDir(seriespath)
-            except:
-                walkDir(str(seriespath))
+            # Temporary to try and figure out the problem
+            #try:
+            walkDir(seriespath)
+            #except:
+            #    walkDir(str(seriespath))
                                           
         log.debug("scanDir: Finished round of local disk checking")
         autosub.WANTEDQUEUELOCK = False
