@@ -105,7 +105,7 @@ class Config:
     def saveConfig(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, 
                    path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, englishsubdelete, username, 
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
-                   webserverip, webserverport, usernamemapping, notifyen, notifynl, homelayoutfirst,
+                   webserverip, webserverport, usernamemapping, useraddic7edmapping, notifyen, notifynl, homelayoutfirst,
                    podnapisilang, subscenelang, bierdopjemirrorlang, undertexterlang,
                    addic7edlang, addic7eduser, addic7edpasswd, downloaddutch,
                    mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None):
@@ -158,6 +158,7 @@ class Config:
         autosub.WEBROOT = webroot
         autosub.SKIPSHOW = autosub.Config.stringToDict(skipshow)
         autosub.USERNAMEMAPPING = autosub.Config.stringToDict(usernamemapping)
+        autosub.USERADDIC7EDMAPPING = autosub.Config.stringToDict(useraddic7edmapping)
 
         # Now save to the configfile
         message = autosub.Config.WriteConfig(configsection="")

@@ -324,6 +324,15 @@ def ReadConfig(configfile):
     else:
         autosub.USERNAMEMAPPING = {}
         autosub.USERNAMEMAPPINGUPPER = {}
+    
+    if cfg.has_section('addic7edmapping'):
+        autosub.USERADDIC7EDMAPPING = dict(cfg.items('addic7edmapping'))
+        autosub.USERADDIC7EDMAPPINGUPPER = {}
+        for x in autosub.USERADDIC7EDMAPPING.keys():
+            autosub.USERADDIC7EDMAPPINGUPPER[x.upper()] = autosub.USERADDIC7EDMAPPING[x]
+    else:
+        autosub.USERADDIC7EDMAPPING = {}
+        autosub.USERADDIC7EDMAPPINGUPPER = {}
 
     if cfg.has_section('notify'):
             #Mail
@@ -784,6 +793,26 @@ def applynameMapping():
     for x in autosub.USERNAMEMAPPING.keys():
         autosub.USERNAMEMAPPINGUPPER[x.upper()] = autosub.USERNAMEMAPPING[x]
 
+def applyAddic7edMapping():
+    """
+    Read addic7edmapping in the config file.
+    """
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosub.CONFIGFILE, 'r', autosub.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        #no config yet
+        pass
+    
+    autosub.SHOWID_CACHE = {}
+    if cfg.has_section("addic7edmapping"):
+        autosub.USERADDIC7EDMAPPING = dict(cfg.items('addic7edmapping'))
+    else:
+        autosub.USERADDIC7EDMAPPING = {}
+    autosub.USERADDIC7EDMAPPINGUPPER = {}
+    for x in autosub.USERADDIC7EDMAPPING.keys():
+        autosub.USERADDIC7EDMAPPINGUPPER[x.upper()] = autosub.USERADDIC7EDMAPPING[x]
 
 def applyskipShow():
     """
@@ -811,6 +840,7 @@ def applyAllSettings():
     Read namemapping and skipshow from the config file.
     """
     applynameMapping()
+    applyAddic7edMapping()
     applyskipShow()
 
 
@@ -837,6 +867,16 @@ def displayNamemapping():
         s += x + " = " + str(autosub.USERNAMEMAPPING[x]) + "\n"
     return s
 
+def displayAddic7edmapping():
+    """
+    Return a string containing all info from user namemapping.
+    After each shows addic7edmapping an '\n' is added to create multiple rows
+    in a textarea.
+    """
+    s = ""
+    for x in autosub.USERADDIC7EDMAPPING:
+        s += x + " = " + str(autosub.USERADDIC7EDMAPPING[x]) + "\n"
+    return s
 
 def stringToDict(items=None):
     """
@@ -1018,6 +1058,33 @@ def saveUsernamemappingSection():
 
     # Set all namemapping stuff correct
     applynameMapping()
+    
+def saveUserAddic7edmappingSection():
+    """
+    Save stuff
+    """
+    section = 'addic7edmapping'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosub.CONFIGFILE, 'r', autosub.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        #no config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+        cfg.add_section(section)
+        with open(autosub.CONFIGFILE, 'wb') as cfile:
+            cfg.write(cfile)
+
+    for x in autosub.USERADDIC7EDMAPPING:
+        SaveToConfig('addic7edmapping', x, autosub.USERADDIC7EDMAPPING[x])
+
+    # Set all addic7edmapping stuff correct
+    applyAddic7edMapping()
 
 def saveNotifySection():
     """
@@ -1194,6 +1261,7 @@ def WriteConfig(configsection=None):
         saveWebserverSection()
         saveSkipshowSection()
         saveUsernamemappingSection()
+        saveUserAddic7edmappingSection()
 
     if restart:
         # This needs to be replaced by a restart thingy, until then, just re-read the config and tell the users to do a manual restart

@@ -216,6 +216,11 @@ def scoreMatch(releasedict, release, quality, releasegrp, source, codec):
     return score
 
 
+def Addic7edMapping(imdb_id):
+    if imdb_id in autosub.USERADDIC7EDMAPPINGUPPER.keys():
+        log.debug("nameMapping: found match in user's addic7edmapping for %s" % imdb_id)
+        return autosub.USERADDIC7EDMAPPINGUPPER[imdb_id]
+
 def nameMapping(showName):
     if showName.upper() in autosub.USERNAMEMAPPINGUPPER.keys():
         log.debug("nameMapping: found match in user's namemapping for %s" % showName)
@@ -314,11 +319,11 @@ def geta7id(showTitle, imdb_id):
 
     log.debug('geta7id: trying to get addic7ed ID for show %s with IMDB ID %s' % (showTitle, imdb_id))
     
-    # user defined ID mapping (to do) 
-    #show_id = nameMapping(show_name)
-    #if show_id:
-    #    log.debug('getShowid: showid from namemapping %s' %show_id)
-    #    return show_id
+    # From user addic7ed mapping
+    a7_id = Addic7edMapping(imdb_id)
+    if a7_id:
+        log.debug('geta7ID: showid from addic7edmapping %s' %a7_id)
+        return a7_id
 
     # From lookup table
     if imdb_id in a7IdDict.keys():
