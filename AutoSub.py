@@ -5,6 +5,13 @@ import signal
 import time
 import locale
 
+# Root path
+base_path = os.path.dirname(os.path.abspath(__file__))
+
+# Insert local directories into path
+sys.path.insert(0, os.path.join(base_path, 'library'))
+
+
 #signal.signal(signal.SIGTERM, autosub.AutoSub.signal_handler)
 
 help_message = '''
