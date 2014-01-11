@@ -43,7 +43,7 @@ _source_syn = {u'tv' : u'hdtv',
 
 
 _quality = [re.compile("(1080p|720p|480p)" , re.IGNORECASE), 
-           re.compile("(1080[i]*|720|480|HD|SD)", re.IGNORECASE)]
+           re.compile("(1080[i]*|720|480|HD[^T]|SD)", re.IGNORECASE)]
 
 _quality_syn = {u'1080' : u'1080p',
                u'1080i' : u'1080p',
@@ -393,7 +393,7 @@ def ReconstructRelease(version_info, HD):
     # This method reconstructs the original releasename    
     # First split up all components
     parametersList = _ParseVersionInfo(version_info, HD)
-     
+
     #First check for unresolvable versions (eg 3 sources combined with multiple qualities)
     problem = _checkIfParseable(parametersList)
     if problem:
@@ -413,9 +413,9 @@ def ReconstructRelease(version_info, HD):
     {'source': sour, 'quality': qual, 'codec': cod, 'releasegrp': rls}
     for sour, qual, cod, rls in product(sources, qualities, codecs, releasegroups)
     ]
+
     
-    
-    # Check for conflicting entries 
+    # Check for conflicting entries
     versionDicts = _checkConflicts(versionDicts)
     if not versionDicts:
         return False
