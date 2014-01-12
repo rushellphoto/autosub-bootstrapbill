@@ -42,6 +42,7 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
             return None
     else:
         log.error("API: out of api calls for SubtitleSeeker.com")
+        return None
 
     if 'quality' in releaseDetails.keys(): quality = releaseDetails['quality']
     if 'releasegrp' in releaseDetails.keys(): releasegrp = releaseDetails['releasegrp']
