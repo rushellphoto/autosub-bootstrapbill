@@ -470,6 +470,8 @@ class Addic7edAPI():
             r = self.session.post(self.server + '/dologin.php', data, timeout=10, allow_redirects=False)
         except requests.Timeout:
             log.debug('Addic7edAPI: Timeout after 10 seconds')
+            return False
+        
         if r.status_code == 302:
             log.info('Addic7edAPI: Logged in')
             self.logged_in = True
