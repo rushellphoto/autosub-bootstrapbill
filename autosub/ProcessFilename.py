@@ -16,7 +16,7 @@ _noextrainfo = 0
 def _checkTitle(title):
     if not title:
         log.debug("ProcessFileName: Invalid title. AutoSub needs a showtitle in the video file! S01E02.mkv file are not supported...")
-        return
+        return None
     
     for reg in episode_regex:
         results = re.findall(reg, title)
@@ -26,7 +26,7 @@ def _checkTitle(title):
 
 def _returnHit(regex, file_info):
     if not file_info:
-        return
+        return None
     
     for reg in regex:
         results = re.findall(reg, file_info)
@@ -112,7 +112,7 @@ def _getReleasegrp(file_info):
 
 def _returnSceneNumber(number):
     if not number:
-        return
+        return None
     
     number = int(number)
     if number <=9:

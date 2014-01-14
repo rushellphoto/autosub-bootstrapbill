@@ -570,6 +570,7 @@ def ReadConfig(configfile):
             "Charlies Angels 2011" :"1760943",
             "chicago fire" : "2261391",
             "chicago fire (2012)" : "2261391",
+            "chicago pd" : "2805096",
             "Common Law 2012" :"1771072",
             "continuum" : "1954347",
             "covert affairs" :"1495708",

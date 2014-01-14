@@ -18,7 +18,7 @@ from autosub.ProcessFilename import ProcessFilename
 log = logging.getLogger('thelogger')
 
 def walkDir(path):
-    for dirname, dirnames, filenames in os.walk(os.path.join(path)):
+    for dirname, dirnames, filenames in os.walk(path):
         log.debug("scanDisk: directory name: %s" %dirname)
         if re.search('_unpack_', dirname, re.IGNORECASE):
             log.debug("scanDisk: found a unpack directory, skipping")
@@ -159,6 +159,7 @@ class scanDisk():
 
         seriespaths = [x.strip() for x in autosub.ROOTPATH.split(',')]
         for seriespath in seriespaths:
+
             if not os.path.exists(seriespath):
                 log.error("scanDir: Root path %s does not exist, aborting..." % seriespath)
                 continue
