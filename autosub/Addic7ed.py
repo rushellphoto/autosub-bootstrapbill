@@ -8,6 +8,7 @@ import re
 import library.requests as requests
 from bs4 import BeautifulSoup
 import time
+import sys
 
 import autosub
 import autosub.Helpers
@@ -506,7 +507,10 @@ class Addic7edAPI():
         try:
             r = self.session.get(self.server + url, timeout=10)
         except requests.Timeout:
-            log.debug('Addic7edAPI: Timeout after 10 seconds')
+            log.error('Addic7edAPI: Timeout after 10 seconds')
+            return None
+        except:
+            log.error('Addic7edAPI: Unexpected error: %s' % sys.exc_info()[0])
             return None
         
         if r.status_code != 200:
@@ -526,7 +530,10 @@ class Addic7edAPI():
         except requests.Timeout:
             log.error('Addic7edAPI: Timeout after 10 seconds')
             return None
-        
+        except:
+            log.error('Addic7edAPI: Unexpected error: %s' % sys.exc_info()[0])
+            return None
+
         if r.status_code != 200:
             log.error('Addic7edAPI: Request failed with status code %d' % r.status_code)
         else:
@@ -618,4 +625,4 @@ class Addic7edAPI():
                 log.debug("geta7IDApi: a7 ID %s found using filename show name %s" % (a7_id, localShowName))
                 return a7_id
 
-        return
+        return None
