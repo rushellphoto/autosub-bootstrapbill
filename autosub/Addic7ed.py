@@ -21,6 +21,7 @@ import logging
 
 log = logging.getLogger('thelogger')
 
+
 #Every part of the file_info got a list with regex. The first item in this list should be the standardnaming
 #The second (and following) regex contains nonstandard naming (either typo's or other renaming tools (like sickbeard)) 
 #Nonstandard naming should be renamed using the syn dictionary. 
