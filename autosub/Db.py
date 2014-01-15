@@ -164,7 +164,7 @@ def upgradeDb(from_version, to_version):
     if upgrades != 1:
         print "upgradeDb: %s upgrades are required. Starting subupgrades" % upgrades
         for x in range (0, upgrades):
-            upgradeDb((from_version + x, from_version + x + 1))
+            upgradeDb(from_version + x, from_version + x + 1)
     else:
         if from_version == 1 and to_version == 2:
             #Add codec and timestamp
@@ -242,5 +242,5 @@ def initDatabase():
     if autosub.DBVERSION < version.dbversion:
         upgradeDb(autosub.DBVERSION, version.dbversion)
     elif autosub.DBVERSION > version.dbversion:
-        print "initDatabase: Database version higher then this version of AutoSub supports. Update!!!"
+        print "initDatabase: Database version higher than this version of AutoSub supports. Update!!!"
         os._exit(1)
