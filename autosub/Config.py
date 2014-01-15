@@ -223,13 +223,7 @@ def ReadConfig(configfile):
         autosub.ADDIC7EDLANG = u"None"
         autosub.ADDIC7EDUSER = u""
         autosub.ADDIC7EDPASSWD = u""
-    
-    if autosub.CONFIGVERSION < version.configversion:
-        upgradeConfig(autosub.CONFIGVERSION, version.configversion)
-    elif autosub.CONFIGVERSION > version.configversion:
-        print "Config: ERROR! Config version higher then this version of AutoSub supports. Update AutoSub!"
-        os._exit(1)
-    
+
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "loglevel"):
             autosub.LOGLEVEL = cfg.get("logfile", "loglevel")
@@ -741,6 +735,11 @@ def ReadConfig(configfile):
 
     autosub.LASTESTDOWNLOAD = []
 
+    if autosub.CONFIGVERSION < version.configversion:
+        upgradeConfig(autosub.CONFIGVERSION, version.configversion)
+    elif autosub.CONFIGVERSION > version.configversion:
+        print "Config: ERROR! Config version higher then this version of AutoSub supports. Update AutoSub!"
+        os._exit(1)
 
 def SaveToConfig(section=None, variable=None, value=None):
     """
@@ -1278,8 +1277,8 @@ def upgradeConfig(from_version, to_version):
     upgrades = to_version - from_version
     if upgrades != 1:
         print "Config: More than 1 upgrade required. Starting subupgrades"
-        for x in range (from_version, upgrades + 1):
-            upgradeConfig((from_version - 1) + x, x + 1)
+        for x in range (0, upgrades):
+            upgradeConfig(from_version + x, from_version + x + 1)
     else:
         if from_version == 1 and to_version == 2:
             print "Config: Upgrading minmatchscores"
@@ -1294,3 +1293,14 @@ def upgradeConfig(from_version, to_version):
             print "Config: Config upgraded to version 2"
             autosub.CONFIGVERSION = 2
             autosub.CONFIGUPGRADED = True
+        elif from_version == 2 and to_version == 3:
+            for title in autosub.SKIPSHOWUPPER:
+                items = autosub.SKIPSHOWUPPER[title]
+                items = ['-1' if x=='0' else x for x in items]
+                items = ['0' if x=='00' else x for x in items]
+                string_items = ','.join(items)
+                SaveToConfig('skipshow', title, string_items)
+                applyskipShow()
+            autosub.CONFIGVERSION = 3
+            autosub.CONFIGUPGRADED = True
+
