@@ -162,9 +162,9 @@ def upgradeDb(from_version, to_version):
     print "upgradeDb: Upgrading database  from version %d to version %d" %(from_version, to_version)
     upgrades = to_version - from_version
     if upgrades != 1:
-        print "upgradeDb: More than 1 upgrade required. Starting subupgrades"
-        for x in range (from_version, upgrades + 1):
-            upgradeDb((from_version - 1) + x, x + 1)
+        print "upgradeDb: %s upgrades are required. Starting subupgrades" % upgrades
+        for x in range (0, upgrades):
+            upgradeDb((from_version + x, from_version + x + 1))
     else:
         if from_version == 1 and to_version == 2:
             #Add codec and timestamp
