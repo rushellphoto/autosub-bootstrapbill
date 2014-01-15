@@ -311,7 +311,7 @@ def ReadConfig(configfile):
         # The following 4 lines convert the skipshow to uppercase. And also convert the variables to a list
         autosub.SKIPSHOWUPPER = {}
         for x in autosub.SKIPSHOW:
-            autosub.SKIPSHOWUPPER[x.upper()] = autosub.SKIPSHOW[x].split(',')
+            autosub.SKIPSHOWUPPER[x.upper()] = [y.strip() for y in autosub.SKIPSHOW[x].split(',')]
     else:
         autosub.SKIPSHOW = {}
         autosub.SKIPSHOWUPPER = {}

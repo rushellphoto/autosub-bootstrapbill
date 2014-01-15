@@ -7,6 +7,7 @@
 
 import cherrypy
 import logging
+from ast import literal_eval
 
 log = logging.getLogger('thelogger')
 
@@ -59,32 +60,48 @@ class Config:
         return str(tmpl)  
 
     @cherrypy.expose
-    def skipShow(self, title, season=None):
+    def skipShow(self, title, season=None, episode=None):
+        episodestoskip = None
         if not season:
             tmpl = PageTemplate(file="interface/templates/config-skipshow.tmpl")
             tmpl.title = title
             return str(tmpl)
         else:
+            season = int(season)
             tmpl = PageTemplate(file="interface/templates/home.tmpl")
             if not title:
                 raise cherrypy.HTTPError(400, "No show supplied")
             if title.upper() in autosub.SKIPSHOWUPPER:
                 for x in autosub.SKIPSHOWUPPER[title.upper()]:
-                    if x == season or x == '0':
-                        tmpl.message = "This show is already being skipped"
+                    x = literal_eval(x)
+                    x_season = int(x)
+                    x_episode = int(round((x-x_season) * 100))
+                    print x_season, x_episode, season, episode
+                    if x == -1 or (x_season == season and (x_episode == 0 or (episode and x_episode == int(episode)))):
+                        tmpl.message = "This show/season/episode is already being skipped"
+                        tmpl.displaymessage = "Yes"
+                        tmpl.modalheader = "Information"
                         return str(tmpl)
-                if season == '00':
-                    season = season + ',' + ','.join(autosub.SKIPSHOWUPPER[title.upper()])
+                if episode:
+                    episodestoskip = str(season + float(episode)/100)
                 else:
-                    season = str(int(season)) + ',' + ','.join(autosub.SKIPSHOWUPPER[title.upper()])
+                    episodestoskip = str(season)
+                episodestoskip = episodestoskip + ',' + ','.join(autosub.SKIPSHOWUPPER[title.upper()])
             else:
-                if not season == '00':
-                    season = str(int(season))
-            autosub.Config.SaveToConfig('skipshow',title,season)
+                if episode:
+                    episodestoskip = str(season + float(episode)/100)
+                else:
+                    episodestoskip = str(season)
+
+            autosub.Config.SaveToConfig('skipshow',title,episodestoskip)
             autosub.Config.applyskipShow()
-            
-            if season == '0':
+
+            print season, episode
+
+            if season == -1:
                 tmpl.message = "<strong>%s</strong> will be skipped.<br> This will happen the next time that Auto-Sub checks for subtitles" % title.title()
+            elif episode:
+                tmpl.message = "<strong>%s</strong> season <strong>%s</strong> episode <strong>%s</strong> will be skipped.<br> This will happen the next time that Auto-Sub checks for subtitles" % (title.title(), season, episode)
             else:
                 tmpl.message = "<strong>%s</strong> season <strong>%s</strong> will be skipped.<br> This will happen the next time that Auto-Sub checks for subtitles" % (title.title(), season)
             

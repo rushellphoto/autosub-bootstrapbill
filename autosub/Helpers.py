@@ -11,6 +11,7 @@ import time
 import urllib2
 import codecs
 import os
+from ast import literal_eval
 
 from library import version
 from autosub.version import autosubversion
@@ -21,7 +22,6 @@ import Tvdb
 from autosub.Db import idCache, a7idCache
 from autosub.ID_lookup import a7IdDict
 from autosub.Addic7ed import Addic7edAPI
-
 
 # Settings
 log = logging.getLogger('thelogger')
@@ -140,7 +140,6 @@ def ReturnUpper(text):
     except:
         pass
 
-
 def matchQuality(quality, item):
     if quality == u"SD":
         if re.search('720', item):
@@ -233,12 +232,33 @@ def SkipShow(showName, season, episode):
     if showName.upper() in autosub.SKIPSHOWUPPER.keys():
         log.debug("SkipShow: Found %s in skipshow dictonary" % showName)
         for seasontmp in autosub.SKIPSHOWUPPER[showName.upper()]:
-            if seasontmp == '0':
-                log.debug("SkipShow: variable of %s is set to 0, skipping the complete Serie" % showName)
+            # Skip entire TV show
+            if seasontmp == '-1':
+                log.debug("SkipShow: variable of %s is set to -1, skipping the complete Serie" % showName)
                 return True
-            elif int(seasontmp) == int(season):
-                log.debug("SkipShow: Season matches variable of %s, skipping season" % showName)
-                return True
+            try:
+                toskip = literal_eval(seasontmp)
+            except:
+                log.error("SkipShow: %s is not a valid parameter, check your Skipshow settings" % seasontmp)
+                continue
+            # Skip specific season:
+            if isinstance(toskip, int):
+                if int(season) == toskip:
+                    log.debug("SkipShow: Season %s matches variable of %s, skipping season" % (season, showName))
+                    return True
+            # Skip specific episode
+            elif isinstance(toskip, float):
+                seasontoskip = int(toskip)
+                episodetoskip = int(round((toskip-seasontoskip) * 100))
+                if int(season) == seasontoskip:
+                    if episodetoskip == 0:
+                        log.debug("SkipShow: Season %s matches variable of %s, skipping season" % (season, showName))
+                        return True
+                    elif int(episode) == episodetoskip:
+                        format = season + 'x' + episode
+                        log.debug("SkipShow: Episode %s matches variable of %s, skipping episode" % (format, showName))
+                        return True
+
 
 def checkAPICallsSubSeeker(use=False):
     """
