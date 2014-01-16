@@ -76,7 +76,6 @@ class Config:
                     x = literal_eval(x)
                     x_season = int(x)
                     x_episode = int(round((x-x_season) * 100))
-                    print x_season, x_episode, season, episode
                     if x == -1 or (x_season == season and (x_episode == 0 or (episode and x_episode == int(episode)))):
                         tmpl.message = "This show/season/episode is already being skipped"
                         tmpl.displaymessage = "Yes"
