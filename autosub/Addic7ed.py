@@ -518,8 +518,8 @@ class Addic7edAPI():
         if r.status_code != 200:
             log.error('Addic7edAPI: Request failed with status code %d' % r.status_code)
 
-        log.debug("Addic7edAPI: Resting for 6 seconds to prevent errors")
-        time.sleep(6) #Max 0.5 connections each second
+        log.debug("Addic7edAPI: Resting for 60 seconds to prevent errors")
+        time.sleep(60)
         return BeautifulSoup(r.content)
 
     def download(self, downloadlink):
@@ -545,8 +545,8 @@ class Addic7edAPI():
             log.error('Addic7edAPI: Expected srt file but got HTML; report this!')
             log.debug("Addic7edAPI: Response content: %s" % r.content)
             return None
-        log.debug("Addic7edAPI: Resting for 6 seconds to prevent errors")
-        time.sleep(6) #Max 0.5 connections each second
+        log.debug("Addic7edAPI: Resting for 60 seconds to prevent errors")
+        time.sleep(60)
         return r.content
     
     def checkCurrentDownloads(self, logout=True):      
