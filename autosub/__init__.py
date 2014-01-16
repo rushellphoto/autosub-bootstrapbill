@@ -150,7 +150,7 @@ def Initialize():
     
     VERSIONURL = 'http://autosub-bootstrapbill.googlecode.com/hg/autosub/version.py'
     USERAGENT = 'AutoSub/' + versionnumber + release.lower()[0]
-    
+
     WANTEDQUEUE = []
 
     APIKEY = "24430affe80bea1edf0e8413c3abf372a64afff2"
