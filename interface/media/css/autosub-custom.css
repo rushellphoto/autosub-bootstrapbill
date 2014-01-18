@@ -133,6 +133,7 @@ code {
 .navbar-collapse.skipshow {
 	margin-bottom: 15px;
 	margin-top: -3px;
+	padding: 0px 0px;
 	height: 0px;
 	overflow: visible;
 	background: transparent;
