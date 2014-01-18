@@ -10,7 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="robots" content="noindex, nofollow">
     <link href="$autosub.WEBROOT/css/bootstrap.css" rel="stylesheet">
-    <link href="$autosub.WEBROOT/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="$autosub.WEBROOT/css/autosub-custom.css" rel="stylesheet">
 	<link href="$autosub.WEBROOT/css/jquery.dataTables.css" rel="stylesheet">
     <link href="$autosub.WEBROOT/images/favicon.ico" rel="shortcut icon" >
@@ -18,52 +17,52 @@
 
   <body>
 	<a id="top"></a>
-    <div id="wrap">
+	<div id="wrap">
 
-      <div class="navbar navbar-fixed-top navbar-inverse">
-        <div class="navbar-inner">
-          <div class="container">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="$autosub.WEBROOT/home">Auto-Sub</a>
-            <div class="nav-collapse collapse">
-              <ul class="nav">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Home <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="$autosub.WEBROOT/home"><i class="icon-home"></i> Home</a></li>
-                    <li><a href="$autosub.WEBROOT/home/runNow"><i class="icon-search"></i> Run Now</a></li>
-                    <li><a href="http://code.google.com/p/autosub-bootstrapbill/issues/list" target="_blank"><i class="icon-list"></i> Report Issue</a></li>
-                    <li><a href="$autosub.WEBROOT/config/checkVersion"><i class="icon-download"></i> Check Version</a></li>
-                    <li><a href="$autosub.WEBROOT/home/shutdown"><i class="icon-off"></i> Shutdown</a></li>
-                    <li class="divider"></li>
-                    <li class="nav-header">Flush</li>
-                    <li><a href="$autosub.WEBROOT/config/flushCache">Cache</a></li>
-                    <li><a href="$autosub.WEBROOT/config/flushLastdown">Downloaded</a></li>
-					<li><a href="$autosub.WEBROOT/log/clearLog">Logfile</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-				    <li><a href="$autosub.WEBROOT/config/info"><i class="icon-info-sign"></i> Info & Help</a></li>
-					<!--<li><a href="$autosub.WEBROOT/config/liveinfo"><i class="icon-book"></i> Live Information</a></li>-->
-					<li class="divider"></li>
-					<li><a href="$autosub.WEBROOT/config/settings"><i class="icon-cog"></i> Settings</a></li>
-					<li><a href="$autosub.WEBROOT/config/notifications"><i class="icon-bell"></i> Notifications</a></li>
-                  </ul>
-                </li>
-                <li><a href="$autosub.WEBROOT/log">Log</a></li>
-				#if $autosub.Helpers.CheckMobileDevice($useragent) == True
-				<li><a href="$autosub.WEBROOT/home/exitMini">Mobile Interface</a></li>
-				#end if
-              </ul>
-            </div>
-          </div>
+    <div class="container">
+
+      <!-- Static navbar -->
+      <div class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="$autosub.WEBROOT/home">Auto-Sub</a>
         </div>
-      </div>    
-
-      <div class="container">
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Home <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="$autosub.WEBROOT/home"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                  <li><a href="$autosub.WEBROOT/home/runNow"><span class="glyphicon glyphicon-search"></span> Run Now</a></li>
+                  <li><a href="http://code.google.com/p/autosub-bootstrapbill/issues/list" target="_blank"><span class="glyphicon glyphicon-list"></span> Report Issue</a></li>
+                  <li><a href="$autosub.WEBROOT/config/checkVersion"><span class="glyphicon glyphicon-download"></span> Check Version</a></li>
+                  <li><a href="$autosub.WEBROOT/home/shutdown"><span class="glyphicon glyphicon-off"></span> Shutdown</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Flush</li>
+                  <li><a href="$autosub.WEBROOT/config/flushCache">Cache</a></li>
+                  <li><a href="$autosub.WEBROOT/config/flushLastdown">Downloaded</a></li>
+				  <li><a href="$autosub.WEBROOT/log/clearLog">Logfile</a></li>
+                </ul>
+            </li>
+			<li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+				    <li><a href="$autosub.WEBROOT/config/info"><span class="glyphicon glyphicon-info-sign"></span> Info & Help</a></li>
+					<!--<li><a href="$autosub.WEBROOT/config/liveinfo"><span class="glyphicon glyphicon-book"></span> Live Information</a></li>-->
+					<li class="divider"></li>
+					<li><a href="$autosub.WEBROOT/config/settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+					<li><a href="$autosub.WEBROOT/config/notifications"><span class="glyphicon glyphicon-bell"></span> Notifications</a></li>
+				</ul>
+            </li>
+			<li><a href="$autosub.WEBROOT/log">Log</a></li>
+			#if $autosub.Helpers.CheckMobileDevice($useragent) == True
+			<li><a href="$autosub.WEBROOT/home/exitMini">Mobile Interface</a></li>
+			#end if
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>

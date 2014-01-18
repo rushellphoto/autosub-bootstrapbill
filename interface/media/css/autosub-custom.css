@@ -37,7 +37,7 @@ body {
 
 @media (min-width: 980px) {
 #wrap > .container {
-	padding-top: 40px;
+	padding-top: 10px;
 }
 
 .container .credit {
@@ -130,10 +130,18 @@ code {
 
 /* Wanted & Downloaded custom dropdown height */
 
-.nav-collapse.skipshow {
+.navbar-collapse.skipshow {
 	margin-bottom: 15px;
-	height: 5px;
+	margin-top: -3px;
+	height: 0px;
 	overflow: visible;
+	background: transparent;
+}
+.navbar-collapse.skipshow .nav > li > a {
+    position: relative;
+    display: block;
+    padding: 0px 0px;
+	background: transparent;
 }
 
 /* General center */

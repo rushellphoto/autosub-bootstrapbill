@@ -20,11 +20,11 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #else
 	<div id="Display1">
 #end if
-		<div class="well well-small center well-header"><b>Wanted</b></div>
+		<div class="well well-sm center well-header"><b>Wanted</b></div>
 #if not $autosub.DOWNLOADDUTCH and not $autosub.DOWNLOADENG:
-		<div class="alert alert-error center"><i class="icon-info-sign"></i> <strong>Oh snap!</strong> You currently have Dutch and English disabled, you don't want to use me anymore? :( <i class="icon-info-sign"></i></div>
+		<div class="alert alert-danger center"><span class="glyphicon glyphicon-info-sign"></span> <strong>Oh snap!</strong> You currently have Dutch and English disabled, you don't want to use me anymore? :( <span class="glyphicon glyphicon-info-sign"></span></div>
 #else		
-		<div class="well well-small center">
+		<div class="well well-sm center">
 #if $len($autosub.WANTEDQUEUE) == 0
 		No data available at the moment.
 #end if		
@@ -89,18 +89,18 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #end if	
 			<td>
 #set $SE = "S" + $var['season'] + "E" + $var['episode']		
-			  <div class="nav-collapse skipshow">
-				  <ul class="nav">
-					<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-wrench"></i></a>
+			<div class="navbar-collapse skipshow">
+			  <ul class="nav">
+				<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span></a>
 					  <ul class="dropdown-menu">
 						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/-1">Skip $var['title']</a></li>
 						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/$var['season']">Skip $var['title'] S$var['season']</a></li>
 						<li><a href="$autosub.WEBROOT/config/skipShow/$var['title'].replace(' ', '%20')/$var['season']/$var['episode']">Skip $var['title'] $SE</a></li>
 					  </ul>
-					</li>
-				  </ul>
-              </div>
+				</li>
+			  </ul>
+            </div>
 			
 			</td>
 		</tr>
@@ -137,8 +137,8 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #else
 	<div id="Display2">
 #end if	
-		<div class="well well-small center well-header"><b>Downloaded</b></div>
-		<div class="well well-small center">
+		<div class="well well-sm center well-header"><b>Downloaded</b></div>
+		<div class="well well-sm center">
 #if $len($lastdownload) == 0
 		No data available at the moment.
 #end if		
@@ -217,8 +217,8 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 		<hr>
 	</div>
 </div>		
-		<div class="well well-small center well-header"><b>Next Run</b></div>
-		<div class="well well-small center">
+		<div class="well well-sm center well-header"><b>Next Run</b></div>
+		<div class="well well-sm center">
 		
 		<table class="table-nextrun">
 			<tr>
