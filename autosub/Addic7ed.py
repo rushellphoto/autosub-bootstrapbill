@@ -1,4 +1,4 @@
-#
+    #
 # Autosub Addic7ed.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Addic7ed method specific module
@@ -46,15 +46,14 @@ _source_syn = {u'tv' : u'hdtv',
 
 
 _quality = [re.compile("(1080p|720p|480p)" , re.IGNORECASE), 
-           re.compile("(1080[i]*|720|480|HD[^T]|SD)", re.IGNORECASE)]
+           re.compile("(1080[i]*|720|480)", re.IGNORECASE)]
 
 _quality_syn = {u'1080' : u'1080p',
                u'1080i' : u'1080p',
                u'720' : u'720p',
                u'480p' : u'sd',
-               u'480' : u'sd', 
-               u'hd': u'720p'}
-               
+               u'480' : u'sd'}
+
 _codec = [re.compile("([xh]*264|xvid|dvix)" , re.IGNORECASE)]
 
 #Note: x264 is the opensource implementation of h264.
