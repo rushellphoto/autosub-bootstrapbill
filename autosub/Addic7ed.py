@@ -1,4 +1,4 @@
-    #
+#
 # Autosub Addic7ed.py - https://code.google.com/p/autosub-bootstrapbill/
 #
 # The Addic7ed method specific module
