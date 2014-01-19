@@ -50,6 +50,7 @@ code {
 
 /* Wanted & Downloaded tables */
 
+/*
 .table {
 	clear: both;
 	width: 100%;
@@ -127,12 +128,13 @@ code {
 .table tbody tr:hover th, .table tbody tr:hover .th, .table tbody tr:hover td {
 	background: #e8eaef;
 }
+*/
 
 /* Wanted & Downloaded custom dropdown height */
 
 .navbar-collapse.skipshow {
 	margin-bottom: 15px;
-	margin-top: -3px;
+	margin-right: 10px;
 	padding: 0px 0px;
 	height: 0px;
 	overflow: visible;

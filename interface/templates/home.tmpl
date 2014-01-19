@@ -29,19 +29,20 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 		No data available at the moment.
 #end if		
 #if $len($autosub.WANTEDQUEUE) >= 1
-		<table id="wanted">
+<div class="table-responsive">
+		<table id="wanted" class="table table-condensed table-hover table-striped">
 			<thead>
 				<tr>
-					<th>Show name</th>
-					<th>Season</th>
-					<th>Episode</th>
-					<th>Source</th>
-					<th>Quality</th>
-					<th>Codec</th>
-					<th>Group</th>
-					<th>Language</th>
-					<th>Time</th>
-					<th>&nbsp;</th>
+					<th class="center">Show name</th>
+					<th class="center">Season</th>
+					<th class="center">Episode</th>
+					<th class="center">Source</th>
+					<th class="center">Quality</th>
+					<th class="center">Codec</th>
+					<th class="center">Group</th>
+					<th class="center">Language</th>
+					<th class="center">Time</th>
+					<th class="center">&nbsp;</th>
 				</tr>
 			</thead>
 		<tbody>
@@ -75,10 +76,10 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 			<td>
 #for lang in $var['lang']
 #if lang == "Dutch"
-			<img src="$autosub.WEBROOT/images/Dutch.png" alt="nl">
+			<img src="$autosub.WEBROOT/images/Dutch.png" alt="$lang" title="$lang">
 #end if
 #if lang == "English"
-			<img src="$autosub.WEBROOT/images/English.png" alt="en">
+			<img src="$autosub.WEBROOT/images/English.png" alt="$lang" title="$lang">
 #end if
 #end for
 			</td>
@@ -90,7 +91,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 			<td>
 #set $SE = "S" + $var['season'] + "E" + $var['episode']		
 			<div class="navbar-collapse skipshow">
-			  <ul class="nav">
+			  <ul class="nav navbar-right">
 				<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span></a>
 					  <ul class="dropdown-menu">
@@ -109,20 +110,20 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 		</tbody>
 			<tfoot>
 				<tr>
-					<th>Show name</th>
-					<th>Season</th>
-					<th>Episode</th>
-					<th>Source</th>
-					<th>Quality</th>
-					<th>Codec</th>
-					<th>Group</th>
-					<th>Language</th>
-					<th>Time</th>
-					<th>&nbsp;</th>
+					<th class="center">Show name</th>
+					<th class="center">Season</th>
+					<th class="center">Episode</th>
+					<th class="center">Source</th>
+					<th class="center">Quality</th>
+					<th class="center">Codec</th>
+					<th class="center">Group</th>
+					<th class="center">Language</th>
+					<th class="center">Time</th>
+					<th class="center">&nbsp;</th>
 				</tr>
 			</tfoot>
 		</table>
-
+</div>
 #end if
 		<br>
 		</div>
@@ -143,19 +144,19 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 		No data available at the moment.
 #end if		
 #if $len($lastdownload) >= 1
-    
-		<table id="downloaded">
+<div class="table-responsive">
+		<table id="downloaded" class="table table-condensed table-hover table-striped">
 			<thead>
 				<tr>
-					<th>Show name</th>
-					<th>Season</th>
-					<th>Episode</th>
-					<th>Source</th>
-					<th>Quality</th>
-					<th>Codec</th>
-					<th>Group</th>
-					<th>Language</th>
-					<th>Time</th>
+					<th class="center">Show name</th>
+					<th class="center">Season</th>
+					<th class="center">Episode</th>
+					<th class="center">Source</th>
+					<th class="center">Quality</th>
+					<th class="center">Codec</th>
+					<th class="center">Group</th>
+					<th class="center">Language</th>
+					<th class="center">Time</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -186,7 +187,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #end if
 				<td>
 					#set $imageurl = $autosub.WEBROOT + "/images/" + $var['language'] + ".png"
-					<img src="$imageurl" alt="$var['language']" />
+					<img src="$imageurl" alt="$var['language']" title="$var['language']" />
 				</td>
 #if $type($var['timestamp']) == UnicodeType:
 				<td>$ConvertTimestamp($var['timestamp'])</td>
@@ -198,18 +199,19 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 			</tbody>
 			<tfoot>
 				<tr>
-					<th>Show name</th>
-					<th>Season</th>
-					<th>Episode</th>
-					<th>Source</th>
-					<th>Quality</th>
-					<th>Codec</th>
-					<th>Group</th>
-					<th>Language</th>
-					<th>Time</th>
+					<th class="center">Show name</th>
+					<th class="center">Season</th>
+					<th class="center">Episode</th>
+					<th class="center">Source</th>
+					<th class="center">Quality</th>
+					<th class="center">Codec</th>
+					<th class="center">Group</th>
+					<th class="center">Language</th>
+					<th class="center">Time</th>
 				</tr>
 			</tfoot>
 		</table>
+</div>
 #end if
 		<br>
 		</div>
