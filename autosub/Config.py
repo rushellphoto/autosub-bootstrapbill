@@ -161,10 +161,10 @@ def ReadConfig(configfile):
         else:
             autosub.SUBSCENELANG = u"Both"
             
-        if cfg.has_option("config", "bierdopjemirrorlang"):
-            autosub.BIERDOPJEMIRRORLANG = cfg.get("config", "bierdopjemirrorlang")
-        else:
-            autosub.BIERDOPJEMIRRORLANG = u"Both"
+        #if cfg.has_option("config", "bierdopjemirrorlang"):
+        #    autosub.BIERDOPJEMIRRORLANG = cfg.get("config", "bierdopjemirrorlang")
+        #else:
+        #    autosub.BIERDOPJEMIRRORLANG = u"Both"
             
         #if cfg.has_option("config", "opensubtitleslang"):
         #    autosub.OPENSUBTITLESLANG = cfg.get("config", "opensubtitleslang")
@@ -217,7 +217,7 @@ def ReadConfig(configfile):
         autosub.ENGLISHSUBDELETE = False
         autosub.PODNAPISILANG = u"Both"
         autosub.SUBSCENELANG = u"Both"
-        autosub.BIERDOPJEMIRRORLANG = u"Both"
+        #autosub.BIERDOPJEMIRRORLANG = u"Both"
         #autosub.OPENSUBTITLESLANG = u"Both"
         autosub.UNDERTEXTERLANG = u"Both"
         autosub.ADDIC7EDLANG = u"None"
@@ -939,7 +939,7 @@ def saveConfigSection():
     cfg.set(section, "englishsubdelete", str(autosub.ENGLISHSUBDELETE))
     cfg.set(section, "podnapisilang", autosub.PODNAPISILANG)
     cfg.set(section, "subscenelang", autosub.SUBSCENELANG)
-    cfg.set(section, "bierdopjemirrorlang", autosub.BIERDOPJEMIRRORLANG)
+    #cfg.set(section, "bierdopjemirrorlang", autosub.BIERDOPJEMIRRORLANG)
     #cfg.set(section, "opensubtitleslang", autosub.OPENSUBTITLESLANG)
     cfg.set(section, "undertexterlang", autosub.UNDERTEXTERLANG)
     cfg.set(section, "addic7edlang", autosub.ADDIC7EDLANG)

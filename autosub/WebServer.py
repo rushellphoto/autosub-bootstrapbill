@@ -122,7 +122,7 @@ class Config:
                    path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, englishsubdelete, username, 
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
                    webserverip, webserverport, usernamemapping, useraddic7edmapping, notifyen, notifynl, homelayoutfirst,
-                   podnapisilang, subscenelang, bierdopjemirrorlang, undertexterlang,
+                   podnapisilang, subscenelang, undertexterlang,
                    addic7edlang, addic7eduser, addic7edpasswd, downloaddutch,
                    mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None):
                    
@@ -144,7 +144,7 @@ class Config:
         autosub.ENGLISHSUBDELETE = englishsubdelete
         autosub.PODNAPISILANG = podnapisilang
         autosub.SUBSCENELANG = subscenelang
-        autosub.BIERDOPJEMIRRORLANG = bierdopjemirrorlang
+        #autosub.BIERDOPJEMIRRORLANG = bierdopjemirrorlang
         #autosub.OPENSUBTITLESLANG = opensubtitleslang
         autosub.UNDERTEXTERLANG = undertexterlang
         autosub.ADDIC7EDLANG = addic7edlang

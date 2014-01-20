@@ -155,8 +155,6 @@ def getSubLinks(showid, lang, releaseDetails, a7Response):
         sourceWebsites.append('podnapisi.net')
     if autosub.SUBSCENELANG == lang or autosub.SUBSCENELANG == 'Both':
         sourceWebsites.append('subscene.com')
-    if autosub.BIERDOPJEMIRRORLANG == lang or autosub.BIERDOPJEMIRRORLANG == 'Both':
-        sourceWebsites.append('bierdopje.eu')
     if autosub.UNDERTEXTERLANG == lang or autosub.UNDERTEXTERLANG == 'Both':
         sourceWebsites.append('undertexter.se')
     if len(sourceWebsites) > 0:
