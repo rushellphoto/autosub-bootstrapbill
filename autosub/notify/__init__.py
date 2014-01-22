@@ -21,49 +21,49 @@ from autosub.notify import plexmediaserver
 
 log = logging.getLogger('thelogger')  
 
-def notify(lang, subtitlefile, videofile):
-    log.debug("Notification: Trying to send notification. Language: %s Srt: %s Video: %s" %(lang, subtitlefile, videofile))
+def notify(lang, subtitlefile, videofile, website):
+    log.debug("Notification: Trying to send notification. Language: %s Srt: %s Video: %s Website: %s" %(lang, subtitlefile, videofile, website))
     #Lets strip video file and subtitle file of its path!
     subtitlefile = os.path.basename(subtitlefile)
     videofile = os.path.basename(videofile)
     
     if lang == 'English' and autosub.NOTIFYEN:
-        notifySend(lang, subtitlefile, videofile)
+        notifySend(lang, subtitlefile, videofile, website)
     if lang == 'Dutch' and autosub.NOTIFYNL:
-        notifySend(lang, subtitlefile, videofile)
+        notifySend(lang, subtitlefile, videofile, website)
 
-def notifySend(lang, subtitlefile, videofile):
+def notifySend(lang, subtitlefile, videofile, website):
     if autosub.NOTIFYTWITTER:
         log.debug("Notification: Twitter is enabled")
-        twitter.send_notify(lang, subtitlefile, videofile)
+        twitter.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYMAIL:
         log.debug("Notification: Mail is enabled")
-        mail.send_notify(lang, subtitlefile, videofile)
+        mail.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYNMA:
         log.debug("Notification: Notify My Android is enabled")
-        nma.send_notify(lang, subtitlefile, videofile)
+        nma.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYGROWL:
         log.debug("Notification: Growl is enabled")
-        growl.send_notify(lang, subtitlefile, videofile)
+        growl.send_notify(lang, subtitlefile, videofile, website)
 
     if autosub.NOTIFYPROWL:
         log.debug("Notification: Prowl is enabled")
-        prowl.send_notify(lang, subtitlefile, videofile)
+        prowl.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYPUSHALOT:
         log.debug("Notification: Pushalot is enabled")
-        pushalot.send_notify(lang, subtitlefile, videofile)
+        pushalot.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYPUSHOVER:
         log.debug("Notification: Pushover is enabled")
-        pushover.send_notify(lang, subtitlefile, videofile)
+        pushover.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYBOXCAR:
         log.debug("Notification: Boxcar is enabled")
-        boxcar.send_notify(lang, subtitlefile, videofile)
+        boxcar.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYPLEX:
         log.debug("Notification: Plex Media Server is enabled")

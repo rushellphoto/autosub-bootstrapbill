@@ -10,9 +10,9 @@ def test_notify(pushalotapi):
     message = "Testing Pushalot settings from Auto-Sub."
     return _send_notify(pushalotapi, message)
 
-def send_notify(lang, subtitlefile, videofile):
+def send_notify(lang, subtitlefile, videofile, website):
     log.debug("Pushalot: Trying to send a notification.")
-    message = "Auto-Sub just downloaded the following subtitle: \n%s" %subtitlefile
+    message = "Auto-Sub just downloaded the following subtitle: \n%s from %s" %(subtitlefile, website)
     pushalotapi = autosub.PUSHALOTAPI
     return _send_notify(pushalotapi, message)
 

@@ -16,10 +16,10 @@ def test_notify(boxcaruser):
     message = 'Testing Boxcar settings from Auto-Sub.'
     return _send_notify(message, title, boxcaruser)
 
-def send_notify(lang, subtitlefile, videofile):
+def send_notify(lang, subtitlefile, videofile, website):
     log.debug("Pushalot: Trying to send a notification.")
     title = 'Auto-Sub Bootstrap Bill'
-    message = "Auto-Sub just downloaded the following subtitle: \n%s" %subtitlefile
+    message = "Auto-Sub just downloaded the following subtitle: \n%s from %s" %(subtitlefile, website)
     boxcaruser = autosub.BOXCARUSER
     return _send_notify(message, title, boxcaruser)
 

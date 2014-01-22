@@ -298,8 +298,8 @@ def DownloadSub(allResults, a7Response, downloadItem):
     
     lastDown().setlastDown(dict = downloadItem)
     
-            
-    notify.notify(downloadItem['downlang'], destsrt, downloadItem["originalFileLocationOnDisk"])
+    # Send notification        
+    notify.notify(downloadItem['downlang'], destsrt, downloadItem["originalFileLocationOnDisk"], website)
 
     if autosub.POSTPROCESSCMD:
         postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadItem["destinationFileLocationOnDisk"] + '" "' + downloadItem["originalFileLocationOnDisk"] + '" "' + downloadItem["downlang"] + '"'

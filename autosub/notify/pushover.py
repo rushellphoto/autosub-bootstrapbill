@@ -11,9 +11,9 @@ def test_notify(pushoverapi):
     message = "Testing Pushover settings from AutoSub"
     return _send_notify(pushoverapi, message)
 
-def send_notify(lang, subtitlefile, videofile):
+def send_notify(lang, subtitlefile, videofile, website):
     log.debug("Pushover: Trying to send a notification")
-    message = "Auto-Sub just downloaded the following subtitle: \n%s" %subtitlefile
+    message = "Auto-Sub just downloaded the following subtitle: \n%s from %s" %(subtitlefile, website)
     pushoverapi = autosub.PUSHOVERAPI
     return _send_notify(pushoverapi, message)
 
