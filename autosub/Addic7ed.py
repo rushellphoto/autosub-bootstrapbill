@@ -31,7 +31,7 @@ _show = [re.compile('(.+)\s+\(?(\d{4})\)?', re.IGNORECASE),
               re.compile('(.+)\s+\(?(uk)\)?', re.IGNORECASE)]
 
 
-_source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|bluray|dvdrip|web[-]*rip)", re.IGNORECASE),
+_source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|blu[. _-]*ray|dvdrip|web[-]*rip)", re.IGNORECASE),
           re.compile("(tv|dvd|bdrip|web)", re.IGNORECASE)]
 
 #A dictionary containing as keys, the nonstandard naming. Followed by there standard naming.
@@ -40,6 +40,7 @@ _source_syn = {u'tv' : u'hdtv',
               u'ahdtv' : u'hdtv',
               u'dvd' : u'dvdrip',
               u'bdrip': u'bluray',
+              u'blu-ray': u'bluray',
               u'webdl' : u'web-dl',
               u'web' : u'web-dl',
               u'web-rip' : u'webrip'}
