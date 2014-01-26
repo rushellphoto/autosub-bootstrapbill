@@ -126,7 +126,21 @@ _releasegrps = ['0TV',
                'BAJSKORV',
                'PCSYNDICATE',
                'SCT',
-               'KILLERS']
+               'KILLERS',
+               'YFN',
+               'FUSiON',
+               'iON',
+               'SURFER',
+               'ViPER',
+               'ETP',
+               'EbP',
+               'Hype',
+               'psychd',
+               'EXCELLENCE',
+               'kyr',
+               'TvR',
+               'TCL',
+               'REMARKABLE']
 
 _releasegrp_pre = '(' + '|'.join(_releasegrps) + ')$'
 
