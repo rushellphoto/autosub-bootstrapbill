@@ -140,7 +140,8 @@ _releasegrps = ['0TV',
                'kyr',
                'TvR',
                'TCL',
-               'REMARKABLE']
+               'REMARKABLE',
+               'DEMAND']
 
 _releasegrp_pre = '(' + '|'.join(_releasegrps) + ')$'
 
