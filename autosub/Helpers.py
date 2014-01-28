@@ -12,7 +12,6 @@ import urllib2
 import codecs
 import os
 from ast import literal_eval
-import unicodedata
 
 from library import version
 from autosub.version import autosubversion
@@ -437,17 +436,7 @@ def DisplaySubtitle(subtitlefile):
     
     numLines = 0
     
-    for x in data:
-        # Get best ascii compatible character for special characters
-        try:
-            if isinstance(x, str):
-                x = unicode(x.decode(autosub.SYSENCODING))
-                correctedx = ''.join((c for c in unicodedata.normalize('NFD', x) if unicodedata.category(c) != 'Mn'))
-                if x != correctedx:
-                    x = correctedx
-        except:
-            continue
-        
+    for x in data:      
         try:
             numLines += 1
             if numLines < startLine:
