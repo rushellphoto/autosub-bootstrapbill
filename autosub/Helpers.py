@@ -12,6 +12,7 @@ import urllib2
 import codecs
 import os
 from ast import literal_eval
+import unicodedata
 
 from library import version
 from autosub.version import autosubversion
@@ -408,6 +409,56 @@ def ClearLogFile():
         except IOError:
             message = "Logfile is currently being used by another process. Please try again later."
         return message
+
+def DisplaySubtitle(subtitlefile):
+    data = []
+    if os.path.isfile(subtitlefile):
+        f = codecs.open(subtitlefile, 'r', autosub.SYSENCODING)
+        data = f.readlines()
+        f.close()
+    
+    finalData = []
+    
+    #Count total lines of file, so we can display the last 30 in correct order and not reversed.
+    totalLines = 0
+    for line in data:
+        totalLines += 1
+    
+    if totalLines == 0:
+        result = "This seems to be an invalid subtitle, it's empty."
+        return result
+    
+    #Define startLine so we know when to start displaying the subtitle
+    startLine = totalLines - 30
+    
+    if startLine <= 0:
+        result = "This seems to be an invalid subtitle, it has less than 30 lines to preview."
+        return result
+    
+    numLines = 0
+    
+    for x in data:
+        # Get best ascii compatible character for special characters
+        try:
+            if isinstance(x, str):
+                x = unicode(x.decode(autosub.SYSENCODING))
+                correctedx = ''.join((c for c in unicodedata.normalize('NFD', x) if unicodedata.category(c) != 'Mn'))
+                if x != correctedx:
+                    x = correctedx
+        except:
+            continue
+        
+        try:
+            numLines += 1
+            if numLines < startLine:
+                continue
+            if numLines >= totalLines:
+                break
+            finalData.append(x)
+        except:
+            continue
+    result = "<br>".join(finalData)
+    return result
 
 def ConvertTimestamp(datestring):
     try:

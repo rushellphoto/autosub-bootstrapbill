@@ -7,6 +7,7 @@
 #from autosub.Db import lastDown
 #from autosub.Helpers import ConvertTimestamp
 #from autosub.Helpers import getAttr
+#from autosub.Helpers import DisplaySubtitle
 
 #include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
 
@@ -157,6 +158,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 					<th class="center">Group</th>
 					<th class="center">Language</th>
 					<th class="center">Time</th>
+					<th class="center">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -194,6 +196,15 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #else
 				<td>Unknown</td>
 #end if
+#if $os.path.isfile($var['destination']):
+				<td>
+					<a href="#" style="cursor: default;"><span id="popover" data-toggle="popover" data-trigger="click" data-html="true" data-placement="left" title="<strong>Subtitle Preview</strong><br>$var['show_name']" data-content="$DisplaySubtitle($var['destination'])"><span class="glyphicon glyphicon-eye-open"></span></span></a>
+				</td>
+#else:
+				<td>
+					<a href="#" style="cursor: default;"><span id="popover" data-toggle="popover" data-trigger="click" data-html="true" data-placement="left" title="<strong>Subtitle Preview</strong><br>$var['show_name']" data-content="Preview is not available.<br>You probably moved the file."><span class="glyphicon glyphicon-eye-close"></span></span></a>
+				</td>
+#end if
 			</tr>	
 #end for
 			</tbody>
@@ -208,6 +219,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 					<th class="center">Group</th>
 					<th class="center">Language</th>
 					<th class="center">Time</th>
+					<th class="center">&nbsp;</th>
 				</tr>
 			</tfoot>
 		</table>
@@ -218,7 +230,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 	
 		<hr>
 	</div>
-</div>		
+</div>
 		<div class="well well-sm center well-header"><b>Next Run</b></div>
 		<div class="well well-sm center">
 		

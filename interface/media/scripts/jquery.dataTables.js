@@ -25,9 +25,10 @@
 
 (/** @lends <global> */function( window, document, undefined ) {
 
-// Below line is not part of dataTables, but custom to Auto-Sub.
-// Added tooltip in here to fix a small bug so the tooltip shows when going to the next page on the Downloaded table.
+// Below lines are not part of dataTables, but custom to Auto-Sub.
+// Added this to fix a small bug so the tooltip and popover shows when going to the next page on the Wanted/Downloaded table.
 $("a").tooltip()
+$("span").popover()
 
 (function( factory ) {
 	"use strict";

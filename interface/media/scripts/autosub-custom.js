@@ -43,7 +43,7 @@ $(document).ready(function () {
 		"bPaginate": true,
 		"aLengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
 		"aaSorting": [ [ 8, "desc" ] ],
-		"aoColumnDefs": [ { "aDataSort": [ 0, 1, 2 ], "aTargets": [ 0 ] }, { "sType": "euro-date", "aTargets": [ 8 ] } ]
+		"aoColumnDefs": [ { "aDataSort": [ 0, 1, 2 ], "aTargets": [ 0 ] }, { "sType": "euro-date", "aTargets": [ 8 ] }, { "bSortable": false, "aTargets": [ 9 ] } ]
 	});
 	
     $('#testMail').click(function () {
@@ -130,8 +130,9 @@ $(document).ready(function () {
 			function (data) { $('#testPlex-result').html(data); });
     });
 	
-	// Code to display the tooltip on the configuration page.
+	// Code to display the tooltip and popover.
 	$("a").tooltip()
+	$("span").popover()
 	
 	// Code to hide/show the notification fields.
 	$(".enabler option:selected").each(function () {
