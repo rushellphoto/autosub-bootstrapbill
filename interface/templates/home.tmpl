@@ -196,10 +196,16 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 #else
 				<td>Unknown</td>
 #end if
+#if $var['destination']:
 #if $os.path.isfile($var['destination']):
 				<td>
 					<a href="#" style="cursor: default;"><span id="popover" data-toggle="popover" data-trigger="click" data-html="true" data-placement="left" title="<strong>Subtitle Preview</strong><br>$var['show_name']" data-content="$DisplaySubtitle($var['destination'])"><span class="glyphicon glyphicon-eye-open"></span></span></a>
 				</td>
+#else:
+				<td>
+					<a href="#" style="cursor: default;"><span id="popover" data-toggle="popover" data-trigger="click" data-html="true" data-placement="left" title="<strong>Subtitle Preview</strong><br>$var['show_name']" data-content="Preview is not available.<br>You probably moved the file."><span class="glyphicon glyphicon-eye-close"></span></span></a>
+				</td>
+#end if
 #else:
 				<td>
 					<a href="#" style="cursor: default;"><span id="popover" data-toggle="popover" data-trigger="click" data-html="true" data-placement="left" title="<strong>Subtitle Preview</strong><br>$var['show_name']" data-content="Preview is not available.<br>You probably moved the file."><span class="glyphicon glyphicon-eye-close"></span></span></a>
