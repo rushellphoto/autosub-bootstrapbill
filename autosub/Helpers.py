@@ -447,7 +447,7 @@ def DisplaySubtitle(subtitlefile):
                 continue
             if numLines >= totalLines:
                 break
-            finalData.append(x)
+            finalData.append(x.replace('"', "'"))
         except:
             continue
     result = "<br>".join(finalData)
