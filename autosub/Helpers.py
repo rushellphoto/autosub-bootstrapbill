@@ -413,7 +413,11 @@ def DisplaySubtitle(subtitlefile):
     data = []
     if os.path.isfile(subtitlefile):
         f = codecs.open(subtitlefile, 'r', autosub.SYSENCODING)
-        data = f.readlines()
+        #This needs fixing, should prevent a crash for now on Linux based systems.
+        try:
+            data = f.readlines()
+        except:
+            data = "Invalid character found"
         f.close()
     
     finalData = []
@@ -436,7 +440,7 @@ def DisplaySubtitle(subtitlefile):
     
     numLines = 0
     
-    for x in data:      
+    for x in data:       
         try:
             numLines += 1
             if numLines < startLine:
