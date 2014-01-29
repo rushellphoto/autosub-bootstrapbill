@@ -410,47 +410,22 @@ def ClearLogFile():
         return message
 
 def DisplaySubtitle(subtitlefile):
-    data = []
     if os.path.isfile(subtitlefile):
         f = codecs.open(subtitlefile, 'r', autosub.SYSENCODING)
         #This needs fixing, should prevent a crash for now on Linux based systems.
         try:
             data = f.readlines()
         except:
-            data = "Invalid character found"
+            data = ""
         f.close()
-    
-    finalData = []
-    
-    #Count total lines of file, so we can display the last 30 in correct order and not reversed.
-    totalLines = 0
-    for line in data:
-        totalLines += 1
-    
-    if totalLines == 0:
-        result = "This seems to be an invalid subtitle, it's empty."
-        return result
-    
-    #Define startLine so we know when to start displaying the subtitle
-    startLine = totalLines - 30
-    
-    if startLine <= 0:
+
+    if len(data) < 30:
         result = "This seems to be an invalid subtitle, it has less than 30 lines to preview."
-        return result
-    
-    numLines = 0
-    
-    for x in data:       
+    else:
         try:
-            numLines += 1
-            if numLines < startLine:
-                continue
-            if numLines >= totalLines:
-                break
-            finalData.append(x.replace('"', "'"))
+            result = "<br>".join(x.replace('"', "'") for x in data[len(data)-30:])
         except:
-            continue
-    result = "<br>".join(finalData)
+            result = "Problem with parsing the last 30 lines of the file"
     return result
 
 def ConvertTimestamp(datestring):
