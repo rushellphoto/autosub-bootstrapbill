@@ -411,12 +411,8 @@ def ClearLogFile():
 
 def DisplaySubtitle(subtitlefile):
     if os.path.isfile(subtitlefile):
-        f = codecs.open(subtitlefile, 'r', autosub.SYSENCODING)
-        #This needs fixing, should prevent a crash for now on Linux based systems.
-        try:
-            data = f.readlines()
-        except:
-            data = ""
+        f = codecs.open(subtitlefile, 'rb', autosub.SYSENCODING, 'replace')
+        data = f.readlines()
         f.close()
 
     if len(data) < 30:
