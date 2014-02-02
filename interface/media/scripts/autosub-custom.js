@@ -134,6 +134,10 @@ $(document).ready(function () {
 	$("a").tooltip()
 	$("span").popover()
 	
+	$("span").on('shown.bs.popover', function () {
+		$("span").not(this).popover('hide');
+	});
+		
 	// Code to hide/show the notification fields.
 	$(".enabler option:selected").each(function () {
 		if ($(this).val() == "False") {
