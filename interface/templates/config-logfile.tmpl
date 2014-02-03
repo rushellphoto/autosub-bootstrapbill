@@ -2,7 +2,7 @@
 #import logging
 	
 		<div class="form-group">
-			<label for="Loglevel" class="col-sm-2 control-label"><a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the loglevel.">Loglevel</a></label>
+			<label for="Loglevel" class="col-sm-2 control-label">Loglevel <a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the loglevel."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="loglevel" class="form-control">
 			#if $logging.getLevelName(autosub.LOGLEVEL).lower() == 'info'
@@ -41,21 +41,21 @@
 		</div>
 		
 		<div class="form-group">
-			<label for="Lognum" class="col-sm-2 control-label"><a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the amount of log files.">Lognum</a></label>
+			<label for="Lognum" class="col-sm-2 control-label">Lognum <a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the amount of log files."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<input type="text" class="form-control" name="lognum" value="$autosub.LOGNUM" placeholder="">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="Logsize" class="col-sm-2 control-label"><a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the maximum size of the log files in bytes.">Logsize</a></label>
+			<label for="Logsize" class="col-sm-2 control-label">Logsize <a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the maximum size of the log files in bytes."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<input type="text" class="form-control" name="logsize" value="$autosub.LOGSIZE" placeholder="">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="Loglevelconsole" class="col-sm-2 control-label"><a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the loglevel for the console.">Loglevelconsole</a></label>
+			<label for="Loglevelconsole" class="col-sm-2 control-label">Loglevel Console <a data-placement="bottom" data-toggle="tooltip" data-original-title="Set the loglevel for the console."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="loglevelconsole" class="form-control">
 			#if $logging.getLevelName(autosub.LOGLEVELCONSOLE).lower() == 'info'
