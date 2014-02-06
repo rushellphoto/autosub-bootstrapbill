@@ -302,7 +302,7 @@ def DownloadSub(allResults, a7Response, downloadItem):
     notify.notify(downloadItem['downlang'], destsrt, downloadItem["originalFileLocationOnDisk"], website)
 
     if autosub.POSTPROCESSCMD:
-        postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadItem["destinationFileLocationOnDisk"] + '" "' + downloadItem["originalFileLocationOnDisk"] + '" "' + downloadItem["downlang"] + '"'
+        postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadItem["destinationFileLocationOnDisk"] + '" "' + downloadItem["originalFileLocationOnDisk"] + '" "' + downloadItem["downlang"] + '" "' + downloadItem["title"] + '" '
         log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
         log.info("downloadSubs: Running PostProcess")
         postprocessoutput, postprocesserr = autosub.Helpers.RunCmd(postprocesscmdconstructed)
