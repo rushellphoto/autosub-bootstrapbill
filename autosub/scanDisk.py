@@ -9,6 +9,7 @@ import platform
 import re
 import time
 import unicodedata
+from library.requests.packages.chardet import detect
 
 # Autosub specific modules
 import autosub
@@ -53,8 +54,9 @@ def walkDir(path):
                     # Get best ascii compatible character for special characters
 
                     try:
-                        if isinstance(filename, str):
-                            filename = unicode(filename.decode('utf-8'))
+                        if not isinstance(filename, unicode):
+                            coding = detect(filename)
+                            filename = unicode(filename.decode(coding))
                         correctedFilename = ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
                         if filename != correctedFilename:
                             os.rename(os.path.join(dirname, filename), os.path.join(dirname, correctedFilename))
