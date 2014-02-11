@@ -266,12 +266,13 @@ def checkAPICallsSubSeeker(use=False):
     Set true if a API call is being made.
     """
     currentime = time.time()
-    lastrun  = autosub.APICALLSLASTRESET
-    interval = autosub.APICALLSRESETINT
+    lastrun = autosub.APICALLSLASTRESET_SUBSEEKER
+    interval = autosub.APICALLSRESETINT_SUBSEEKER
     
     if currentime - lastrun > interval:
+        log.info("API SubtitleSeeker: 24h limit, resetting API calls.")
         autosub.APICALLS_SUBSEEKER = autosub.APICALLSMAX_SUBSEEKER
-        autosub.APICALLSLASTRESET = time.time()
+        autosub.APICALLSLASTRESET_SUBSEEKER = time.time()
     
     if autosub.APICALLS_SUBSEEKER > 0:
         if use==True:
@@ -286,12 +287,13 @@ def checkAPICallsTvdb(use=False):
     Set true if a API call is being made.
     """
     currentime = time.time()
-    lastrun  = autosub.APICALLSLASTRESET
-    interval = autosub.APICALLSRESETINT
+    lastrun = autosub.APICALLSLASTRESET_TVDB
+    interval = autosub.APICALLSRESETINT_TVDB
     
     if currentime - lastrun > interval:
+        log.info("API TVDB: 24h limit, resetting API calls.")
         autosub.APICALLS_TVDB = autosub.APICALLSMAX_TVDB
-        autosub.APICALLSLASTRESET = time.time()
+        autosub.APICALLSLASTRESET_TVDB = time.time()
     
     if autosub.APICALLS_TVDB > 0:
         if use==True:
