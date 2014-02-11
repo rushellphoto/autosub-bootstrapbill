@@ -25,6 +25,8 @@ import autosub.notify as notify
 
 import autosub.Helpers
 
+from autosub.Addic7ed import Addic7edAPI
+
 def redirect(abspath, *args, **KWs):
     assert abspath[0] == '/'
     raise cherrypy.HTTPRedirect(autosub.WEBROOT + abspath, *args, **KWs)
@@ -378,6 +380,18 @@ class Config:
             return "Auto-Sub successfully updated the media library on your <strong>Plex Media Server</strong>."
         else:
             return "Failed to update the media library on your <strong>Plex Media Server</strong>."
+    
+    @cherrypy.expose
+    def RetrieveAddic7edCount(self):
+        if autosub.WANTEDQUEUELOCK != True:
+            log.info("Addic7ed: Retrieving Addic7ed download count")
+            result = Addic7edAPI().checkCurrentDownloads()
+            if result:
+                return "Addic7ed count: %s of %s" % (autosub.DOWNLOADS_A7, autosub.DOWNLOADS_A7MAX)
+            else:
+                return "Unable to retrieve count at the moment."
+        else:
+            return "Auto-Sub is currently checking Addic7ed for subtitles, unable to refresh data at the moment."
     
     @cherrypy.expose
     def regTwitter(self, token_key=None, token_secret=None, token_pin=None):

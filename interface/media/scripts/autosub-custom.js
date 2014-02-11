@@ -130,6 +130,12 @@ $(document).ready(function () {
 			function (data) { $('#testPlex-result').html(data); });
     });
 	
+	$('#RetrieveAddic7edCount').click(function () {
+        $('#Addic7edCount-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Retrieving Addic7ed download count, this will take a minute...</span>');
+		$.get(autosubRoot + "/config/RetrieveAddic7edCount",
+			function (data) { $('#Addic7edCount-result').html(data); });
+    });
+	
 	// Code to display the tooltip and popover.
 	$("a").tooltip()
 	$("span").popover()
