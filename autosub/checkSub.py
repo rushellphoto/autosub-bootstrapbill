@@ -118,15 +118,16 @@ class checkSub():
                         languages.remove(autosub.ENGLISH)
                 
                     if autosub.ENGLISHSUBDELETE:
-                        if os.path.exists(nlsrtfile) and os.path.exists(engsrtfile):
-                            log.debug("checkSub: Trying to delete English subtitle.")
+                        log.info("checkSub: Clean up English enabled")
+                        if os.path.exists(engsrtfile):
+                            log.debug("checkSub: Trying to delete English subtitle: %s" % engsrtfile)
                             try:
                                 os.unlink(engsrtfile)
                                 log.info("checkSub: Removed English subtitle: %s" % engsrtfile)
                             except:
                                 log.error("checkSub: Error while trying to remove subtitle %s." % engsrtfile)
                         else:
-                            log.debug("checkSub: English subtitle not found.")
+                            log.info("checkSub: English subtitle not found.")
                 
                 if len(languages) == 0:
                     toDelete_wantedQueue.append(index)
