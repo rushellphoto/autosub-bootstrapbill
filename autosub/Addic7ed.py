@@ -565,7 +565,7 @@ class Addic7edAPI():
             classTag = soup.select("tr")[20]
             account = classTag.select("td")[1].string
             if account == 'VIP':
-                autosub.DOWNLOADS_A7MAX = 55
+                autosub.DOWNLOADS_A7MAX = 80
         except:
             log.error("Addic7edAPI: Couldn't retrieve Addic7ed MyPanel data")
             return False

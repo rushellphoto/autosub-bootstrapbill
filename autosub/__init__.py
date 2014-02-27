@@ -198,7 +198,7 @@ def Initialize():
     DUTCH = 'Dutch'
     
     # Default value
-    DOWNLOADS_A7MAX = 30
+    DOWNLOADS_A7MAX = 40
      
     
 def initLogging(logfile):
