@@ -55,15 +55,31 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
     scoreList = []
 
     for sub in dom.getElementsByTagName('item'):
-        release = sub.getElementsByTagName('release')[0].firstChild.data
-        release = release.lower()
-        # Remove the .srt extension some of the uploaders leave on the file
-        if release.endswith(".srt"):
-            release = release[:-4]
-        website = sub.getElementsByTagName('site')[0].firstChild.data
-        website = website.lower()
-        url = sub.getElementsByTagName('url')[0].firstChild.data
+        try:
+            release = sub.getElementsByTagName('release')[0].firstChild.data
+            release = release.lower()
+            # Remove the .srt extension some of the uploaders leave on the file
+            if release.endswith(".srt"):
+                release = release[:-4]
+        except AttributeError:
+            log.error("getSubLink: Invalid release tag in API response, skipping this item.")
+            continue
+        
+        try:
+            website = sub.getElementsByTagName('site')[0].firstChild.data
+            website = website.lower()
+        except AttributeError:
+            log.error("getSubLink: Invalid website tag in API response, skipping this item.")
+            continue
+        
+        try:
+            url = sub.getElementsByTagName('url')[0].firstChild.data
+        except AttributeError:
+            log.error("getSubLink: Invalid url tag in API response, skipping this item.")
+            continue
+        
         tmpDict = ProcessFilename(release, '')
+        
         if not website in sourceWebsites or not tmpDict:
             continue
 
