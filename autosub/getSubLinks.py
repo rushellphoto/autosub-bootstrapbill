@@ -48,6 +48,15 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
     if 'releasegrp' in releaseDetails.keys(): releasegrp = releaseDetails['releasegrp']
     if 'source' in releaseDetails.keys(): source = releaseDetails['source']
     if 'codec' in releaseDetails.keys(): codec = releaseDetails['codec']
+    
+    if not len(dom.getElementsByTagName('error')) == 0:
+        for error in dom.getElementsByTagName('error'):
+            try:
+                errormsg = error.getElementsByTagName('msg')[0].firstChild.data
+                log.error("getSubLink: Error found in API response: %s" % errormsg)
+            except AttributeError:
+                log.debug("getSubLink: Invalid msg tag in API response, unable to read error message.")
+        return None
 
     if not dom or len(dom.getElementsByTagName('item')) == 0:
         return None
@@ -62,20 +71,20 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
             if release.endswith(".srt"):
                 release = release[:-4]
         except AttributeError:
-            log.error("getSubLink: Invalid release tag in API response, skipping this item.")
+            log.debug("getSubLink: Invalid release tag in API response, skipping this item.")
             continue
         
         try:
             website = sub.getElementsByTagName('site')[0].firstChild.data
             website = website.lower()
         except AttributeError:
-            log.error("getSubLink: Invalid website tag in API response, skipping this item.")
+            log.debug("getSubLink: Invalid website tag in API response, skipping this item.")
             continue
         
         try:
             url = sub.getElementsByTagName('url')[0].firstChild.data
         except AttributeError:
-            log.error("getSubLink: Invalid url tag in API response, skipping this item.")
+            log.debug("getSubLink: Invalid url tag in API response, skipping this item.")
             continue
         
         tmpDict = ProcessFilename(release, '')

@@ -209,7 +209,12 @@ def _getShow(title):
     searchName = title
     suffix = ''
     for reg in _show:
-        m = re.match(reg, title)
+        try:
+            m = re.match(reg, title)
+        except TypeError:
+            log.error("_getShow: Error while processing: %s %s" %(searchName, suffix))
+            return searchName, suffix
+        
         if m:
             searchName = m.group(1)
             suffix = m.group(2)
