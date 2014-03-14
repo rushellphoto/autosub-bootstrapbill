@@ -11,7 +11,6 @@ from operator import itemgetter
 
 import autosub.Helpers
 from autosub.ProcessFilename import ProcessFilename
-import autosub.Addic7ed
 
 # Settings
 log = logging.getLogger('thelogger')
@@ -100,70 +99,7 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
 
     return scoreList
 
-def Addic7ed(imdb_id, language, releaseDetails):
-
-    # Info about episode file
-    if imdb_id == -1:
-        return None
-
-    title = releaseDetails['title']
-    season = releaseDetails['season']
-    episode = releaseDetails['episode']
-    if 'quality' in releaseDetails.keys(): quality = releaseDetails['quality']
-    if 'releasegrp' in releaseDetails.keys(): releasegrp = releaseDetails['releasegrp']
-    if 'source' in releaseDetails.keys(): source = releaseDetails['source']
-    if 'codec' in releaseDetails.keys(): codec = releaseDetails['codec']
-    #rlsgrp = downloadDict['releasegrp']
-
-    a7ID = autosub.Helpers.geta7id(title, imdb_id)
-    if not a7ID:
-        return None
-
-    params = {'show_id': a7ID, 'season': season}
-    soup = autosub.ADDIC7EDAPI.get('/show/{show_id}&season={season}'.format(**params))
-    if not soup:
-        return None
-
-    scoreList = []
-
-    for row in soup('tr', class_='epeven completed'):
-        cells = row('td')
-        #Check if line is intact
-        if not len(cells) == 11:
-            continue
-        # filter on Completed, wanted language and episode
-        if cells[5].string != 'Completed':
-            continue
-        if not unicode(cells[3].string) == language:
-            continue
-        if not unicode(cells[1].string) == episode and not unicode(cells[1].string) == unicode(int(episode)):
-            continue
-
-        # use ASCII codec and put in lower case
-        details = unicode(cells[4].string).encode('utf-8')
-        details = details.lower()
-        HD = True if bool(cells[8].string) != None else False
-        downloadUrl = cells[9].a['href'].encode('utf-8')
-        hearingImpaired = True if bool(cells[6].string) else False
-        if hearingImpaired:
-            releasename = autosub.Addic7ed.makeReleaseName(details, title, season, episode, HI=True)
-        else:
-            releasename = autosub.Addic7ed.makeReleaseName(details, title, season, episode)
-
-        # Retun is a list of possible releases that match
-        versionDicts = autosub.Addic7ed.ReconstructRelease(details, HD)
-        if not versionDicts:
-            continue
-
-        for version in versionDicts:
-            releaseDict = {'score':None , 'releasename':releasename, 'website':'addic7ed.com' , 'url':downloadUrl , 'HI':hearingImpaired}
-            releaseDict['score'] = autosub.Helpers.scoreMatch(version, details, quality, releasegrp, source, codec)
-            scoreList.append(releaseDict)
-
-    return scoreList
-
-
-def getSubLinks(showid, lang, releaseDetails, a7Response):
+def getSubLinks(showid, lang, releaseDetails):
     """
     Return all the hits that reach minmatchscore, sorted with the best at the top of the list
     Each element had the downloadlink, score, releasename, and source website)
@@ -175,7 +111,7 @@ def getSubLinks(showid, lang, releaseDetails, a7Response):
     releaseDetails -- Dict containing the quality, releasegrp, source season and episode.
     """
 
-    sourceWebsites, scoreListSubSeeker, scoreListAddic7ed, fullScoreList  = [],[],[],[]
+    sourceWebsites, scoreListSubSeeker  = [],[]
     if autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
         sourceWebsites.append('podnapisi.net')
     if autosub.SUBSCENELANG == lang or autosub.SUBSCENELANG == 'Both':
@@ -185,17 +121,13 @@ def getSubLinks(showid, lang, releaseDetails, a7Response):
     if len(sourceWebsites) > 0:
         scoreListSubSeeker = SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites)
 
-    if (autosub.ADDIC7EDLANG == lang or autosub.ADDIC7EDLANG == 'Both') and a7Response:
-        scoreListAddic7ed = Addic7ed(showid, lang, releaseDetails)
-        pass
-
-    for list in [scoreListSubSeeker, scoreListAddic7ed]:
-        if list: fullScoreList.extend(list)
-
     # Done comparing all the results, lets sort them and return the highest result
     # If there are results with the same score, the download links which comes last (anti-alphabetically) will be returned
     # Also check if the result match the minimal score
-    sortedscorelist = sorted(fullScoreList, key=itemgetter('score', 'website'), reverse=True)
+    try:
+        sortedscorelist = sorted(scoreListSubSeeker, key=itemgetter('score', 'website'), reverse=True)
+    except:
+        return None
 
     toDelete = []
     for index, item in enumerate(sortedscorelist):

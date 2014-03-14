@@ -19,13 +19,11 @@ except:
 import threading
 import time
 import autosub.Config
-from autosub.Db import idCache, lastDown, a7idCache
+from autosub.Db import idCache, lastDown
 
 import autosub.notify as notify
 
 import autosub.Helpers
-
-from autosub.Addic7ed import Addic7edAPI
 
 def redirect(abspath, *args, **KWs):
     assert abspath[0] == '/'
@@ -123,9 +121,8 @@ class Config:
     def saveConfig(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, 
                    path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, englishsubdelete, username, 
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
-                   webserverip, webserverport, usernamemapping, useraddic7edmapping, notifyen, notifynl, homelayoutfirst,
-                   podnapisilang, subscenelang, undertexterlang,
-                   addic7edlang, addic7eduser, addic7edpasswd, downloaddutch,
+                   webserverip, webserverport, usernamemapping, notifyen, notifynl, homelayoutfirst,
+                   podnapisilang, subscenelang, undertexterlang, downloaddutch,
                    mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None):
                    
         # Set all internal variables
@@ -146,12 +143,8 @@ class Config:
         autosub.ENGLISHSUBDELETE = englishsubdelete
         autosub.PODNAPISILANG = podnapisilang
         autosub.SUBSCENELANG = subscenelang
-        #autosub.BIERDOPJEMIRRORLANG = bierdopjemirrorlang
         #autosub.OPENSUBTITLESLANG = opensubtitleslang
         autosub.UNDERTEXTERLANG = undertexterlang
-        autosub.ADDIC7EDLANG = addic7edlang
-        autosub.ADDIC7EDUSER = addic7eduser
-        autosub.ADDIC7EDPASSWD = addic7edpasswd.replace("%","%%")
         
         autosub.MINMATCHSCORE = 0
         if mmssource:
@@ -176,7 +169,6 @@ class Config:
         autosub.WEBROOT = webroot
         autosub.SKIPSHOW = autosub.Config.stringToDict(skipshow)
         autosub.USERNAMEMAPPING = autosub.Config.stringToDict(usernamemapping)
-        autosub.USERADDIC7EDMAPPING = autosub.Config.stringToDict(useraddic7edmapping)
 
         # Now save to the configfile
         message = autosub.Config.WriteConfig(configsection="")
@@ -239,7 +231,6 @@ class Config:
     @cherrypy.expose
     def flushCache(self):
         idCache().flushCache()
-        a7idCache().flushCache()
         message = 'ID Cache flushed'
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
         tmpl.message = message
@@ -360,17 +351,7 @@ class Config:
             return "Auto-Sub successfully sent a test message with <strong>Boxcar</strong>."
         else:
             return "Failed to send a test message with <strong>Boxcar</strong>."
-    
-    @cherrypy.expose
-    def testAddic7ed(self, addic7eduser, addic7edpasswd):
         
-        log.info("Addic7ed: Testing Login")
-        result = autosub.Addic7ed.Addic7edAPI().login(addic7eduser, addic7edpasswd)
-        if result:
-            return "Auto-Sub successfully logged on to <strong>Addic7ed</strong>."
-        else:
-            return "Failed to login to <strong>Addic7ed</strong>."
-    
     @cherrypy.expose
     def testPlex(self, plexserverhost, plexserverport):
         
@@ -380,19 +361,7 @@ class Config:
             return "Auto-Sub successfully updated the media library on your <strong>Plex Media Server</strong>."
         else:
             return "Failed to update the media library on your <strong>Plex Media Server</strong>."
-    
-    @cherrypy.expose
-    def RetrieveAddic7edCount(self):
-        if autosub.WANTEDQUEUELOCK != True:
-            log.info("Addic7ed: Retrieving Addic7ed download count")
-            result = Addic7edAPI().checkCurrentDownloads()
-            if result:
-                return "Addic7ed count: %s of %s" % (autosub.DOWNLOADS_A7, autosub.DOWNLOADS_A7MAX)
-            else:
-                return "Unable to retrieve count at the moment."
-        else:
-            return "Auto-Sub is currently checking Addic7ed for subtitles, unable to refresh data at the moment."
-    
+       
     @cherrypy.expose
     def regTwitter(self, token_key=None, token_secret=None, token_pin=None):
         import library.oauth2 as oauth

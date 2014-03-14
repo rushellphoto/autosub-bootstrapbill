@@ -19,9 +19,7 @@ from autosub.version import autosubversion
 import autosub
 import Tvdb
 
-from autosub.Db import idCache, a7idCache
-from autosub.ID_lookup import a7IdDict
-from autosub.Addic7ed import Addic7edAPI
+from autosub.Db import idCache
 
 # Settings
 log = logging.getLogger('thelogger')
@@ -214,12 +212,6 @@ def scoreMatch(releasedict, release, quality, releasegrp, source, codec):
     log.debug("scoreMatch: MatchScore is %s" % str(score))
     return score
 
-
-def Addic7edMapping(imdb_id):
-    if imdb_id in autosub.USERADDIC7EDMAPPINGUPPER.keys():
-        log.debug("nameMapping: found match in user's addic7edmapping for %s" % imdb_id)
-        return autosub.USERADDIC7EDMAPPINGUPPER[imdb_id]
-
 def nameMapping(showName):
     if showName.upper() in autosub.USERNAMEMAPPINGUPPER.keys():
         log.debug("nameMapping: found match in user's namemapping for %s" % showName)
@@ -333,48 +325,6 @@ def getShowid(show_name):
     
     log.error('getShowid: showid not found for %s' %show_name)
     #idCache().setId(-1, show_name)
-    
-def geta7id(showTitle, imdb_id):
-    
-    #imdb_id = getShowid(showTitle)
-    #imdb_id = str(imdb_id)
-
-    log.debug('geta7id: trying to get addic7ed ID for show %s with IMDB ID %s' % (showTitle, imdb_id))
-    
-    # From user addic7ed mapping
-    a7_id = Addic7edMapping(imdb_id)
-    if a7_id:
-        log.debug('geta7ID: showid from addic7edmapping %s' %a7_id)
-        return a7_id
-
-    # From lookup table
-    if imdb_id in a7IdDict.keys():
-        a7_id = a7IdDict[imdb_id]
-        log.debug('geta7ID: showid from lookup table %s' % a7_id)
-        return a7_id 
-    
-    
-    # From cache
-    a7_id = a7idCache().getId(imdb_id)
-    if a7_id:
-        log.debug('geta7id: addic7ed ID from cache %s' %a7_id)
-        if int(a7_id) == -1:
-            log.error('geta7id: addic7ed ID not found for %s' %showTitle)
-            return
-        return a7_id
-    
-    # From Addic7ed show overview page
-    a7_id = Addic7edAPI().geta7ID(imdb_id, showTitle)
-    if a7_id:
-        log.debug('geta7id: addic7ed ID from Addic7ed show overview page %s' %a7_id)
-        a7idCache().setId(a7_id, imdb_id)
-        log.info('geta7id: %s added to cache with %s' %(a7_id, imdb_id))       
-        return a7_id
-    
-    log.error('geta7id: addic7ed ID not found for %s' %showTitle)
-    
-    #a7idCache().setId(-1, imdb_id)
-    
 
 def DisplayLogFile(loglevel):
     maxLines = 500

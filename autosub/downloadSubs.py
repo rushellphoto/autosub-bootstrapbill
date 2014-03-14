@@ -171,35 +171,8 @@ def subscene(subSeekerLink):
     zipUrl = urljoin(baseLink,downloadLink.encode('utf8'))
     subtitleFile = unzip(zipUrl)
     return subtitleFile
-
     
-def bierdopje(subSeekerLink):    
-    
-    try:
-        soup = getSoup(subSeekerLink)
-        downloadLink = soup.select('p > a[href]')[0]['href'].strip('/')
-    except:
-        log.error("Mirror Bierdopje: Something went wrong while retrieving download link")
-        return None    
-    try:
-        bierdopjeapi = autosub.Helpers.API(downloadLink)
-        subtitleFile = StringIO(bierdopjeapi.resp.read())            
-    except:
-        log.debug("Mirror Bierdopje: Subtitle file at %s couldn't be retrieved" % downloadLink)
-        return None   
-    return subtitleFile
-                
-
-def addic7ed(url):
-    subtitleFile = autosub.ADDIC7EDAPI.download(url)
-    if subtitleFile:
-        autosub.DOWNLOADS_A7 += 1
-        log.debug("addic7ed: Your current Addic7ed download count is: %s" % autosub.DOWNLOADS_A7)
-        return StringIO(subtitleFile)
-    return None
-    
-
-def DownloadSub(allResults, a7Response, downloadItem):    
+def DownloadSub(allResults, downloadItem):    
     
     log.debug("downloadSubs: Starting DownloadSub function")    
     
@@ -236,17 +209,6 @@ def DownloadSub(allResults, a7Response, downloadItem):
         elif website == 'podnapisi.net':
             log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
             fileStringIO = podnapisi(url)
-        elif website == 'bierdopje.eu':
-            log.debug("downloadSubs: Scraper for Bierdopjes Mirror is chosen for subtitle %s" % destsrt)
-            fileStringIO = bierdopje(url)
-        elif website == 'addic7ed.com' and a7Response:
-            log.debug("downloadSubs: Scraper for Addic7ed.com is chosen for subtitle %s" % destsrt)
-            if result['HI']:
-                if not HIfallback:
-                    log.debug("downloadSubs: Addic7ed HI version: store as fallback")
-                    HIfallback = result            
-                continue
-            fileStringIO = addic7ed(url)   
         else:
             log.error("downloadSubs: %s is not recognized. Something went wrong!" % website)
 
@@ -256,14 +218,6 @@ def DownloadSub(allResults, a7Response, downloadItem):
    
         log.debug("downloadSubs: Trying to download another subtitle for this episode")
     
-    
-    if not fileStringIO:
-        if HIfallback:
-            log.debug("downloadSubs: Downloading HI subtitle as fallback")
-            fileStringIO = addic7ed(url)
-            release = HIfallback['releasename']
-            website = HIfallback['website']
-        else: return False
     if not fileStringIO: 
         log.debug("downloadSubs: No suitable subtitle was found")
         return False
@@ -289,9 +243,6 @@ def DownloadSub(allResults, a7Response, downloadItem):
         
     log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
         
-    if website == 'bierdopje.eu':
-        website = 'subtitleseekers mirror of bierdopje'
-
         
     downloadItem['subtitle'] = "%s downloaded from %s" % (release,website)
     downloadItem['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')

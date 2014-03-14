@@ -161,11 +161,6 @@ def ReadConfig(configfile):
         else:
             autosub.SUBSCENELANG = u"Both"
             
-        #if cfg.has_option("config", "bierdopjemirrorlang"):
-        #    autosub.BIERDOPJEMIRRORLANG = cfg.get("config", "bierdopjemirrorlang")
-        #else:
-        #    autosub.BIERDOPJEMIRRORLANG = u"Both"
-            
         #if cfg.has_option("config", "opensubtitleslang"):
         #    autosub.OPENSUBTITLESLANG = cfg.get("config", "opensubtitleslang")
         #else:
@@ -175,22 +170,6 @@ def ReadConfig(configfile):
             autosub.UNDERTEXTERLANG = cfg.get("config", "undertexterlang")
         else:
             autosub.UNDERTEXTERLANG = u"Both"
-
-        if cfg.has_option("config", "addic7edlang"):
-            autosub.ADDIC7EDLANG = cfg.get("config", "addic7edlang")
-        else:
-            autosub.ADDIC7EDLANG = u"None"
-
-        if cfg.has_option("config", "addic7eduser"):
-            autosub.ADDIC7EDUSER = cfg.get("config", "addic7eduser")
-        else:
-            autosub.ADDIC7EDUSER = u""
-
-        if cfg.has_option("config", "addic7edpasswd"):
-            autosub.ADDIC7EDPASSWD = cfg.get("config", "addic7edpasswd")
-        else:
-            autosub.ADDIC7EDPASSWD = u""
-        
         
     else:
         # config section is missing
@@ -217,12 +196,8 @@ def ReadConfig(configfile):
         autosub.ENGLISHSUBDELETE = False
         autosub.PODNAPISILANG = u"Both"
         autosub.SUBSCENELANG = u"Both"
-        #autosub.BIERDOPJEMIRRORLANG = u"Both"
         #autosub.OPENSUBTITLESLANG = u"Both"
         autosub.UNDERTEXTERLANG = u"Both"
-        autosub.ADDIC7EDLANG = u"None"
-        autosub.ADDIC7EDUSER = u""
-        autosub.ADDIC7EDPASSWD = u""
 
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "loglevel"):
@@ -794,27 +769,6 @@ def applynameMapping():
     for x in autosub.USERNAMEMAPPING.keys():
         autosub.USERNAMEMAPPINGUPPER[x.upper()] = autosub.USERNAMEMAPPING[x]
 
-def applyAddic7edMapping():
-    """
-    Read addic7edmapping in the config file.
-    """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosub.CONFIGFILE, 'r', autosub.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        #no config yet
-        pass
-    
-    autosub.SHOWID_CACHE = {}
-    if cfg.has_section("addic7edmapping"):
-        autosub.USERADDIC7EDMAPPING = dict(cfg.items('addic7edmapping'))
-    else:
-        autosub.USERADDIC7EDMAPPING = {}
-    autosub.USERADDIC7EDMAPPINGUPPER = {}
-    for x in autosub.USERADDIC7EDMAPPING.keys():
-        autosub.USERADDIC7EDMAPPINGUPPER[x.upper()] = autosub.USERADDIC7EDMAPPING[x]
-
 def applyskipShow():
     """
     Read skipshow in the config file.
@@ -866,17 +820,6 @@ def displayNamemapping():
     s = ""
     for x in autosub.USERNAMEMAPPING:
         s += x + " = " + str(autosub.USERNAMEMAPPING[x]) + "\n"
-    return s
-
-def displayAddic7edmapping():
-    """
-    Return a string containing all info from user namemapping.
-    After each shows addic7edmapping an '\n' is added to create multiple rows
-    in a textarea.
-    """
-    s = ""
-    for x in autosub.USERADDIC7EDMAPPING:
-        s += x + " = " + str(autosub.USERADDIC7EDMAPPING[x]) + "\n"
     return s
 
 def stringToDict(items=None):
@@ -940,12 +883,8 @@ def saveConfigSection():
     cfg.set(section, "englishsubdelete", str(autosub.ENGLISHSUBDELETE))
     cfg.set(section, "podnapisilang", autosub.PODNAPISILANG)
     cfg.set(section, "subscenelang", autosub.SUBSCENELANG)
-    #cfg.set(section, "bierdopjemirrorlang", autosub.BIERDOPJEMIRRORLANG)
     #cfg.set(section, "opensubtitleslang", autosub.OPENSUBTITLESLANG)
     cfg.set(section, "undertexterlang", autosub.UNDERTEXTERLANG)
-    cfg.set(section, "addic7edlang", autosub.ADDIC7EDLANG)
-    cfg.set(section, "addic7eduser", autosub.ADDIC7EDUSER)
-    cfg.set(section, "addic7edpasswd", autosub.ADDIC7EDPASSWD)
     
     with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as cfile:
         cfg.write(cfile)
@@ -1059,33 +998,6 @@ def saveUsernamemappingSection():
 
     # Set all namemapping stuff correct
     applynameMapping()
-    
-def saveUserAddic7edmappingSection():
-    """
-    Save stuff
-    """
-    section = 'addic7edmapping'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosub.CONFIGFILE, 'r', autosub.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        #no config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosub.CONFIGFILE, 'wb') as cfile:
-            cfg.write(cfile)
-
-    for x in autosub.USERADDIC7EDMAPPING:
-        SaveToConfig('addic7edmapping', x, autosub.USERADDIC7EDMAPPING[x])
-
-    # Set all addic7edmapping stuff correct
-    applyAddic7edMapping()
 
 def saveNotifySection():
     """
@@ -1262,7 +1174,6 @@ def WriteConfig(configsection=None):
         saveWebserverSection()
         saveSkipshowSection()
         saveUsernamemappingSection()
-        saveUserAddic7edmappingSection()
 
     if restart:
         # This needs to be replaced by a restart thingy, until then, just re-read the config and tell the users to do a manual restart
