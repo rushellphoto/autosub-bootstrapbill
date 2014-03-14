@@ -6,6 +6,7 @@
 #import os
 #import time
 #from autosub.version import autosubversion
+#from autosub.Addic7ed import Addic7edAPI
 
 #include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
 
@@ -85,6 +86,22 @@
 				<td><a href="http://tiny.cc/autosub-bootstrapbill" target="_blank">http://tiny.cc/autosub-bootstrapbill</a></td>
 			</tr>
 		</table>
+#if $autosub.ADDIC7EDLANG != "None":
+		<hr>
+		<strong>ADDIC7ED</strong>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td>
+					<span id="Addic7edCount-result">Click below to retrieve Addic7ed download count.</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="button" class="btn btn-default" value="Retrieve Count" id="RetrieveAddic7edCount" />
+				</td>
+			</tr>
+		</table>
+#end if
 		<hr>
 		<strong>API CALLS REMAINING</strong>
 		<table>

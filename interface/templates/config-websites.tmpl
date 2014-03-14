@@ -1,6 +1,56 @@
 #import autosub
 
 		<div class="form-group">
+			<label for="Addic7ed" class="col-sm-2 control-label">Addic7ed <a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using Addic7ed. Select 'None' if you don't want to use this website. Default is None."><span class="glyphicon glyphicon-info-sign"></span></a></label>
+			<div class="col-sm-10">
+			<select id="addic7edlang" name="addic7edlang" class="form-control enableraddic7ed">
+			#if $autosub.ADDIC7EDLANG == 'Both':
+				<option value="Both" selected="selected">Both</option>
+				<option value="Dutch">Dutch</option>
+				<option value="English">English</option>
+				<option value="None">None</option>
+			#elif $autosub.ADDIC7EDLANG == 'Dutch':
+				<option value="Both">Both</option>
+				<option value="Dutch" selected="selected">Dutch</option>
+				<option value="English">English</option>
+				<option value="None">None</option>
+			#elif $autosub.ADDIC7EDLANG == 'English':
+				<option value="Both">Both</option>
+				<option value="Dutch">Dutch</option>
+				<option value="English" selected="selected">English</option>
+				<option value="None">None</option>
+			#elif $autosub.ADDIC7EDLANG == 'None':
+				<option value="Both">Both</option>
+				<option value="Dutch">Dutch</option>
+				<option value="English">English</option>
+				<option value="None" selected="selected">None</option>
+			#end if
+			</select>
+			</div>
+		</div>
+			
+		<div id="content_addic7edlang">
+			<div class="form-group">
+				<label for="Addic7edUsername" class="col-sm-2 control-label">Username <a data-placement="bottom" data-toggle="tooltip" data-original-title="What is your username for addic7ed?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
+				<div class="col-sm-10">
+				<input type="text" class="form-control" name="addic7eduser" id="addic7eduser" value="$autosub.ADDIC7EDUSER" placeholder="">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="Addic7edPassword" class="col-sm-2 control-label">Password <a data-placement="bottom" data-toggle="tooltip" data-original-title="What is your password for addic7ed?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
+				<div class="col-sm-10">
+				<input type="password" class="form-control" name="addic7edpasswd" id="addic7edpasswd" value="$autosub.ADDIC7EDPASSWD" placeholder="">
+				</div>
+			</div>
+			
+			<div align="right">
+					<span id="testAddic7ed-result">Click below to test the Addic7ed login.</span><br>
+					<input type="button" class="btn btn-default" value="Test Addic7ed" id="testAddic7ed" /><br><br>
+			</div>
+		</div>
+		
+		<div class="form-group">
 			<label for="Podnapisi" class="col-sm-2 control-label">Podnapisi <a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using Podnapisi. Select 'None' if you don't want to use this website. Default is Both."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="podnapisilang" class="form-control">
@@ -57,6 +107,36 @@
 			</select>
 			</div>
 		</div>
+		
+		<!-- Removed Bierdopje because mirror appears to be down.
+		<div class="form-group">
+			<label for="BierdopjeMirror" class="col-sm-2 control-label"><a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using Bierdopje's mirror on Subtitleseeker. Select 'None' if you don't want to use this website. Default is Both.">Bierdopje mirror</a></label>
+			<div class="col-sm-10">
+			<select name="bierdopjemirrorlang" class="form-control">
+			#if $autosub.BIERDOPJEMIRRORLANG == 'Both':
+				<option value="Both" selected="selected">Both</option>
+				<option value="Dutch">Dutch</option>
+				<option value="English">English</option>
+				<option value="None">None</option>
+			#elif $autosub.BIERDOPJEMIRRORLANG == 'Dutch':
+				<option value="Both">Both</option>
+				<option value="Dutch" selected="selected">Dutch</option>
+				<option value="English">English</option>
+				<option value="None">None</option>
+			#elif $autosub.BIERDOPJEMIRRORLANG == 'English':
+				<option value="Both">Both</option>
+				<option value="Dutch">Dutch</option>
+				<option value="English" selected="selected">English</option>
+				<option value="None">None</option>
+			#elif $autosub.BIERDOPJEMIRRORLANG == 'None':
+				<option value="Both">Both</option>
+				<option value="Dutch">Dutch</option>
+				<option value="English">English</option>
+				<option value="None" selected="selected">None</option>
+			#end if
+			</select>
+			</div>
+		</div>-->
 		
 		<div class="form-group">
 			<label for="Undertexter" class="col-sm-2 control-label">UnderTexter <a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using Undertexter. Select 'None' if you don't want to use this website. Default is Both."><span class="glyphicon glyphicon-info-sign"></span></a></label>

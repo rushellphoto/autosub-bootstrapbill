@@ -114,12 +114,26 @@ $(document).ready(function () {
 			function (data) { $('#testBoxcar-result').html(data); });
     });
 	
+	$('#testAddic7ed').click(function () {
+        $('#testAddic7ed-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Addic7ed login...</span>');
+        var addic7eduser = $("#addic7eduser").val();
+		var addic7edpasswd = $("#addic7edpasswd").val();
+		$.get(autosubRoot + "/config/testAddic7ed", {'addic7eduser': addic7eduser, 'addic7edpasswd': addic7edpasswd},
+			function (data) { $('#testAddic7ed-result').html(data); });
+    });
+	
 	$('#testPlex').click(function () {
         $('#testPlex-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Plex Media Server...</span>');
         var plexserverhost = $("#plexserverhost").val();
 		var plexserverport = $("#plexserverport").val();
 		$.get(autosubRoot + "/config/testPlex", {'plexserverhost': plexserverhost, 'plexserverport': plexserverport},
 			function (data) { $('#testPlex-result').html(data); });
+    });
+	
+	$('#RetrieveAddic7edCount').click(function () {
+        $('#Addic7edCount-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Retrieving Addic7ed download count, this will take a minute...</span>');
+		$.get(autosubRoot + "/config/RetrieveAddic7edCount",
+			function (data) { $('#Addic7edCount-result').html(data); });
     });
 	
 	// Code to display the tooltip and popover.
@@ -146,6 +160,24 @@ $(document).ready(function () {
  			if ($(this).val() == "False") {
  				$('#content_' + dropdown.attr("id")).hide();
  			}
+ 		});
+ 	});
+	
+	$(".enableraddic7ed option:selected").each(function () {
+		if ($(this).val() == "None") {
+			$('#content_' + $(this).parent().attr("id")).hide();
+		}
+	});
+
+	$(".enableraddic7ed").change(function () {
+ 		var dropdown = $(this);
+		$(this).children("option:selected").each(function() {
+ 			if ($(this).val() == "None") {
+ 				$('#content_' + dropdown.attr("id")).hide();
+ 			}
+			else {
+				$('#content_' + dropdown.attr("id")).show();
+			}
  		});
  	});
 
