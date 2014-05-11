@@ -117,7 +117,9 @@ _rlsgrps_HD = ['DIMENSION',
                'CTU',
                'KILLERS',
                '2HD',
-               'MOMENTUM']
+               'MOMENTUM',
+               'REMARKABLE',
+               'EXCELLENCE']
 
 _rlsgrps_SD = ['LOL',
                'ASAP',
