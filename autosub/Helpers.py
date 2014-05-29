@@ -413,9 +413,18 @@ def ClearLogFile():
 
 def DisplaySubtitle(subtitlefile):
     if os.path.isfile(subtitlefile):
-        f = codecs.open(subtitlefile, 'rb', autosub.SYSENCODING, 'replace')
-        data = f.readlines()
-        f.close()
+        try:
+            f = codecs.open(subtitlefile, 'rb', autosub.SYSENCODING, 'replace')
+            data = f.readlines()
+            f.close()
+        except IOError, e:
+            if e.errno == 13:
+                result = "Permission Denied: <br>Unable to read subtitle."
+                log.error('DisplaySubtitle: Permission Denied on %s' %subtitlefile)
+            else: 
+                result = "There was a problem with loading the subtitle."
+                log.error('DisplaySubtitle: There was a problem with loading %s' %subtitlefile)
+            return result
 
     if len(data) < 30:
         result = "This seems to be an invalid subtitle, it has less than 30 lines to preview."
