@@ -211,10 +211,10 @@
 		
 		<hr>
 		<div class="form-group">
-			<label for="Boxcar" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/boxcar.png" width="25px" height="24px" alt="" /> <b><a href="http://www.boxcar.io/sign-in" target="_blank">Boxcar</a></b></label>
+			<label for="Boxcar2" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/boxcar2.png" width="25px" height="24px" alt="" /> <b><a href="http://www.boxcar.io/sign-in" target="_blank">Boxcar2</a></b></label>
 			<div class="col-sm-10">
-			<select name="notifyboxcar" id="notifyboxcar" class="form-control enabler">
-			#if $autosub.NOTIFYBOXCAR
+			<select name="notifyboxcar2" id="notifyboxcar2" class="form-control enabler">
+			#if $autosub.NOTIFYBOXCAR2
 				<option value="True" selected="selected">Enabled</option>
 				<option value="False">Disabled</option>
 			#else
@@ -222,21 +222,21 @@
 				<option value="False" selected="selected">Disabled</option>
 			#end if
 			</select>
-			<br>Boxcar is a notifier for iOS and OSX.
+			<br>Boxcar2 is a notifier for iOS and OSX.
 			</div>
 		</div>
 		
-		<div id="content_notifyboxcar">
+		<div id="content_notifyboxcar2">
 			<div class="form-group">
-				<label for="BoxcarAccount" class="col-sm-2 control-label">Account <a data-placement="bottom" data-toggle="tooltip" data-original-title="What email address do you use for Boxcar?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
+				<label for="Boxcar2Token" class="col-sm-2 control-label">Access Token <a data-placement="bottom" data-toggle="tooltip" data-original-title="What is your access token for Boxcar2?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
 				<div class="col-sm-10">
-				<input type="text" class="form-control" name="boxcaruser" id="boxcaruser" value="$autosub.BOXCARUSER" placeholder="">
+				<input type="text" class="form-control" name="boxcar2token" id="boxcar2token" value="$autosub.BOXCAR2TOKEN" placeholder="">
 				</div>
 			</div>
 			
 			<div align="right">
-				<span id="testBoxcar-result">Click below to test Boxcar.</span><br>
-				<input type="button" class="btn btn-default" value="Test Boxcar" id="testBoxcar" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+				<span id="testBoxcar2-result">Click below to test Boxcar2.</span><br>
+				<input type="button" class="btn btn-default" value="Test Boxcar2" id="testBoxcar2" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
 			</div>
 		</div>
 		

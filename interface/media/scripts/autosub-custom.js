@@ -107,11 +107,11 @@ $(document).ready(function () {
 			function (data) { $('#testProwl-result').html(data); });
     });
 	
-	$('#testBoxcar').click(function () {
-        $('#testBoxcar-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Boxcar...</span>');
-        var boxcaruser = $("#boxcaruser").val();
-		$.get(autosubRoot + "/config/testBoxcar", {'boxcaruser': boxcaruser},
-			function (data) { $('#testBoxcar-result').html(data); });
+	$('#testBoxcar2').click(function () {
+        $('#testBoxcar2-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Boxcar2...</span>');
+        var boxcar2token = $("#boxcar2token").val();
+		$.get(autosubRoot + "/config/testBoxcar2", {'boxcar2token': boxcar2token},
+			function (data) { $('#testBoxcar2-result').html(data); });
     });
 	
 	$('#testAddic7ed').click(function () {

@@ -16,7 +16,7 @@ from autosub.notify import growl
 from autosub.notify import prowl
 from autosub.notify import pushalot
 from autosub.notify import pushover
-from autosub.notify import boxcar
+from autosub.notify import boxcar2
 from autosub.notify import plexmediaserver
 
 log = logging.getLogger('thelogger')  
@@ -61,9 +61,9 @@ def notifySend(lang, subtitlefile, videofile, website):
         log.debug("Notification: Pushover is enabled")
         pushover.send_notify(lang, subtitlefile, videofile, website)
     
-    if autosub.NOTIFYBOXCAR:
-        log.debug("Notification: Boxcar is enabled")
-        boxcar.send_notify(lang, subtitlefile, videofile, website)
+    if autosub.NOTIFYBOXCAR2:
+        log.debug("Notification: Boxcar2 is enabled")
+        boxcar2.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYPLEX:
         log.debug("Notification: Plex Media Server is enabled")

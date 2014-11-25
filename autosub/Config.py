@@ -467,15 +467,15 @@ def ReadConfig(configfile):
                 autosub.PUSHOVERAPI = u"API key"
             
             #Boxcar - iOS and OSX notifier.
-            if cfg.has_option('notify', 'notifyboxcar'):
-                autosub.NOTIFYBOXCAR = cfg.getboolean('notify', 'notifyboxcar')
+            if cfg.has_option('notify', 'notifyboxcar2'):
+                autosub.NOTIFYBOXCAR2 = cfg.getboolean('notify', 'notifyboxcar2')
             else:
-                autosub.NOTIFYBOXCAR = False
+                autosub.NOTIFYBOXCAR2 = False
             
-            if cfg.has_option('notify', 'boxcaruser'):
-                autosub.BOXCARUSER = cfg.get('notify', 'boxcaruser')
+            if cfg.has_option('notify', 'boxcar2token'):
+                autosub.BOXCAR2TOKEN = cfg.get('notify', 'boxcar2token')
             else:
-                autosub.BOXCARUSER = u"Boxcar email"
+                autosub.BOXCAR2TOKEN = u"Boxcar2 access token"
             
             #Plex Media Server
             if cfg.has_option('notify', 'notifyplex'):
@@ -520,8 +520,8 @@ def ReadConfig(configfile):
         autosub.PUSHALOTAPI = u"API key"
         autosub.NOTIFYPUSHOVER = False
         autosub.PUSHOVERAPI = u"API key"
-        autosub.NOTIFYBOXCAR = False
-        autosub.BOXCARUSER = u"Boxcar email"
+        autosub.NOTIFYBOXCAR2 = False
+        autosub.BOXCAR2TOKEN = u"Boxcar2 access token"
         autosub.NOTIFYPLEX = False
         autosub.PLEXSERVERHOST = u"127.0.0.1"
         autosub.PLEXSERVERPORT = u"32400"
@@ -1131,8 +1131,8 @@ def saveNotifySection():
     cfg.set(section, "pushalotapi", autosub.PUSHALOTAPI)
     cfg.set(section, "notifypushover", str(autosub.NOTIFYPUSHOVER))
     cfg.set(section, "pushoverapi", autosub.PUSHOVERAPI)
-    cfg.set(section, "notifyboxcar", str(autosub.NOTIFYBOXCAR))
-    cfg.set(section, "boxcaruser", autosub.BOXCARUSER)
+    cfg.set(section, "notifyboxcar2", str(autosub.NOTIFYBOXCAR2))
+    cfg.set(section, "boxcar2token", autosub.BOXCAR2TOKEN)
     cfg.set(section, "notifyplex", str(autosub.NOTIFYPLEX))
     cfg.set(section, "plexserverhost", autosub.PLEXSERVERHOST)
     cfg.set(section, "plexserverport", autosub.PLEXSERVERPORT)

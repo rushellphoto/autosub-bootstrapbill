@@ -192,7 +192,7 @@ class Config:
                          mailtoaddr, mailusername, mailpassword, mailsubject, mailencryption, mailauth, 
                          growlhost, growlport, growlpass, nmaapi, twitterkey, twittersecret, notifyprowl, 
                          prowlapi, prowlpriority, notifypushalot, pushalotapi, notifypushover, pushoverapi, 
-                         nmapriority, notifyboxcar, boxcaruser, notifyplex, plexserverhost, plexserverport):
+                         nmapriority, notifyboxcar2, boxcar2token, notifyplex, plexserverhost, plexserverport):
 
         # Set all internal notify variables
         autosub.NOTIFYMAIL = notifymail
@@ -221,8 +221,8 @@ class Config:
         autosub.PUSHALOTAPI = pushalotapi
         autosub.NOTIFYPUSHOVER = notifypushover
         autosub.PUSHOVERAPI = pushoverapi
-        autosub.NOTIFYBOXCAR = notifyboxcar
-        autosub.BOXCARUSER = boxcaruser
+        autosub.NOTIFYBOXCAR2 = notifyboxcar2
+        autosub.BOXCAR2TOKEN = boxcar2token
         autosub.NOTIFYPLEX = notifyplex
         autosub.PLEXSERVERHOST = plexserverhost
         autosub.PLEXSERVERPORT = plexserverport
@@ -352,14 +352,14 @@ class Config:
             return "Failed to send a test message with <strong>Prowl</strong>."
     
     @cherrypy.expose
-    def testBoxcar(self, boxcaruser):
+    def testBoxcar2(self, boxcar2token):
         
-        log.info("Notification: Testing Boxcar")
-        result = notify.boxcar.test_notify(boxcaruser)
+        log.info("Notification: Testing Boxcar2")
+        result = notify.boxcar2.test_notify(boxcar2token)
         if result:
-            return "Auto-Sub successfully sent a test message with <strong>Boxcar</strong>."
+            return "Auto-Sub successfully sent a test message with <strong>Boxcar2</strong>."
         else:
-            return "Failed to send a test message with <strong>Boxcar</strong>."
+            return "Failed to send a test message with <strong>Boxcar2</strong>."
     
     @cherrypy.expose
     def testAddic7ed(self, addic7eduser, addic7edpasswd):
