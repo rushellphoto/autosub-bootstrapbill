@@ -191,10 +191,10 @@ def ReadConfig(configfile):
         else:
             autosub.ADDIC7EDPASSWD = u""
             
-        if cfg.has_option("config", "skipwebdl"):
-            autosub.SKIPWEBDL = cfg.getboolean("config", "skipwebdl")
+        if cfg.has_option("config", "webdl"):
+            autosub.WEBDL = cfg.get("config", "webdl")
         else:
-            autosub.SKIPWEBDL = False
+            autosub.WEBDL = u"Both"
         
         
     else:
@@ -228,7 +228,7 @@ def ReadConfig(configfile):
         autosub.ADDIC7EDLANG = u"None"
         autosub.ADDIC7EDUSER = u""
         autosub.ADDIC7EDPASSWD = u""
-        autosub.SKIPWEBDL = False
+        autosub.WEBDL = u"Both"
 
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "loglevel"):
@@ -942,7 +942,7 @@ def saveConfigSection():
     cfg.set(section, "configversion", str(autosub.CONFIGVERSION))
     cfg.set(section, "launchbrowser", str(autosub.LAUNCHBROWSER))
     cfg.set(section, "skiphiddendirs", str(autosub.SKIPHIDDENDIRS))
-    cfg.set(section, "skipwebdl", str(autosub.SKIPWEBDL))
+    cfg.set(section, "webdl", autosub.WEBDL)
     cfg.set(section, "homelayoutfirst", autosub.HOMELAYOUTFIRST)
     cfg.set(section, "englishsubdelete", str(autosub.ENGLISHSUBDELETE))
     cfg.set(section, "podnapisilang", autosub.PODNAPISILANG)

@@ -120,7 +120,7 @@ class Config:
         return str(tmpl)
 
     @cherrypy.expose  
-    def saveConfig(self, subeng, checksub, scandisk, skiphiddendirs, skipwebdl, subnl, postprocesscmd, 
+    def saveConfig(self, subeng, checksub, scandisk, skiphiddendirs, webdl, subnl, postprocesscmd, 
                    path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, englishsubdelete, username, 
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
                    webserverip, webserverport, usernamemapping, useraddic7edmapping, notifyen, notifynl, homelayoutfirst,
@@ -152,7 +152,7 @@ class Config:
         autosub.ADDIC7EDLANG = addic7edlang
         autosub.ADDIC7EDUSER = addic7eduser
         autosub.ADDIC7EDPASSWD = addic7edpasswd.replace("%","%%")
-        autosub.SKIPWEBDL = skipwebdl
+        autosub.WEBDL = webdl
         
         autosub.MINMATCHSCORE = 0
         if mmssource:

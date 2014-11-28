@@ -50,11 +50,11 @@ def walkDir(path):
             if ext in ('avi', 'mkv', 'wmv', 'ts', 'mp4'):
                 if re.search('sample', filename): continue
                 
-                if autosub.SKIPWEBDL:
+                if autosub.WEBDL == 'None':
                     if re.search('web-dl', filename.lower()): 
-                        log.debug("scanDisk: Skip WEB-DL is enabled, skipping %s" %filename)
+                        log.debug("scanDisk: WEB-DL is set to 'None', skipping %s" %filename)
                         continue
-
+                
                 if not platform.system() == 'Windows':
                     # Get best ascii compatible character for special characters
 
@@ -103,12 +103,18 @@ def walkDir(path):
                 if autosub.DOWNLOADENG:
                     # If the English subtitle doesn't exist, then add it to the wanted list.
                     if not os.path.exists(os.path.join(dirname, srtfileeng)):
-                        lang.append(autosub.ENGLISH)
+                        if autosub.WEBDL == 'DutchOnly' and re.search('web-dl', filename.lower()):
+                            log.debug("scanDisk: WEB-DL is set to 'Dutch Only', not adding English as wanted for %s" %filename)
+                        else:
+                            lang.append(autosub.ENGLISH)
 
                 if (autosub.FALLBACKTOENG and autosub.DOWNLOADDUTCH) and not autosub.DOWNLOADENG:
                     # If the Dutch and English subtitles do not exist, then add English to the wanted list.
                     if not os.path.exists(os.path.join(dirname, srtfilenl)) and not os.path.exists(os.path.join(dirname, srtfileeng)):
-                        lang.append(autosub.ENGLISH)
+                        if autosub.WEBDL == 'DutchOnly' and re.search('web-dl', filename.lower()):
+                            log.debug("scanDisk: WEB-DL is set to 'Dutch Only', not adding English as wanted for %s" %filename)
+                        else:
+                            lang.append(autosub.ENGLISH)
 
                 if not lang:
                     # autosub.WANTEDQUEUE empty
