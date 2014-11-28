@@ -49,6 +49,11 @@ def walkDir(path):
 
             if ext in ('avi', 'mkv', 'wmv', 'ts', 'mp4'):
                 if re.search('sample', filename): continue
+                
+                if autosub.SKIPWEBDL:
+                    if re.search('web-dl', filename.lower()): 
+                        log.debug("scanDisk: Skip WEB-DL is enabled, skipping %s" %filename)
+                        continue
 
                 if not platform.system() == 'Windows':
                     # Get best ascii compatible character for special characters
