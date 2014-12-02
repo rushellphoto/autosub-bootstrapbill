@@ -4,27 +4,10 @@
 			<label for="Addic7ed" class="col-sm-2 control-label">Addic7ed <a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using Addic7ed. Select 'None' if you don't want to use this website. Default is None."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select id="addic7edlang" name="addic7edlang" class="form-control enableraddic7ed">
-			#if $autosub.ADDIC7EDLANG == 'Both':
-				<option value="Both" selected="selected">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.ADDIC7EDLANG == 'Dutch':
-				<option value="Both">Both</option>
-				<option value="Dutch" selected="selected">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.ADDIC7EDLANG == 'English':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English" selected="selected">English</option>
-				<option value="None">None</option>
-			#elif $autosub.ADDIC7EDLANG == 'None':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None" selected="selected">None</option>
-			#end if
+				<option value="Both" #if $autosub.ADDIC7EDLANG == "Both" then 'selected="selected"' else ""#>Both</option>
+				<option value="Dutch" #if $autosub.ADDIC7EDLANG == "Dutch" then 'selected="selected"' else ""#>Dutch</option>
+				<option value="English" #if $autosub.ADDIC7EDLANG == "English" then 'selected="selected"' else ""#>English</option>
+				<option value="None" #if $autosub.ADDIC7EDLANG == "None" then 'selected="selected"' else ""#>None</option>
 			</select>
 			</div>
 		</div>
@@ -54,27 +37,10 @@
 			<label for="Podnapisi" class="col-sm-2 control-label">Podnapisi <a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using Podnapisi. Select 'None' if you don't want to use this website. Default is Both."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="podnapisilang" class="form-control">
-			#if $autosub.PODNAPISILANG == 'Both':
-				<option value="Both" selected="selected">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.PODNAPISILANG == 'Dutch':
-				<option value="Both">Both</option>
-				<option value="Dutch" selected="selected">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.PODNAPISILANG == 'English':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English" selected="selected">English</option>
-				<option value="None">None</option>
-			#elif $autosub.PODNAPISILANG == 'None':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None" selected="selected">None</option>
-			#end if
+				<option value="Both" #if $autosub.PODNAPISILANG == "Both" then 'selected="selected"' else ""#>Both</option>
+				<option value="Dutch" #if $autosub.PODNAPISILANG == "Dutch" then 'selected="selected"' else ""#>Dutch</option>
+				<option value="English" #if $autosub.PODNAPISILANG == "English" then 'selected="selected"' else ""#>English</option>
+				<option value="None" #if $autosub.PODNAPISILANG == "None" then 'selected="selected"' else ""#>None</option>
 			</select>
 			</div>
 		</div>
@@ -83,27 +49,10 @@
 			<label for="Subscene" class="col-sm-2 control-label">SubScene <a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using SubScene. Select 'None' if you don't want to use this website. Default is Both."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="subscenelang" class="form-control">
-			#if $autosub.SUBSCENELANG == 'Both':
-				<option value="Both" selected="selected">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.SUBSCENELANG == 'Dutch':
-				<option value="Both">Both</option>
-				<option value="Dutch" selected="selected">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.SUBSCENELANG == 'English':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English" selected="selected">English</option>
-				<option value="None">None</option>
-			#elif $autosub.SUBSCENELANG == 'None':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None" selected="selected">None</option>
-			#end if
+				<option value="Both" #if $autosub.SUBSCENELANG == "Both" then 'selected="selected"' else ""#>Both</option>
+				<option value="Dutch" #if $autosub.SUBSCENELANG == "Dutch" then 'selected="selected"' else ""#>Dutch</option>
+				<option value="English" #if $autosub.SUBSCENELANG == "English" then 'selected="selected"' else ""#>English</option>
+				<option value="None" #if $autosub.SUBSCENELANG == "None" then 'selected="selected"' else ""#>None</option>
 			</select>
 			</div>
 		</div>
@@ -142,27 +91,10 @@
 			<label for="Undertexter" class="col-sm-2 control-label">UnderTexter <a data-placement="bottom" data-toggle="tooltip" data-original-title="Select which languages you want to download using Undertexter. Select 'None' if you don't want to use this website. Default is Both."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="undertexterlang" class="form-control">
-			#if $autosub.UNDERTEXTERLANG == 'Both':
-				<option value="Both" selected="selected">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.UNDERTEXTERLANG == 'Dutch':
-				<option value="Both">Both</option>
-				<option value="Dutch" selected="selected">Dutch</option>
-				<option value="English">English</option>
-				<option value="None">None</option>
-			#elif $autosub.UNDERTEXTERLANG == 'English':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English" selected="selected">English</option>
-				<option value="None">None</option>
-			#elif $autosub.UNDERTEXTERLANG == 'None':
-				<option value="Both">Both</option>
-				<option value="Dutch">Dutch</option>
-				<option value="English">English</option>
-				<option value="None" selected="selected">None</option>
-			#end if
+				<option value="Both" #if $autosub.UNDERTEXTERLANG == "Both" then 'selected="selected"' else ""#>Both</option>
+				<option value="Dutch" #if $autosub.UNDERTEXTERLANG == "Dutch" then 'selected="selected"' else ""#>Dutch</option>
+				<option value="English" #if $autosub.UNDERTEXTERLANG == "English" then 'selected="selected"' else ""#>English</option>
+				<option value="None" #if $autosub.UNDERTEXTERLANG == "None" then 'selected="selected"' else ""#>None</option>
 			</select>
 			</div>
 		</div>

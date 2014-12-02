@@ -15,13 +15,8 @@
 			<label for="DownloadDutch" class="col-sm-2 control-label">Download Dutch <a data-placement="bottom" data-toggle="tooltip" data-original-title="When Enabled, Dutch subtitles are always downloaded. Default is Enabled."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="downloaddutch" id="downloaddutch" class="form-control enabler">
-			#if $autosub.DOWNLOADDUTCH
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.DOWNLOADDUTCH == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.DOWNLOADDUTCH == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			</div>
 		</div>
@@ -31,13 +26,8 @@
 				<label for="NotifyDutch" class="col-sm-2 control-label">Notify Dutch <a data-placement="bottom" data-toggle="tooltip" data-original-title="When enabled, Auto-Sub will send a notification when a Dutch subtitle has been downloaded. Default is Enabled."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 				<div class="col-sm-10">
 				<select name="notifynl" class="form-control">
-					#if $autosub.NOTIFYNL
-					<option value="True" selected="selected">Enabled</option>
-						  <option value="False">Disabled</option>
-					#else
-						  <option value="True">Enabled</option>
-						  <option value="False" selected="selected">Disabled</option>
-					#end if
+					<option value="True" #if $autosub.NOTIFYNL == True then 'selected="selected"' else ""#>Enabled</option>
+					<option value="False" #if $autosub.NOTIFYNL == False then 'selected="selected"' else ""#>Disabled</option>
 				</select>
 				</div>
 			</div>
@@ -53,13 +43,8 @@
 				<label for="FallbacktoEnglish" class="col-sm-2 control-label">Fallback to English <a data-placement="bottom" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are downloaded when there are no Dutch subtitles available. Default is Enabled."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 				<div class="col-sm-10">
 				<select name="fallbacktoeng" class="form-control">
-				#if $autosub.FALLBACKTOENG
-					<option value="True" selected="selected">Enabled</option>
-					<option value="False">Disabled</option>
-				#else
-					<option value="True">Enabled</option>
-					<option value="False" selected="selected">Disabled</option>
-				#end if
+					<option value="True" #if $autosub.FALLBACKTOENG == True then 'selected="selected"' else ""#>Enabled</option>
+					<option value="False" #if $autosub.FALLBACKTOENG == False then 'selected="selected"' else ""#>Disabled</option>
 				</select>
 				</div>
 			</div>
@@ -68,13 +53,8 @@
 				<label for="CleanUpEnglish" class="col-sm-2 control-label">Clean up English <a data-placement="bottom" data-toggle="tooltip" data-original-title="Do you want to remove the English subtitle when the Dutch subtitle is downloaded?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
 				<div class="col-sm-10">
 				<select name="englishsubdelete" class="form-control">
-				#if $autosub.ENGLISHSUBDELETE == True:
-					<option value="True" selected="selected">Enabled</option>
-					<option value="False">Disabled</option>
-				#else
-					<option value="True">Enabled</option>
-					<option value="False" selected="selected">Disabled</option>
-				#end if
+					<option value="True" #if $autosub.ENGLISHSUBDELETE == True then 'selected="selected"' else ""#>Enabled</option>
+					<option value="False" #if $autosub.ENGLISHSUBDELETE == False then 'selected="selected"' else ""#>Disabled</option>
 				</select>
 				</div>
 			</div>		
@@ -87,13 +67,8 @@
 			<label for="DownloadEnglish" class="col-sm-2 control-label">Download English <a data-placement="bottom" data-toggle="tooltip" data-original-title="When Enabled, English subtitles are always downloaded. Default is Disabled."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="downloadeng" class="form-control"> <!--value="$autosub.DOWNLOADENG" />-->
-			#if $autosub.DOWNLOADENG
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.DOWNLOADENG == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.DOWNLOADENG == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			</div>
 		</div>
@@ -102,13 +77,8 @@
 			<label for="NotifyEnglish" class="col-sm-2 control-label">Notify English <a data-placement="bottom" data-toggle="tooltip" data-original-title="When enabled, Auto-Sub will send a notification when an English subtitle has been downloaded. Default is Enabled."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="notifyen" class="form-control">
-			#if $autosub.NOTIFYEN
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYEN == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYEN == False then 'selected="selected"' else ""#>Disabled</option>
 				</select>
 			</div>
 		</div>
@@ -126,13 +96,8 @@
 			<label for="HomeTableOrder" class="col-sm-2 control-label">Home table order <a data-placement="bottom" data-toggle="tooltip" data-original-title="Which table do you want displayed first on the Home page?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="homelayoutfirst" class="form-control">
-			#if $autosub.HOMELAYOUTFIRST == "Wanted"
-				<option value="Wanted" selected="selected">Wanted, Downloaded</option>
-				<option value="Downloaded">Downloaded, Wanted</option>
-			#else
-				<option value="Wanted">Wanted, Downloaded</option>
-				<option value="Downloaded" selected="selected">Downloaded, Wanted</option>
-			#end if
+				<option value="Wanted" #if $autosub.HOMELAYOUTFIRST == "Wanted" then 'selected="selected"' else ""#>Wanted, Downloaded</option>
+				<option value="Downloaded" #if $autosub.HOMELAYOUTFIRST == "Downloaded" then 'selected="selected"' else ""#>Downloaded, Wanted</option>
 			</select>
 			</div>
 		</div>
@@ -141,19 +106,9 @@
 			<label for="WebDl" class="col-sm-2 control-label">WEB-DL <a data-placement="bottom" data-toggle="tooltip" data-original-title="Which subtitles do you want to download for WEB-DL episodes?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="webdl" class="form-control">
-			#if $autosub.WEBDL == 'None':
-				<option value="None" selected="selected">None</option>
-				<option value="DutchOnly">Dutch Only</option>
-				<option value="Both">Both</option>
-			#elif $autosub.WEBDL == 'DutchOnly':
-				<option value="None" selected="selected">None</option>
-				<option value="DutchOnly" selected="selected">Dutch Only</option>
-				<option value="Both">Both</option>
-			#else:
-				<option value="None" selected="selected">None</option>
-				<option value="DutchOnly">Dutch Only</option>
-				<option value="Both" selected="selected">Both</option>
-			#end if
+				<option value="None" #if $autosub.WEBDL == "None" then 'selected="selected"' else ""#>None</option>
+				<option value="DutchOnly" #if $autosub.WEBDL == "DutchOnly" then 'selected="selected"' else ""#>Dutch Only</option>
+				<option value="Both" #if $autosub.WEBDL == "Both" then 'selected="selected"' else ""#>Both</option>
 			</select>
 			</div>
 		</div>	
@@ -180,13 +135,8 @@
 			<label for="Launchbrowser" class="col-sm-2 control-label">Launch Browser <a data-placement="bottom" data-toggle="tooltip" data-original-title="Should we start a browser every time Auto-Sub starts? This overwrites the commandline parameters."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="launchbrowser" class="form-control">
-			#if $autosub.LAUNCHBROWSER
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.LAUNCHBROWSER == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.LAUNCHBROWSER == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			</div>
 		</div>
@@ -202,13 +152,8 @@
 			<label for="SkipHidden" class="col-sm-2 control-label">Skip Hidden <a data-placement="bottom" data-toggle="tooltip" data-original-title="Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories."><span class="glyphicon glyphicon-info-sign"></span></a></label>
 			<div class="col-sm-10">
 			<select name="skiphiddendirs" class="form-control">
-			#if $autosub.SKIPHIDDENDIRS
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.SKIPHIDDENDIRS == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.SKIPHIDDENDIRS == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			</div>
 		</div>

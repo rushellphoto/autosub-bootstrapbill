@@ -18,13 +18,8 @@
 			<label for="Email" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/email.png" width="25px" height="24px" alt="" /> <b>Mail</b></label>
 			<div class="col-sm-10">
 			<select name="notifymail" id="notifymail" class="form-control enabler">
-				#if $autosub.NOTIFYMAIL
-				  <option value="True" selected="selected">Enabled</option>
-				  <option value="False">Disabled</option>
-				#else
-				  <option value="True">Enabled</option>
-				  <option value="False" selected="selected">Disabled</option>
-				#end if
+				<option value="True" #if $autosub.NOTIFYMAIL == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYMAIL == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Send notifications via Email.
 			</div>
@@ -98,13 +93,8 @@
 			<label for="Twitter" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/twitter.png" width="25px" height="24px" alt="" /> <b><a href="https://twitter.com/" target="_blank">Twitter</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifytwitter" id="notifytwitter" class="form-control enabler">
-			#if $autosub.NOTIFYTWITTER
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYTWITTER == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYTWITTER == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Post notifications on Twitter.
 			</div>
@@ -136,13 +126,8 @@
 			<label for="Pushalot" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/pushalot.png" width="25px" height="24px" alt="" /> <b><a href="https://pushalot.com/" target="_blank">Pushalot</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifypushalot" id="notifypushalot" class="form-control enabler">
-			#if $autosub.NOTIFYPUSHALOT
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYPUSHALOT == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYPUSHALOT == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Notifier for Windows Phone and Windows 8.
 			</div>
@@ -167,13 +152,8 @@
 			<label for="NotifyMyAndroid" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/nma.png" width="25px" height="24px" alt="" /> <b><a href="https://www.notifymyandroid.com/" target="_blank">Notify My Android</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifynma" id="notifynma" class="form-control enabler">
-			#if $autosub.NOTIFYNMA
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYNMA == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYNMA == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Notification system for Android users.
 			</div>
@@ -214,13 +194,8 @@
 			<label for="Boxcar2" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/boxcar2.png" width="25px" height="24px" alt="" /> <b><a href="http://www.boxcar.io/sign-in" target="_blank">Boxcar2</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifyboxcar2" id="notifyboxcar2" class="form-control enabler">
-			#if $autosub.NOTIFYBOXCAR2
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYBOXCAR2 == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYBOXCAR2 == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Boxcar2 is a notifier for iOS and OSX.
 			</div>
@@ -245,13 +220,8 @@
 			<label for="Pushover" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/pushover.png" width="25px" height="24px" alt="" /> <b><a href="https://pushover.net/" target="_blank">Pushover</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifypushover" id="notifypushover" class="form-control enabler">
-			#if $autosub.NOTIFYPUSHOVER
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYPUSHOVER == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYPUSHOVER == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Pushover is a platform for iPhone and Android users.
 			</div>
@@ -277,13 +247,8 @@
 			<label for="Growl" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/growl.png" width="25px" height="24px" alt="" /> <b><a href="http://www.growl.info" target="_blank">Growl</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifygrowl" id="notifygrowl" class="form-control enabler">
-			#if $autosub.NOTIFYGROWL
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYGROWL == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYGROWL == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Notifier for OSX and Windows.
 			</div>
@@ -326,13 +291,8 @@
 			<label for="Prowl" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/prowl.png" width="25px" height="24px" alt="" /> <b><a href="http://www.prowlapp.com/" target="_blank">Prowl</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifyprowl" id="notifyprowl" class="form-control enabler">
-			#if $autosub.NOTIFYPROWL
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYPROWL == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYPROWL == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Prowl is the Growl client for iPhone users.
 			</div>
@@ -373,13 +333,8 @@
 			<label for="PlexMediaServer" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/plex.png" width="25px" height="24px" alt="" /> <b><a href="https://www.plex.tv/" target="_blank">Plex Media Server</a></b></label>
 			<div class="col-sm-10">
 			<select name="notifyplex" id="notifyplex" class="form-control enabler">
-			#if $autosub.NOTIFYPLEX
-				<option value="True" selected="selected">Enabled</option>
-				<option value="False">Disabled</option>
-			#else
-				<option value="True">Enabled</option>
-				<option value="False" selected="selected">Disabled</option>
-			#end if
+				<option value="True" #if $autosub.NOTIFYPLEX == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYPLEX == False then 'selected="selected"' else ""#>Disabled</option>
 			</select>
 			<br>Update the media library of your Plex Media Server.
 			</div>
