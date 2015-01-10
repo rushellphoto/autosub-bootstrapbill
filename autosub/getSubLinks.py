@@ -182,6 +182,8 @@ def getSubLinks(showid, lang, releaseDetails, a7Response):
         sourceWebsites.append('subscene.com')
     if autosub.UNDERTEXTERLANG == lang or autosub.UNDERTEXTERLANG == 'Both':
         sourceWebsites.append('undertexter.se')
+    if autosub.OPENSUBTITLESLANG== lang or autosub.OPENSUBTITLESLANG== 'Both':
+        sourceWebsites.append('opensubtitles.org')
     if len(sourceWebsites) > 0:
         scoreListSubSeeker = SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites)
 

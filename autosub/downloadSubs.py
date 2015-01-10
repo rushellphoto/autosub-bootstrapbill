@@ -2,7 +2,7 @@
 #
 # The Autosub downloadSubs module
 # Scrapers are used for websites:
-# Podnapisi.net, Subscene.com, Undertexter.se, SubSeeker's Mirror of BD
+# Podnapisi.net, Subscene.com, Undertexter.se, OpenSubtitles
 # and addic7ed.com
 #
 import logging
@@ -66,46 +66,32 @@ def unzip(url):
             log.debug("unzip: No subtitle files was found in the zip archive for %s" % url)
             log.debug("unzip: Subtitle with different extention than .srt?")
             return None  
-    
 
 def openSubtitles(subSeekerLink):
-    openSubLink = 'http://www.opensubtitles.org/subtitleserve/sub/' 
-   
+    log.debug("openSubtitles: Subseekerlink =  %s" % subSeekerLink)
     try:
         soup = getSoup(subSeekerLink)
-        tag = soup.find('iframe', src=True)
+        linkToOpensubtitles = soup.select('p > a[href]')[0]['href'].strip('/')
+        log.debug("openSubtitles: SubSeek link to opensubtitles =  %s" % linkToOpensubtitles )
+        soup = getSoup(linkToOpensubtitles)
     except:
         log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
         return None
-    
     try:
-        link = tag['src'].strip('/')    
-        soup = getSoup(link)
-        msgError = soup.find('div', class_='msg error')
-    except:
+        soup = getSoup(linkToOpensubtitles)
+        for link in soup.find_all('a','none'):
+            downloadLink = link.get('href')
+            if 'http://dl.opensubtitles.org/en/download/file/' in downloadLink :
+                log.debug("openSubtitles: OpenSubtitles sub downloadlink = %s" % downloadLink )
+                opensubtitlesapi = autosub.Helpers.API(downloadLink)
+                subtitleFile = StringIO(opensubtitlesapi.resp.read())            
+                return subtitleFile
+        log.error("OpenSubtitles: Failed to find the download link on OpenSubtiitles.org")
         return None
-    
-    if not msgError:  
-        try:      
-            openID = link.split('/')[4].encode('utf8')
-        except:
-            log.error("openSubtitles: Something went with parsing the downloadlink")        
-            return None
-            
-    else:   
-        log.debug("openSubtitles: Original link %s is dead. Trying to find alternative in error message" % link)        
-        pattern = re.compile('http://www.opensubtitles.org/.*/subtitles/(\d*)/', re.IGNORECASE)
-        match = re.search(pattern, msgError.text)
-        if match:
-            openID = match.group(1)
-            log.debug("openSubtitles: Alternative link found: %s" % link)  
-        else:
-            return None
-    
-    zipUrl = urljoin(openSubLink, openID.encode('utf8'))
-    subtitleFile = unzip(zipUrl)
-    return subtitleFile
-
+    except:
+        log.error("OpenSubtitles: Failed to find the download link on OpenSubtiitles.org")        
+        return None
+    return None
     
 def undertexter(subSeekerLink):
     engSub = 'http://www.engsub.net/getsub.php?id='    
@@ -121,12 +107,11 @@ def undertexter(subSeekerLink):
     try:
         zipUrl = engSub + link.split('/')[3].encode('utf8')
     except:
-        log.error("Undertexter: Something went with parsing the downloadlink")        
+        log.error("Undertexter: Something went wrong with parsing the downloadlink")        
         return None    
 
     subtitleFile = unzip(zipUrl)
     return subtitleFile
-    
 
 def podnapisi(subSeekerLink):
     baseLink = 'http://www.podnapisi.net/'    
@@ -150,7 +135,6 @@ def podnapisi(subSeekerLink):
     subtitleFile = unzip(zipUrl)
     return subtitleFile
 
-
 def subscene(subSeekerLink):
     baseLink = 'http://subscene.com/'
     
@@ -170,25 +154,7 @@ def subscene(subSeekerLink):
     
     zipUrl = urljoin(baseLink,downloadLink.encode('utf8'))
     subtitleFile = unzip(zipUrl)
-    return subtitleFile
-
-    
-def bierdopje(subSeekerLink):    
-    
-    try:
-        soup = getSoup(subSeekerLink)
-        downloadLink = soup.select('p > a[href]')[0]['href'].strip('/')
-    except:
-        log.error("Mirror Bierdopje: Something went wrong while retrieving download link")
-        return None    
-    try:
-        bierdopjeapi = autosub.Helpers.API(downloadLink)
-        subtitleFile = StringIO(bierdopjeapi.resp.read())            
-    except:
-        log.debug("Mirror Bierdopje: Subtitle file at %s couldn't be retrieved" % downloadLink)
-        return None   
-    return subtitleFile
-                
+    return subtitleFile               
 
 def addic7ed(url):
     subtitleFile = autosub.ADDIC7EDAPI.download(url)
@@ -197,7 +163,6 @@ def addic7ed(url):
         log.debug("addic7ed: Your current Addic7ed download count is: %s" % autosub.DOWNLOADS_A7)
         return StringIO(subtitleFile)
     return None
-    
 
 def DownloadSub(allResults, a7Response, downloadItem):    
     
@@ -236,9 +201,9 @@ def DownloadSub(allResults, a7Response, downloadItem):
         elif website == 'podnapisi.net':
             log.debug("downloadSubs: Scraper for Podnapisi.net is chosen for subtitle %s" % destsrt)
             fileStringIO = podnapisi(url)
-        elif website == 'bierdopje.eu':
-            log.debug("downloadSubs: Scraper for Bierdopjes Mirror is chosen for subtitle %s" % destsrt)
-            fileStringIO = bierdopje(url)
+        elif website == 'opensubtitles.org':
+            log.debug("downloadSubs: Scraper for opensubtitles.org is chosen for subtitle %s" % destsrt)
+            fileStringIO = openSubtitles(url)
         elif website == 'addic7ed.com' and a7Response:
             log.debug("downloadSubs: Scraper for Addic7ed.com is chosen for subtitle %s" % destsrt)
             if result['HI']:
@@ -306,10 +271,10 @@ def DownloadSub(allResults, a7Response, downloadItem):
         log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
         log.info("downloadSubs: Running PostProcess")
         postprocessoutput, postprocesserr = autosub.Helpers.RunCmd(postprocesscmdconstructed)
+        log.debug("downloadSubs: PostProcess Output:% s" % postprocessoutput)
         if postprocesserr:
             log.error("downloadSubs: PostProcess: %s" % postprocesserr)
-            log.debug("downloadSubs: PostProcess Output:% s" % postprocessoutput)
+            #log.debug("downloadSubs: PostProcess Output:% s" % postprocessoutput)
     
     log.debug('downloadSubs: Finished for %s' % downloadItem["originalFileLocationOnDisk"])
     return True
-
