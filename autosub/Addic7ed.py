@@ -457,7 +457,7 @@ class Addic7edAPI():
     def __init__(self):
         self.session = requests.Session()
         self.server = 'http://www.addic7ed.com'
-        self.session.headers = {'User-Agent': autosub.ADDIC7EDUSER}
+        self.session.headers = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13', 'Referer' : 'http://www.addic7ed.com', 'Pragma': 'no-cache'}
         self.logged_in = False
                 
     def login(self, addic7eduser=None, addic7edpasswd=None):        

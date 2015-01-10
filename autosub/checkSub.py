@@ -93,7 +93,7 @@ class checkSub():
                 allResults = autosub.getSubLinks.getSubLinks(showid, lang, wantedItem, a7Response)
                 
                 if not allResults:
-                    log.debug("checkSub: not suitable subtitles were found for %s based on your minmatchscore" % downloadItem['originalFileLocationOnDisk'])
+                    log.debug("checkSub: no suitable subtitles were found for %s based on your minmatchscore" % downloadItem['originalFileLocationOnDisk'])
                     continue                                 
 
                 if lang == autosub.DUTCH:
