@@ -81,15 +81,15 @@ def openSubtitles(subSeekerLink):
         soup = getSoup(linkToOpensubtitles)
         for link in soup.find_all('a','none'):
             downloadLink = link.get('href')
-            if 'http://dl.opensubtitles.org/en/download/file/' in downloadLink :
+            if '/download/file/' in downloadLink :
                 log.debug("openSubtitles: OpenSubtitles sub downloadlink = %s" % downloadLink )
                 opensubtitlesapi = autosub.Helpers.API(downloadLink)
                 subtitleFile = StringIO(opensubtitlesapi.resp.read())            
                 return subtitleFile
-        log.error("OpenSubtitles: Failed to find the download link on OpenSubtiitles.org")
+        log.error("OpenSubtitles: Failed to find the download link on OpenSubtitles.org")
         return None
     except:
-        log.error("OpenSubtitles: Failed to find the download link on OpenSubtiitles.org")        
+        log.error("OpenSubtitles: Failed to find the download link on OpenSubtitles.org")        
         return None
     return None
     
@@ -204,6 +204,7 @@ def DownloadSub(allResults, a7Response, downloadItem):
         elif website == 'opensubtitles.org':
             log.debug("downloadSubs: Scraper for opensubtitles.org is chosen for subtitle %s" % destsrt)
             fileStringIO = openSubtitles(url)
+            time.sleep(6)
         elif website == 'addic7ed.com' and a7Response:
             log.debug("downloadSubs: Scraper for Addic7ed.com is chosen for subtitle %s" % destsrt)
             if result['HI']:
