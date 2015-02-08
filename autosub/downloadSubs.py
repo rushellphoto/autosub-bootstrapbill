@@ -22,12 +22,11 @@ from autosub.Db import lastDown
 import autosub.notify as notify
 import autosub.Helpers
 
-log = logging.getLogger('thelogger')
-
+import xml.etree.cElementTree as ET
+from autosub.OpenSubtitles import OpenSubtitlesLogin
 
 # Settings
 log = logging.getLogger('thelogger')
-
 
 def getSoup(url):
     try:
@@ -68,7 +67,14 @@ def unzip(url):
             return None  
 
 def openSubtitles(subSeekerLink):
-    log.debug("openSubtitles: Subseekerlink =  %s" % subSeekerLink)
+    if autosub.OPENSUBTITLESLOGGED_IN == False and autosub.OPENSUBTITLESUSER and autosub.OPENSUBTITLESPASSWD:
+        log.debug('openSubtitles: Now call login')
+        Result = OpenSubtitlesLogin()
+        if Result:
+            log.debug("OpenSubtitles: Logged in")
+        else:
+            log.debug("OpenSubtitles: login failed")
+    log.debug("OpenSubtitles: Subseekerlink =  %s" % subSeekerLink)
     try:
         soup = getSoup(subSeekerLink)
         linkToOpensubtitles = soup.select('p > a[href]')[0]['href'].strip('/')
@@ -77,21 +83,21 @@ def openSubtitles(subSeekerLink):
     except:
         log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
         return None
+
     try:
-        soup = getSoup(linkToOpensubtitles)
-        for link in soup.find_all('a','none'):
-            downloadLink = link.get('href')
-            if '/download/file/' in downloadLink :
-                log.debug("openSubtitles: OpenSubtitles sub downloadlink = %s" % downloadLink )
-                opensubtitlesapi = autosub.Helpers.API(downloadLink)
-                subtitleFile = StringIO(opensubtitlesapi.resp.read())            
-                return subtitleFile
-        log.error("OpenSubtitles: Failed to find the download link on OpenSubtitles.org")
-        return None
+        RequestResult = autosub.OPENSUBTTITLESSESSION.get(linkToOpensubtitles + '/xml',timeout=10)
     except:
-        log.error("OpenSubtitles: Failed to find the download link on OpenSubtitles.org")        
+        log.error("openSubtitles: Failed to get the download link from Opensubtitles.org!")        
         return None
-    return None
+    root = ET.fromstring(RequestResult.content)
+    downloadLink = autosub.OPENSUBTITLESURL + '/en/download/file/' + root.find('.//SubBrowse/Subtitle/SubtitleFile/File').get('ID')
+    log.debug("openSubtitles: OpenSubtitles sub downloadlink = %s" % downloadLink )
+    try:
+        RequestResult = autosub.OPENSUBTTITLESSESSION.get(downloadLink, timeout=10)
+    except:
+        log.error("openSubtitles: Failed to get the download link from OpenSubtitles.org")
+        return None           
+    return StringIO(RequestResult.content)
     
 def undertexter(subSeekerLink):
     engSub = 'http://www.engsub.net/getsub.php?id='    

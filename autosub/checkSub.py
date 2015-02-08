@@ -5,11 +5,13 @@
 
 import logging
 import os
+import time
 
 # Autosub specific modules
 import autosub.getSubLinks
 import autosub.Helpers as Helpers
 from autosub.downloadSubs import DownloadSub
+from autosub.OpenSubtitles import OpenSubtitlesLogin, OpenSubtitlesLogout
 
 # Settings
 log = logging.getLogger('thelogger')
@@ -32,8 +34,7 @@ class checkSub():
             return False
         else:
             autosub.WANTEDQUEUELOCK = True
-
-        
+                       
         # Initiate the Addic7ed API and check the current number of downloads
         a7Response = False
         if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD and autosub.ADDIC7EDLANG != 'None':
@@ -44,7 +45,7 @@ class checkSub():
                 a7Response = autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
             except:
                 log.debug("checkSub: Couldn't connect with Addic7ed.com")
-         
+       
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
             title = wantedItem['title']
             season = wantedItem['season']
@@ -135,6 +136,9 @@ class checkSub():
          
         if autosub.ADDIC7EDAPI:
             autosub.ADDIC7EDAPI.logout()
+
+        if autosub.OPENSUBTITLESLOGGED_IN:
+            OpenSubtitlesLogout()
                                         
         i = len(toDelete_wantedQueue) - 1
         while i >= 0:

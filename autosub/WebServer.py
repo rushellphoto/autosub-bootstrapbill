@@ -26,6 +26,7 @@ import autosub.notify as notify
 import autosub.Helpers
 
 from autosub.Addic7ed import Addic7edAPI
+from autosub.OpenSubtitles import OpenSubtitlesLogin
 
 def redirect(abspath, *args, **KWs):
     assert abspath[0] == '/'
@@ -124,7 +125,7 @@ class Config:
                    path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, englishsubdelete, username, 
                    password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, 
                    webserverip, webserverport, usernamemapping, useraddic7edmapping, notifyen, notifynl, homelayoutfirst,
-                   podnapisilang, subscenelang, undertexterlang, opensubtitleslang,
+                   podnapisilang, subscenelang, undertexterlang, opensubtitleslang, opensubtitlesuser, opensubtitlespasswd,
                    addic7edlang, addic7eduser, addic7edpasswd, downloaddutch,
                    mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None):
                    
@@ -147,6 +148,8 @@ class Config:
         autosub.PODNAPISILANG = podnapisilang
         autosub.SUBSCENELANG = subscenelang
         autosub.OPENSUBTITLESLANG = opensubtitleslang
+        autosub.OPENSUBTITLESUSER = opensubtitlesuser
+        autosub.OPENSUBTITLESPASSWD = opensubtitlespasswd.replace("%","%%")
         autosub.UNDERTEXTERLANG = undertexterlang
         autosub.ADDIC7EDLANG = addic7edlang
         autosub.ADDIC7EDUSER = addic7eduser
@@ -392,6 +395,16 @@ class Config:
                 return "Unable to retrieve count at the moment."
         else:
             return "Auto-Sub is currently checking Addic7ed for subtitles, unable to refresh data at the moment."
+    
+    @cherrypy.expose
+    def testOpenSubtitles(self, opensubtitlesuser, opensubtitlespasswd):
+        log.info('OpenSubtitles: Testing Login with user %s' % opensubtitlesuser)
+        result= OpenSubtitlesLogin(opensubtitlesuser,opensubtitlespasswd)
+        if result:
+            log.info('OpenSubtitles: login successful')
+            return "Auto-Sub successfully logged on to <strong>OpenSubtitles</strong>."
+        else:
+            return "Failed to login to <strong>OpenSubtitles</strong>."
     
     @cherrypy.expose
     def regTwitter(self, token_key=None, token_secret=None, token_pin=None):

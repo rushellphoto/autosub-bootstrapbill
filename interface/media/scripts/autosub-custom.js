@@ -136,6 +136,13 @@ $(document).ready(function () {
 			function (data) { $('#Addic7edCount-result').html(data); });
     });
 	
+	$('#testOpenSubtitles').click(function () {
+        $('#testOpenSubtitles-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing OpenSubtitles login...</span>');
+        var opensubtitlesuser = $("#opensubtitlesuser").val();
+        var opensubtitlespasswd = $("#opensubtitlespasswd").val();
+	    $.get(autosubRoot + "/config/testOpenSubtitles", {'opensubtitlesuser': opensubtitlesuser, 'opensubtitlespasswd': opensubtitlespasswd},function (data) { $('#testOpenSubtitles-result').html(data); });
+    });
+	
 	// Code to display the tooltip and popover.
 	$("a").tooltip()
 	$("span").popover()
@@ -170,6 +177,24 @@ $(document).ready(function () {
 	});
 
 	$(".enableraddic7ed").change(function () {
+ 		var dropdown = $(this);
+		$(this).children("option:selected").each(function() {
+ 			if ($(this).val() == "None") {
+ 				$('#content_' + dropdown.attr("id")).hide();
+ 			}
+			else {
+				$('#content_' + dropdown.attr("id")).show();
+			}
+ 		});
+ 	});
+	
+	$(".enablerOpenSubtitles option:selected").each(function () {
+		if ($(this).val() == "None") {
+			$('#content_' + $(this).parent().attr("id")).hide();
+		}
+	});
+
+	$(".enablerOpenSubtitles").change(function () {
  		var dropdown = $(this);
 		$(this).children("option:selected").each(function() {
  			if ($(this).val() == "None") {

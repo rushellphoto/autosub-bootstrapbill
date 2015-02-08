@@ -165,6 +165,16 @@ def ReadConfig(configfile):
             autosub.OPENSUBTITLESLANG = cfg.get("config", "opensubtitleslang")
         else:
             autosub.OPENSUBTITLESLANG = u"Both"
+        
+        if cfg.has_option("config", "opensubtitlesuser"):
+            autosub.OPENSUBTITLESUSER = cfg.get("config", "opensubtitlesuser")
+        else:
+            autosub.OPENSUBTITLESUSER = u""
+
+        if cfg.has_option("config", "opensubtitlespasswd"):
+            autosub.OPENSUBTITLESPASSWD = cfg.get("config", "opensubtitlespasswd")
+        else:
+            autosub.OPENSUBTITLESPASSWD = u"" 
             
         if cfg.has_option("config", "undertexterlang"):
             autosub.UNDERTEXTERLANG = cfg.get("config", "undertexterlang")
@@ -218,6 +228,8 @@ def ReadConfig(configfile):
         autosub.PODNAPISILANG = u"Both"
         autosub.SUBSCENELANG = u"Both"
         autosub.OPENSUBTITLESLANG = u"Both"
+        autosub.OPENSUBTITLESUSER = u""
+        autosub.OPENSUBTITLESPASSWD = u""
         autosub.UNDERTEXTERLANG = u"Both"
         autosub.ADDIC7EDLANG = u"None"
         autosub.ADDIC7EDUSER = u""
@@ -942,6 +954,8 @@ def saveConfigSection():
     cfg.set(section, "podnapisilang", autosub.PODNAPISILANG)
     cfg.set(section, "subscenelang", autosub.SUBSCENELANG)
     cfg.set(section, "opensubtitleslang", autosub.OPENSUBTITLESLANG)
+    cfg.set(section, "opensubtitlesuser", autosub.OPENSUBTITLESUSER)
+    cfg.set(section, "opensubtitlespasswd", autosub.OPENSUBTITLESPASSWD)
     cfg.set(section, "undertexterlang", autosub.UNDERTEXTERLANG)
     cfg.set(section, "addic7edlang", autosub.ADDIC7EDLANG)
     cfg.set(section, "addic7eduser", autosub.ADDIC7EDUSER)
