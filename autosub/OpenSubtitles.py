@@ -62,7 +62,11 @@ def OpenSubtitlesLogin(opensubtitlesusername=None,opensubtitlespasswd=None):
         log.debug('OpenSubtitlesLogin: Get first page exception.')
         return True
     root = ET.fromstring(RequestResult.content)
-    ProfilePage = root.find('.//links/profile').get('Link')
+    try:
+        ProfilePage = root.find('.//links/profile').get('Link')
+    except:
+        log.error('OpenSubtitlesLogin: "Could not retrieve profilepage of user %s' % data['user'])
+        return True
     log.debug('OpenSubtitlesLogin: ProfilePage = %s' % ProfilePage)
     try:
         RequestResult = autosub.OPENSUBTTITLESSESSION.get(autosub.OPENSUBTITLESURL + ProfilePage + '/xml',timeout=10)
@@ -70,7 +74,11 @@ def OpenSubtitlesLogin(opensubtitlesusername=None,opensubtitlespasswd=None):
         log.debug('OpenSubtitlesLogin: Get Userprofile exception.')
         return True 
     root = ET.fromstring(RequestResult.content)
-    autosub.OPENSUBTITLESRANK= root.find('.//profile/UserProfile/UserRank').text        
+    try:
+        autosub.OPENSUBTITLESRANK= root.find('.//profile/UserProfile/UserRank').text
+    except:
+        log.debug('OpenSubtitlesLogin: Could not retrieve the userrank.')
+        return True       
     Message = data['user'] + " as " + autosub.OPENSUBTITLESRANK
     log.info('OpenSubtitlesLogin: logged is as User %s' % Message)
     return True
