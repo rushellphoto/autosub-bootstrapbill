@@ -377,7 +377,9 @@ def _MakeTwinRelease(originalDict):
                      u'fov' : u'fov'}
     
     qualSwitchDict_hdtv = {u'sd' : u'720p',
-                           u'720p' : u'sd'}
+                           u'720p' : u'sd',
+                           u'1080p' : u'720p',
+                           u'480p' : u'720p'}
     
     qualSwitchDict_webdl =  {u'1080p' : u'720p',
                              u'720p' : u'1080p'}
@@ -386,7 +388,7 @@ def _MakeTwinRelease(originalDict):
     if rlsgroup in rlsSwitchDict.keys():
         twinDict['releasegrp'] = rlsSwitchDict[rlsgroup]
         twinDict['quality'] = qualSwitchDict_hdtv[qual]
-    
+   
     # WEB-DLs 720p and 1080p are always synced
     if source == 'web-dl' and qual in qualSwitchDict_webdl.keys():
         twinDict['quality'] = qualSwitchDict_webdl[qual]
