@@ -1,29 +1,50 @@
 README 
 
-Thank you for choosing AutoSub! The automated python subtitle downloader for SubtitleSeeker.com
-Unlike the original AutoSub (until version 0.5.8), which used Bierdopje.com, the current and next versions
-use SubtitleSeeker.com as its primary source for subtitles.
-
-Many thanks for the administrators of SubtitleSeeker.com to expose and facilitate the API's feeds 
-so that we lazy users can enjoy automated scripts like this.
-
-Via SubtitleSeeker.com AutoSub indexes other subtitle
-websites: these are:
-- Podnapisi.net
-- Undertexter.se 
-- Subscene.com
-- a mirror of Bierdopjes database, hosted on SubtitleSeeker.com itself
-
-In addition, it scrapes the full Addic7ed.com webpage directly (ie not using the SubtitleSeeker API).
-To use this scraper, however, a login for Addic7ed.com is required!
-Also, the website sets a daily download limit per user. Depending on your Addic7ed account, 
-you can download 30 (Regular) or 55 (VIP) subtitles a day.
-
-
-AutoSub is an easy and straightforward script that scans your TV contents. 
-If no SRT found it will attempt to download one from SubtitleSeeker.com. 
-Where the script will attempt to match the correct version of the subtitle with the file located on the disk. 
-Once every day it will do a full rescan of your local content versus the SubtitleSeeker API.
++--- Auto-Sub Bootstrap Bill
+     |
+     +--- Uses SubtitleSeeker API, supporting the following website:
+     |    +--- Podnapisi
+     |    +--- Subscene
+     |    +--- OpenSubtitles
+     |    \--- Undertexter
+     |
+     +--- Addic7ed support.
+     |    +--- Requires account.
+     |    \--- Limited downloads per 24 hours. (Regular: 30 - VIP: 55)
+     |
+     +--- Notifications
+     |    +--- Windows & Windows Phone
+     |    |    +--- Pushalot
+     |    |    \--- Growl
+     |    +--- Android
+     |    |    +--- Notify My Android
+     |    |    \--- Pushover
+     |    +--- OSX & iDevices
+     |    |    +--- Pushover
+     |    |    +--- Growl
+     |    |    +--- Prowl
+     |    |    \--- Boxcar
+     |    \--- Other
+     |         +--- Email
+     |         +--- Twitter
+     |         \--- Plex Media Server
+     |
+     \--- Features
+          +--- Mobile template, automatically detected.
+          +--- Multiple folder support, separate folders with a comma. Example: D:\Series1,D:\Series2
+          +--- Select which languages you want to allow per website.
+          |    \--- If you set this to 'None', then the site will be disabled.
+          +--- Remove English subtitle when the Dutch subtitle has been downloaded.
+          +--- Configure a custom post-process script.
+          \--- Home tables.
+               +--- Both
+               |    +--- Select 10, 25, 50, 100, All items to display. Options are stored using localStorage.
+               |    \--- Search field, which allows you to search on show name.
+               +--- Wanted
+               |    +--- Option to skip show when clicking on the show name.
+               |    \--- Option to skip season when clicking on the season.
+               +--- Downloaded
+                    \--- Display original subtitle and website by hovering over the show name
 
 To use:
 
@@ -39,8 +60,7 @@ Make sure you have python installed. Also you need the python-cheetah package:
  * Shutdown AutoSub and start it again
 Enjoy your subtitles!
 
-
-Requirements for running AutoSub:
+Requirements for running Auto-Sub Bootstrap Bill:
 - Install Cheetah : https://pypi.python.org/pypi/Cheetah/2.4.4
 - Python2.7
 

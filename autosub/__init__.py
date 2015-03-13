@@ -163,7 +163,7 @@ def Initialize():
     release = autosubversion.split(' ')[0]
     versionnumber = autosubversion.split(' ')[1]
     
-    VERSIONURL = 'http://autosub-bootstrapbill.googlecode.com/hg/autosub/version.py'
+    VERSIONURL = 'https://raw.githubusercontent.com/Donny87/autosub-bootstrapbill/master/autosub/version.py'
     USERAGENT = 'AutoSub/' + versionnumber + release.lower()[0]
 
     WANTEDQUEUE = []
