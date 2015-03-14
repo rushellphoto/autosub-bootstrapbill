@@ -90,11 +90,23 @@ def openSubtitles(subSeekerLink):
         log.error("openSubtitles: Failed to get the download link from Opensubtitles.org!")        
         return None
     root = ET.fromstring(RequestResult.content)
+
     try:
         FileId = root.find('.//SubBrowse/Subtitle/SubtitleFile/File').get('ID')
     except:
         log.debug('openSubtitles: SubTitleSeeker link does not exist on Opensubtitles, skipping it')
         return None
+
+    SubBad = ''
+    try:
+        SubBad = root.find('.//SubBrowse/Subtitle/SubBad').text
+    except:
+        log.debug('openSubtitles: Subtitle is not marked as bad, proceeding with download.')
+
+    if SubBad:
+        log.debug('openSubtitles: Subtitle is marked as bad, ignoring download.')
+        return None
+
     downloadLink = autosub.OPENSUBTITLESURL + '/en/download/file/' + FileId
     log.debug("openSubtitles: OpenSubtitles sub downloadlink = %s" % downloadLink )
     try:
