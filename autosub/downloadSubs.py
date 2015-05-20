@@ -5,6 +5,7 @@
 # Podnapisi.net, Subscene.com, Undertexter.se, OpenSubtitles
 # and addic7ed.com
 #
+import autosub
 import logging
 
 from bs4 import BeautifulSoup
@@ -23,6 +24,7 @@ import autosub.notify as notify
 import autosub.Helpers
 
 import xml.etree.cElementTree as ET
+import library.requests as requests
 from autosub.OpenSubtitles import OpenSubtitlesLogin
 
 # Settings
@@ -36,7 +38,7 @@ def getSoup(url):
         return soup
     except:
         log.error("getSoup: The server returned an error for request %s" % url)
-        return False   
+        return None   
 
 def unzip(url):
     # returns a file-like StringIO object    
@@ -75,37 +77,38 @@ def openSubtitles(subSeekerLink):
         else:
             log.debug("OpenSubtitles: login failed")
     log.debug("OpenSubtitles: Subseekerlink =  %s" % subSeekerLink)
-    try:
-        soup = getSoup(subSeekerLink)
-        linkToOpensubtitles = soup.select('p > a[href]')[0]['href'].strip('/')
-        log.debug("openSubtitles: SubSeek link to opensubtitles =  %s" % linkToOpensubtitles )
-        soup = getSoup(linkToOpensubtitles)
-    except:
-        log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
+    soup = getSoup(subSeekerLink)
+    if not soup:
+        log.debug("openSubtitles: Could not get a soup root")
         return None
 
+    linkToOpensubtitles = soup.select('p > a[href]')[0]['href'].strip('/')
+    if autosub.OPENSUBTITLESURL in linkToOpensubtitles:
+        log.debug("openSubtitles: SubSeek link to opensubtitles =  %s" % linkToOpensubtitles )
+    else:
+        log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
+        return None
     try:
         RequestResult = autosub.OPENSUBTTITLESSESSION.get(linkToOpensubtitles + '/xml',timeout=10)
     except:
         log.error("openSubtitles: Failed to get the download link from Opensubtitles.org!")        
         return None
-    root = ET.fromstring(RequestResult.content)
-
+    try:
+        root = ET.fromstring(RequestResult.content)
+    except:
+        log.error("openSubtitles: Failed to get the root from string from the Opensubtitles page!") 
+        return None
     try:
         FileId = root.find('.//SubBrowse/Subtitle/SubtitleFile/File').get('ID')
     except:
         log.debug('openSubtitles: SubTitleSeeker link does not exist on Opensubtitles, skipping it')
         return None
-
-    SubBad = ''
     try:
         SubBad = root.find('.//SubBrowse/Subtitle/SubBad').text
-    except:
-        log.debug('openSubtitles: Subtitle is not marked as bad, proceeding with download.')
-
-    if SubBad:
         log.debug('openSubtitles: Subtitle is marked as bad, ignoring download.')
         return None
+    except:
+        log.debug('openSubtitles: Subtitle is not marked as bad, proceeding with download.')
 
     downloadLink = autosub.OPENSUBTITLESURL + '/en/download/file/' + FileId
     log.debug("openSubtitles: OpenSubtitles sub downloadlink = %s" % downloadLink )
@@ -114,67 +117,65 @@ def openSubtitles(subSeekerLink):
     except:
         log.error("openSubtitles: Failed to get the download link from OpenSubtitles.org")
         return None           
-    return StringIO(RequestResult.content)
-    
+    return StringIO(RequestResult.content)    
+
 def undertexter(subSeekerLink):
     engSub = 'http://www.engsub.net/getsub.php?id='    
-
-    try:
-        soup = getSoup(subSeekerLink)
+    soup = getSoup(subSeekerLink)
+    if soup:
         tag = soup.find('iframe', src=True)
         link = tag['src'].strip('/')     
-    except:
+    else:
         log.error("Undertexter: Failed to extract download link using SubtitleSeekers's link")        
-        return None       
-       
+        return None
     try:
         zipUrl = engSub + link.split('/')[3].encode('utf8')
     except:
         log.error("Undertexter: Something went wrong with parsing the downloadlink")        
-        return None    
-
+        return None
     subtitleFile = unzip(zipUrl)
     return subtitleFile
 
 def podnapisi(subSeekerLink):
-    baseLink = 'http://www.podnapisi.net/'    
-    
-    try:
-        soup = getSoup(subSeekerLink)    
+    baseLink = 'http://www.podnapisi.net/'
+    soup = getSoup(subSeekerLink)    
+    if soup:
         linkToPodnapisi = soup.select('p > a[href]')[0]['href'].strip('/')
-    except:
+    else:
         log.error("Podnapisi: Failed to find the redirect link using SubtitleSeekers's link")        
         return None
-    
-    try:
+    if baseLink in linkToPodnapisi:
         soup = getSoup(linkToPodnapisi)
-        downloadTag = soup.select('a.button.big.download')[0]
-    except:
-        log.error("Podnapisi: Failed to find the download link on Podnapisi.net")        
+    else:
+        log.error("Podnapisi: Failed to find the Podnapisi page.")
         return None
-    
-    downloadLink = downloadTag['href'].strip('/')
+    if soup:
+        downloadLink = soup.find('form', class_='form-inline download-form').get('action')
+    else:
+        log.error("Podnapisi: Failed to find the download link on Podnapisi page")     
+        return None
     zipUrl = urljoin(baseLink,downloadLink.encode('utf8'))
     subtitleFile = unzip(zipUrl)
     return subtitleFile
 
 def subscene(subSeekerLink):
     baseLink = 'http://subscene.com/'
-    
-    try:
-        soup = getSoup(subSeekerLink)
+    soup = getSoup(subSeekerLink)
+    if soup:
         linkToSubscene = soup.select('p > a[href]')[0]['href'].strip('/')
-    except:
+    else:
         log.error("Subscene: Failed to find the redirect link using SubtitleSeekers's link")        
         return None
-    
-    try:
+    if baseLink in linkToSubscene :
         soup = getSoup(linkToSubscene)
+    else:
+        log.error("subscene: Failed to find the subscene page.")
+        return None
+    if soup:
         downloadLink = soup.select('div.download > a[href]')[0]['href'].strip('/')
-    except:
+    else:
         log.error("Subscene: Failed to find the download link on Subscene.com")        
         return None
-    
     zipUrl = urljoin(baseLink,downloadLink.encode('utf8'))
     subtitleFile = unzip(zipUrl)
     return subtitleFile               
