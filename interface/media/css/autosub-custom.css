@@ -189,3 +189,9 @@ code {
 .config-checkbox {
 	height: 40px;
 }
+
+/* Traceback error message in modal */
+
+textarea.traceback {
+	width: 100%;
+}
