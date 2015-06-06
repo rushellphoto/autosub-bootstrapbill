@@ -566,7 +566,7 @@ class WebServerInit():
     
     def error_page_404(status, message, traceback, version):
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
-        message = "Page could not be found.<br><br><center><textarea rows='15' wrap='off' class='spancustom'>%s</textarea></center>" %traceback
+        message = "Page could not be found.<br><br><center><textarea rows='15' wrap='off' class='traceback'>%s</textarea></center>" %traceback
         tmpl.message = message
         tmpl.displaymessage = "Yes"
         tmpl.modalheader = "Error %s" %status
@@ -574,7 +574,7 @@ class WebServerInit():
     
     def error_page_500(status, message, traceback, version):
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
-        message = "Try again. If this error doesn't go away, please report the issue.<br><br><center><textarea rows='15' wrap='off' class='spancustom'>%s</textarea></center>" %traceback
+        message = "Try again. If this error doesn't go away, please report the issue.<br><br><center><textarea rows='15' wrap='off' class='traceback'>%s</textarea></center>" %traceback
         tmpl.message = message
         tmpl.displaymessage = "Yes"
         tmpl.modalheader = "Error %s" %status
