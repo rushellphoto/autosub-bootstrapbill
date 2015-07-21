@@ -1,4 +1,4 @@
-# Autosub Helpers.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub Helpers.py - https://github.com/Donny87/autosub-bootstrapbill
 #
 # The Autosub helper functions
 #
@@ -15,11 +15,11 @@ from ast import literal_eval
 
 from library import version
 from autosub.version import autosubversion
-
+from autosub.OpenSubtitles import GetOpensubtitlesId
 import autosub
 import Tvdb
 
-from autosub.Db import idCache, a7idCache
+from autosub.Db import idCache,EpisodeIdCache
 from autosub.ID_lookup import a7IdDict
 from autosub.Addic7ed import Addic7edAPI
 
@@ -302,79 +302,59 @@ def checkAPICallsTvdb(use=False):
     else:
         return False
 
-def getShowid(show_name):
-    log.debug('getShowid: trying to get showid for %s' %show_name)
-    show_id = nameMapping(show_name)
-    if show_id:
-        log.debug('getShowid: showid from namemapping %s' %show_id)
-        return show_id
-    
-    show_id = idCache().getId(show_name)
-    if show_id:
-        log.debug('getShowid: showid from cache %s' %show_id)
-        if int(show_id) == -1:
-            log.error('getShowid: showid not found for %s' %show_name)
-            return
-        return show_id
-    
-    #do we have enough api calls?
-    if checkAPICallsTvdb(use=False): 
-        show_id = Tvdb.getShowidApi(show_name)
+def getShowid(ShowName, UseAddic, UseOs):
+    AddicId = ImdbId = OsId = AddicIdMapping = None
+    UpdateCache = False
+    log.debug('getShowid: trying to get Imdb Id, Addic7 Id and Opensubtitles Id for %s' %ShowName)
+
+    # First we try the cache
+    ImdbId, AddicId, OsId = idCache().getId(ShowName)
+    if ImdbId:
+        TvdbShowName = ShowName
     else:
-        log.warning("getShowid: Out of API calls")
-        return None
-    
-    if show_id:
-        log.debug('getShowid: showid from api %s' %show_id)
-        idCache().setId(show_id, show_name)
-        log.info('getShowid: %s added to cache with %s' %(show_name, show_id))
-        
-        return str(show_id)
-    
-    log.error('getShowid: showid not found for %s' %show_name)
-    #idCache().setId(-1, show_name)
-    
-def geta7id(showTitle, imdb_id):
-    
-    #imdb_id = getShowid(showTitle)
-    #imdb_id = str(imdb_id)
+        # Now we try Tvdb
+        log.debug('getShowid: Try TvdbID to find info')
+        ImdbId, TvdbShowName = Tvdb.getShowidApi(ShowName)
+        if ImdbId:
+            UpdateCache = True
+        else:
+            # Last resort the name mapping from the config page
+            ImdbNameMappingId = nameMapping(ShowName)
+            if ImdbNameMappingId:
+            # Check whether the Namemapping is an existing Imdb Id and if so find the official showname
+                TvdbShowName = Tvdb.getShowName(ImdbNameMappingId)
+                if TvdbShowName:
+                    ImdbId = ImdbNameMappingId
+                return None, None
+            else:
+                return None, None
 
-    log.debug('geta7id: trying to get addic7ed ID for show %s with IMDB ID %s' % (showTitle, imdb_id))
-    
-    # From user addic7ed mapping
-    a7_id = Addic7edMapping(imdb_id)
-    if a7_id:
-        log.debug('geta7ID: showid from addic7edmapping %s' %a7_id)
-        return a7_id
+    if UseAddic and not AddicId:
+        #Try to find the Addice7ed Id on the show page of the Addic7ed website
+        AddicId = Addic7edAPI().geta7ID(TvdbShowName, ShowName)
+        if AddicId:
+            log.debug('getShowid: From Website Addic7ed Id = %s' %AddicId)
+            UpdateCache = True
+        else:
+            # Try the Addice Id mapping from the config
+            AddicIdMapping = Addic7edMapping(ImdbId)
+            #if Addic7edIdMapping:
+            #    Addic7edId = Addic7edIdMapping
+    else:
+        AddicId = None
 
-    # From lookup table
-    if imdb_id in a7IdDict.keys():
-        a7_id = a7IdDict[imdb_id]
-        log.debug('geta7ID: showid from lookup table %s' % a7_id)
-        return a7_id 
-    
-    
-    # From cache
-    a7_id = a7idCache().getId(imdb_id)
-    if a7_id:
-        log.debug('geta7id: addic7ed ID from cache %s' %a7_id)
-        if int(a7_id) == -1:
-            log.error('geta7id: addic7ed ID not found for %s' %showTitle)
-            return
-        return a7_id
-    
-    # From Addic7ed show overview page
-    a7_id = Addic7edAPI().geta7ID(imdb_id, showTitle)
-    if a7_id:
-        log.debug('geta7id: addic7ed ID from Addic7ed show overview page %s' %a7_id)
-        a7idCache().setId(a7_id, imdb_id)
-        log.info('geta7id: %s added to cache with %s' %(a7_id, imdb_id))       
-        return a7_id
-    
-    log.error('geta7id: addic7ed ID not found for %s' %showTitle)
-    
-    #a7idCache().setId(-1, imdb_id)
-    
+    if UseOs and not OsId:
+        #try to find the Opensubtitles Id on the opensubtitles website
+        OsId = GetOpensubtitlesId(ImdbId,TvdbShowName)
+        if OsId:
+            UpdateCache = True
+
+    if UpdateCache:
+        idCache().setId(ImdbId, AddicId, OsId, TvdbShowName)
+    AddicId = AddicIdMapping if AddicIdMapping else AddicId
+    log.debug("getShowid: Return Imdb Id = %s Addic7ed Id = %s OsId = %s" %(ImdbId,AddicId,OsId))
+    return ImdbId, AddicId, OsId
+
 
 def DisplayLogFile(loglevel):
     maxLines = 500
@@ -463,7 +443,6 @@ def getAttr(name):
             rv = o[name]
         return rv
     return inner_func
-    
 
 class API:
     """

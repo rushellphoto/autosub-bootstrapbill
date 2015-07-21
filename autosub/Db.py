@@ -1,4 +1,4 @@
-# Autosub Db.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub Db.py - https://github.com/Donny87/autosub-bootstrapbill
 #
 # The Autosub DB module
 # 
@@ -20,78 +20,81 @@ def dict_factory(cursor, row):
 
 class idCache():
     def __init__(self):
-        self.query_getId = 'select imdb_id from id_cache where show_name = ?'
-        self.query_setId = 'insert into id_cache values (?,?)'
-        self.query_flush = 'delete from id_cache'
-        
-    def getId(self, show_name):
-        show_name = show_name
-        
-        connection=sqlite3.connect(autosub.DBFILE)
-        cursor=connection.cursor()
-        cursor.execute(self.query_getId, [show_name.upper()])
-        imdb_id = None
-        
-        for row in cursor:
-            imdb_id = row[0]
-        
-        connection.close()
-        if imdb_id:
-            return imdb_id
-    
-    def setId(self, imdb_id, show_name):
-        show_name = show_name
-        
-        connection=sqlite3.connect(autosub.DBFILE)
-        cursor=connection.cursor()
-        cursor.execute(self.query_setId,[imdb_id, show_name.upper()])
-        connection.commit()
-        connection.close()
-    
+        self.query_getId    = "SELECT imdb_id, a7_id, os_id FROM show_id_cache WHERE show_name = ?"
+        self.query_checkId  = "SELECT * FROM show_id_cache WHERE imdb_id = ?"
+        self.query_updateId = "UPDATE show_id_cache SET  a7_id = ?, os_id = ? WHERE imdb_id = ?"
+        self.query_setId    = "INSERT INTO show_id_cache VALUES (?,?,?,?)"
+        self.query_flush    = "DELETE FROM show_id_cache"
+        self.cursor         = autosub.DBCONNECTION.cursor()
+
+    def getId(self, ShowName):
+        try:
+            Result = self.cursor.execute(self.query_getId, [ShowName.upper()]).fetchone()
+            if Result:
+                return Result[0],Result[1],Result[2]
+            else:
+                return None, None, None
+        except Exception as error:
+            log.error('getId: Database error: %s' % error)
+            return None, None, None
+
+    def setId(self, ImdbId, AddicId, OsId, ShowName):
+        try:
+            Result = self.cursor.execute(self.query_checkId,[ImdbId]).fetchone()
+            if Result:
+                if AddicId and AddicId != Result[1] or OsId and OsId != Result[2]:
+                    self.cursor.execute(self.query_updateId,[AddicId, OsId, ImdbId])
+                    autosub.DBCONNECTION.commit()
+            else:
+                self.cursor.execute(self.query_setId,[ImdbId, AddicId, OsId, ShowName.upper()])
+                autosub.DBCONNECTION.commit()
+        except Exception as error:
+            log.error('setId: Database error: %s' % error)
+        return
+
     def flushCache(self):
-        connection=sqlite3.connect(autosub.DBFILE)
-        cursor=connection.cursor()
-        cursor.execute(self.query_flush)
-        connection.commit()
-        connection.close()
-            
-class a7idCache():
+        try:
+            self.cursor.execute(self.query_flush)
+            autosub.DBCONNECTION.commit()
+        except Exception as error: 
+            log.error('idCache.flushCache: Database error: %s' % error)
+        return       
+
+class EpisodeIdCache():
     def __init__(self):
-        self.query_getId = 'select a7_id from a7id_cache where imdb_id = ?'
-        self.query_setId = 'insert into a7id_cache values (?,?)'
-        self.query_flush = 'delete from a7id_cache'
-        
-    def getId(self, imdb_id):
-        imdb_id = imdb_id
-        
-        connection=sqlite3.connect(autosub.DBFILE)
-        cursor=connection.cursor()
-        cursor.execute(self.query_getId, [imdb_id])
-        a7_id = None
-        
-        for row in cursor:
-            a7_id = row[0]
-        
-        connection.close()
-        if a7_id:
-            return a7_id
-    
-    def setId(self, a7_id, imdb_id):
-        imdb_id = imdb_id
-        
-        connection=sqlite3.connect(autosub.DBFILE)
-        cursor=connection.cursor()
-        cursor.execute(self.query_setId,[a7_id, imdb_id])
-        connection.commit()
-        connection.close()
-    
+        self.query_getId    = "SELECT episode_imdb_id FROM episode_cache WHERE serie_os_id =? AND season = ? AND episode =?"
+        self.query_setId    = "INSERT INTO episode_cache values (?,?,?,?)"
+        self.query_flush    = "DELETE FROM episode_cache"
+        self.cursor         = autosub.DBCONNECTION.cursor()
+
+    def getId(self, SerieId, Season, Episode):
+        try:
+            Result =  self.cursor.execute(self.query_getId, [SerieId, Season, Episode]).fetchone()
+            if Result:
+                return Result[0]
+            else:
+                return None
+        except:
+            return None
+
+    def setId(self, EpisodeId, SerieId, Season, Episode):
+        try:
+            self.cursor.execute(self.query_setId,[EpisodeId, SerieId, Season, Episode])
+        except:
+            pass
+        return
+
+    def commit(self):
+        autosub.DBCONNECTION.commit()
+
     def flushCache(self):
-        connection=sqlite3.connect(autosub.DBFILE)
-        cursor=connection.cursor()
-        cursor.execute(self.query_flush)
-        connection.commit()
-        connection.close()
-            
+        try:
+            self.cursor.execute(self.query_flush)
+            autosub.DBCONNECTION.commit()
+        except Exception as error: 
+            log.error('EpisodeIdCache.flushCache: Database error: %s' % error)
+        return
+
 class lastDown():
     def __init__(self):
         self.query_get = 'select * from last_downloads'
@@ -141,22 +144,19 @@ def createDatabase():
     #create the database
     try: 
         connection=sqlite3.connect(autosub.DBFILE)
-        cursor=connection.cursor()
-        
-        cursor.execute("CREATE TABLE id_cache (imdb_id TEXT, show_name TEXT);")
-        cursor.execute("CREATE TABLE a7id_cache (a7_id TEXT, imdb_id TEXT);")
+        cursor=connection.cursor() 
+        cursor.execute("CREATE TABLE episode_cache (episode_imdb_id TEXT UNIQUE PRIMARY KEY, serie_os_id TEXT, season TEXT, episode TEXT);")
+        cursor.execute("CREATE INDEX episode_index ON episode_cache(serie_os_id, season, episode);")
+        cursor.execute("CREATE TABLE show_id_cache (imdb_id TEXT UNIQUE PRIMARY KEY, a7_id TEXT, os_id TEXT, show_name TEXT);")
         cursor.execute("CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, show_name TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, destination TEXT);")
-        cursor.execute("CREATE TABLE info (database_version NUMERIC);")
-        connection.commit()
-        cursor.execute("INSERT INTO info VALUES (%d)" % version.dbversion)
+        cursor.execute("PRAGMA user_version = 8")
         connection.commit()
         connection.close()
-        
         print "createDatabase: Succesfully created the sqlite database"
-        autosub.DBVERSION = version.dbversion
+        autosub.DBVERSION = 8
     except:
-        "initDatabase: Could not create database, please check if AutoSub has write access to write the following file %s" %autosub.DBFILE
-    
+        print "initDatabase: Could not create database, please check if AutoSub has write access to write the following file %s" %autosub.DBFILE
+        os._exit(1)
     return True
 
 def upgradeDb(from_version, to_version):
@@ -167,75 +167,62 @@ def upgradeDb(from_version, to_version):
         for x in range (0, upgrades):
             upgradeDb(from_version + x, from_version + x + 1)
     else:
+        connection=sqlite3.connect(autosub.DBFILE)
+        cursor=connection.cursor()
         if from_version == 1 and to_version == 2:
             #Add codec and timestamp
-            #New table, info with dbversion
-            connection=sqlite3.connect(autosub.DBFILE)
-            cursor=connection.cursor()
+            #New table, info with dbversion     
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'codec')
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'timestamp')
             cursor.execute("CREATE TABLE info (database_version NUMERIC);")
             cursor.execute("INSERT INTO info VALUES (%d)" % 2)
-            connection.commit()
-            connection.close()
         if from_version == 2 and to_version == 3:
             #Add Releasegrp
-            connection=sqlite3.connect(autosub.DBFILE)
-            cursor=connection.cursor()
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'releasegrp')
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'subtitle')
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (3,2))
-            connection.commit()
-            connection.close()
         if from_version == 3 and to_version == 4:
             #Change IMDB_ID from INTEGER to TEXT
-            connection=sqlite3.connect(autosub.DBFILE)
-            cursor=connection.cursor()
             cursor.execute("CREATE TABLE temp_table as select * from id_cache;")
             cursor.execute("DROP TABLE id_cache;")
             cursor.execute("CREATE TABLE id_cache (imdb_id TEXT, show_name TEXT);")
             cursor.execute("INSERT INTO id_cache select * from temp_table;")
             cursor.execute("DROP TABLE temp_table;")
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (4,3))
-            connection.commit()
-            connection.close()
         if from_version == 4 and to_version == 5:
-            connection=sqlite3.connect(autosub.DBFILE)
-            cursor=connection.cursor()
             cursor.execute("CREATE TABLE a7id_cache (a7_id TEXT, imdb_id TEXT);")
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (5,4))
-            connection.commit()
-            connection.close()
         if from_version == 5 and to_version == 6:
             #Clear id cache once, so we don't get invalid reports about non working IMDB/A7 ID's
-            connection=sqlite3.connect(autosub.DBFILE)
-            cursor=connection.cursor()
             cursor.execute("delete from id_cache;")
             cursor.execute("delete from a7id_cache;")
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (6,5))
-            connection.commit()
-            connection.close()
         if from_version == 6 and to_version == 7:
             #Add location on disk, so we can use it to create a preview of the subtitle.
-            connection=sqlite3.connect(autosub.DBFILE)
-            cursor=connection.cursor()
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'destination')
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (7,6))
-            connection.commit()
-            connection.close()
-            
+        if from_version == 7 and to_version == 8:
+            # Add Episode tabel to as cache to store the Episode IMDB number
+            cursor.execute("CREATE TABLE episode_cache (episode_imdb_id TEXT UNIQUE PRIMARY KEY, serie_os_id TEXT, season TEXT, episode TEXT);")
+            cursor.execute("CREATE INDEX ep_index ON episode_cache(serie_os_id, season, episode);")
+            cursor.execute("CREATE TABLE show_id_cache (imdb_id TEXT UNIQUE PRIMARY KEY, a7_id TEXT, os_id TEXT, show_name TEXT);")
+            cursor.execute("INSERT INTO  show_id_cache (imdb_id,a7_id,show_name) SELECT id_cache.imdb_id, a7id_cache.a7_id, id_cache.show_name FROM id_cache LEFT JOIN a7id_cache ON id_cache.imdb_id = a7id_cache.imdb_id")
+            cursor.execute("DROP   TABLE id_cache;")
+            cursor.execute("DROP   TABLE a7id_cache;")
+            cursor.execute("DROP TABLE info;")
+            cursor.execute("PRAGMA user_version = 8")
+        connection.commit()
+        connection.close()
+        autosub.DBVERSION = version.dbversion
 
 def getDbVersion():
     try:
-        query_getVersion = 'SELECT database_version FROM info'
         connection=sqlite3.connect(autosub.DBFILE)
         cursor=connection.cursor()
-        cursor.execute(query_getVersion)
-        
-        for row in cursor:
-            dbversion = row[0]
-        connection.close()
-        
+        dbversion = cursor.execute( "PRAGMA user_version").fetchone()[0]
+        if dbversion == 0 :
+            dbversion = cursor.execute('SELECT database_version FROM info').fetchone()[0]
+        connection.close() 
         return int(dbversion)
     except:
         return 1
@@ -243,6 +230,7 @@ def getDbVersion():
 def initDatabase():
     #check if file is already there
     dbFile = os.path.join(autosub.PATH, autosub.DBFILE)
+    #dbFile = os.path.normpath("/volume1/sync/AutoSub/Database.db")
     if not os.path.exists(dbFile):
         createDatabase()
     

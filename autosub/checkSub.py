@@ -1,4 +1,4 @@
-# Autosub checkSub.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub checkSub.py - https://github.com/Donny87/autosub-bootstrapbill
 #
 # The Autosub checkSub module
 #
@@ -6,12 +6,14 @@
 import logging
 import os
 import time
+import sqlite3
 
 # Autosub specific modules
 import autosub.getSubLinks
+from autosub.Db import idCache, EpisodeIdCache
 import autosub.Helpers as Helpers
 from autosub.downloadSubs import DownloadSub
-from autosub.OpenSubtitles import OpenSubtitlesLogin, OpenSubtitlesLogout
+from autosub.OpenSubtitles import OpenSubtitlesLogin, OpenSubtitlesLogout, GetEpisodeId
 
 # Settings
 log = logging.getLogger('thelogger')
@@ -24,28 +26,37 @@ class checkSub():
     """
     def run(self):
         log.debug("checkSub: Starting round of checkSub")
+        # First we check if checksub in not still running
+        if autosub.WANTEDQUEUELOCK:
+            log.info("checkSub: Exiting, another threat is using the queues. Will try again in 60 seconds")
+            time.sleep(60)
+            return False
+        else:
+            autosub.WANTEDQUEUELOCK = True
+        autosub.DBCONNECTION = sqlite3.connect(autosub.DBFILE)
+        autosub.DBIDCACHE = idCache()
+        autosub.DBEPISODECACHE = EpisodeIdCache()
+
         toDelete_wantedQueue = []
         if not Helpers.checkAPICallsTvdb() or not Helpers.checkAPICallsSubSeeker():            
             log.warning("checkSub: out of api calls")
             return True
-        
-        if autosub.WANTEDQUEUELOCK:
-            log.debug("checkSub: Exiting, another threat is using the queues")
-            return False
-        else:
-            autosub.WANTEDQUEUELOCK = True
-                       
+                             
         # Initiate the Addic7ed API and check the current number of downloads
-        a7Response = False
+        UseAddic= False
         if autosub.ADDIC7EDUSER and autosub.ADDIC7EDPASSWD and autosub.ADDIC7EDLANG != 'None':
             try:
                 # Sets autosub.DOWNLOADS_A7 and autosub.DOWNLOADS_A7MAX
                 # and gives a True response if it's ok to download from a7
                 autosub.ADDIC7EDAPI = autosub.Addic7ed.Addic7edAPI()
-                a7Response = autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
+                UseAddic= autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
             except:
                 log.debug("checkSub: Couldn't connect with Addic7ed.com")
-       
+        # Initiate a Session to opensubtitles and log in if opensubtitles is choosen
+        if autosub.OPENSUBTITLESLANG != 'None' and autosub.OPENSUBTITLESUSER and autosub.OPENSUBTITLESPASSWD:
+            UseOpensubtitles = OpenSubtitlesLogin()
+        else:
+            UseOpensubtitles = False
         for index, wantedItem in enumerate(autosub.WANTEDQUEUE):
             title = wantedItem['title']
             season = wantedItem['season']
@@ -76,7 +87,12 @@ class checkSub():
 
             
             #lets try to find a showid; no showid? skip this item
-            showid = Helpers.getShowid(title)
+            showid,a7_id, OsId = Helpers.getShowid(title, UseAddic, UseOpensubtitles)
+            if UseOpensubtitles and OsId:
+                EpisodeId = GetEpisodeId(OsId, season, episode)
+            else:
+                EpisodeId = None
+            log.debug('checkSub: Imdb Id = %s Addic7Ed Id = %s OsId = %s' %(showid,a7_id, OsId))
             if not showid:
                 continue
             
@@ -85,13 +101,13 @@ class checkSub():
                 downloadItem['downlang'] = lang
 
                 # Check if Addic7ed download limit has been reached
-                if a7Response and autosub.DOWNLOADS_A7 >= autosub.DOWNLOADS_A7MAX:
-                    a7Response = False            
+                if UseAddic and autosub.DOWNLOADS_A7 >= autosub.DOWNLOADS_A7MAX:
+                    UseAddic= False            
                     log.debug("checkSub: You have reached your 24h limit of %s  Addic7ed downloads!" % autosub.DOWNLOADS_A7MAX)
 
                 log.debug("checkSub: trying to get a downloadlink for %s, language is %s" % (originalfile, lang))
                 # get all links higher than the minmatch as input for downloadSub
-                allResults = autosub.getSubLinks.getSubLinks(showid, lang, wantedItem, a7Response)
+                allResults = autosub.getSubLinks.getSubLinks(showid, a7_id, EpisodeId, lang, wantedItem)
                 
                 if not allResults:
                     log.debug("checkSub: no suitable subtitles were found for %s based on your minmatchscore" % downloadItem['originalFileLocationOnDisk'])
@@ -107,7 +123,7 @@ class checkSub():
                     log.debug("checkSub: destination filename %s" % downloadItem['destinationFileLocationOnDisk'])
                 
                     
-                if not DownloadSub(allResults, a7Response, downloadItem):
+                if not DownloadSub(allResults, UseAddic, downloadItem):
                     continue
                 
                 #Remove downloaded language
@@ -133,7 +149,11 @@ class checkSub():
                 if len(languages) == 0:
                     toDelete_wantedQueue.append(index)
                     break
-         
+
+        autosub.DBCONNECTION.close()
+        del autosub.DBCONNECTION
+        del autosub.DBIDCACHE
+        del  autosub.DBEPISODECACHE
         if autosub.ADDIC7EDAPI:
             autosub.ADDIC7EDAPI.logout()
 
