@@ -191,9 +191,8 @@ def _getSource(file_info):
     return results
 
 def _getQuality(file_info, HD):
-    results = _checkSynonyms(_getQuality,
+    results = _checkSynonyms(_quality_syn,
                             _returnHits(_quality, file_info))
-
     return results
 
 def _getCodec(file_info):
@@ -548,14 +547,14 @@ class Addic7edAPI():
             log.debug("Addic7edAPI: Response content: %s" % r.content)
             return None
         log.debug("Addic7edAPI: Resting for 60 seconds to prevent errors")
-        time.sleep(30)
+        time.sleep(60)
         return r.content
     
     def checkCurrentDownloads(self, logout=True):      
         self.login()
             
         try:
-            soup = BeautifulSoup(self.get('/panel.php'))
+            soup = self.get('/panel.php'))
             # Get Download Count
             countTag = soup.select('a[href^="mydownloads.php"]')
             pattern = re.compile('(\d*).*of.*\d*', re.IGNORECASE)
