@@ -32,12 +32,11 @@ _show = [re.compile('(.+)\s+\(?(\d{4})\)?', re.IGNORECASE),
 
 
 _source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|blu[. _-]*ray|dvdrip|web[-]*rip|hddvd)", re.IGNORECASE),
-          re.compile("(tv|dvd|bdrip|web)", re.IGNORECASE)]
+          re.compile("(dvd|bdrip|web)", re.IGNORECASE)]
 
 #A dictionary containing as keys, the nonstandard naming. Followed by there standard naming.
 #Very important!!! Should be unicode and all LOWERCASE!!!
-_source_syn = {u'tv' : u'hdtv',
-              u'ahdtv' : u'hdtv',
+_source_syn = {u'ahdtv' : u'hdtv',
               u'dvd' : u'dvdrip',
               u'bdrip': u'bluray',
               u'blu-ray': u'bluray',
@@ -64,6 +63,7 @@ _codec_syn = {u'x264' : u'h264',
 #The following 2 variables create the regex used for guessing the releasegrp. Functions should not call them!
 _rlsgrps_rest = ['0TV',
                  'aAF',
+                 'BATV',
                  'BTN',
                  'BWB',
                  'CLUE',
@@ -120,8 +120,7 @@ _rlsgrps_HD = ['DIMENSION',
                '2HD',
                'MOMENTUM',
                'REMARKABLE',
-               'EXCELLENCE'
-               'BATV']
+               'EXCELLENCE']
 
 _rlsgrps_SD = ['LOL',
                'ASAP',
@@ -302,7 +301,7 @@ def _checkConflicts(versionDicts):
         i=i-1
     return versionDicts   
 
-def _addInfo(versionDicts):
+def _addInfo(versionDicts,HD):
     # assume missing codec is x264, error prone!
     for index, versionDict in enumerate(versionDicts):
         source = versionDict['source']
@@ -313,7 +312,8 @@ def _addInfo(versionDicts):
         # Based on quality
         if quality == u'1080p':
             if not source:
-                versionDicts[index]['source'] = u'web-dl'    
+                versionDicts[index]['source'] = u'web-dl'
+
     
         # Based on source
         if any(source == x for x in (u'web-dl', u'hdtv', u'bluray')):
@@ -338,6 +338,10 @@ def _addInfo(versionDicts):
             if re.match(_regexRls(_rlsgrps_webdl), releasegroup):
                 if not source:
                     versionDicts[index]['source'] = u'web-dl'
+            else:
+                if quality == u'1080p' or quality == u'720p' or HD:
+                    if not source:
+                        versionDicts[index]['source'] = u'hdtv'
             if re.match(_regexRls(_rlsgrps_HD), releasegroup):
                 if not quality:
                     versionDicts[index]['quality'] = u'720p'
@@ -425,7 +429,7 @@ def ReconstructRelease(version_info, HD):
         return False
 
     # Fill in the gaps
-    versionDicts = _addInfo(versionDicts)
+    versionDicts = _addInfo(versionDicts, HD)
 
     twinDicts = []
     for originalDict in versionDicts:
@@ -547,14 +551,14 @@ class Addic7edAPI():
             log.debug("Addic7edAPI: Response content: %s" % r.content)
             return None
         log.debug("Addic7edAPI: Resting for 60 seconds to prevent errors")
-        time.sleep(60)
+        time.sleep(30)
         return r.content
     
     def checkCurrentDownloads(self, logout=True):      
         self.login()
             
         try:
-            soup = self.get('/panel.php'))
+            soup = BeautifulSoup(self.get('/panel.php'))
             # Get Download Count
             countTag = soup.select('a[href^="mydownloads.php"]')
             pattern = re.compile('(\d*).*of.*\d*', re.IGNORECASE)
