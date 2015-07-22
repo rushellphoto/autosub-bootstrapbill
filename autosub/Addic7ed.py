@@ -551,7 +551,7 @@ class Addic7edAPI():
             log.debug("Addic7edAPI: Response content: %s" % r.content)
             return None
         log.debug("Addic7edAPI: Resting for 60 seconds to prevent errors")
-        time.sleep(30)
+        time.sleep(60)
         return r.content
     
     def checkCurrentDownloads(self, logout=True):      
