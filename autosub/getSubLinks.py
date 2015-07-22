@@ -129,7 +129,7 @@ def Addic7ed(a7ID , language, releaseDetails):
         # use ASCII codec and put in lower case
         details = unicode(cells[4].string).encode('utf-8')
         details = details.lower()
-        HD = True if bool(cells[8].string) != None else False
+        HD = True if cells[8].string != None else False
         downloadUrl = cells[9].a['href'].encode('utf-8')
         hearingImpaired = True if bool(cells[6].string) else False
         if hearingImpaired:

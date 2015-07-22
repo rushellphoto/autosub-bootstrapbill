@@ -340,8 +340,6 @@ def getShowid(ShowName, UseAddic, UseOs):
             AddicIdMapping = Addic7edMapping(ImdbId)
             #if Addic7edIdMapping:
             #    Addic7edId = Addic7edIdMapping
-    else:
-        AddicId = None
 
     if UseOs and not OsId:
         #try to find the Opensubtitles Id on the opensubtitles website

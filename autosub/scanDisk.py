@@ -163,7 +163,8 @@ class scanDisk():
     def run(self):
         log.debug("scanDir: Starting round of local disk checking at %s" % autosub.ROOTPATH)
         if autosub.WANTEDQUEUELOCK == True:
-            log.debug("scanDir: Exiting, another threat is using the queues")
+            log.debug("scanDir: Exiting, another threat is using the queue's. Will try again in 60 seconds")
+            time.sleep(60)
             return False
         else:
             autosub.WANTEDQUEUELOCK = True
@@ -182,9 +183,8 @@ class scanDisk():
                 walkDir(seriespath)
             except:
                 log.error("scanDir: Something went wrong when traversing directory %s" % seriespath)
-                #walkDir(str(seriespath))
+                return False
 
         log.debug("scanDir: Finished round of local disk checking")
         autosub.WANTEDQUEUELOCK = False
-
         return True
