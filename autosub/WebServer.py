@@ -1,5 +1,5 @@
 #
-# Autosub Webserver.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub Webserver.py - https://github.com/Donny87/autosub-bootstrapbill
 #
 # The Webserver module
 #
@@ -243,7 +243,7 @@ class Config:
     def flushCache(self):
         idCache().flushCache()
         EpisodeIdCache.flushCache()
-        message = 'Imdb -en Episode Cache flushed'
+        message = 'Cache flushed'
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
         tmpl.message = message
         tmpl.displaymessage = "Yes"

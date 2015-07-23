@@ -1,5 +1,5 @@
 #
-# Autosub OpenSubtitles.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub OpenSubtitles.py - https://github.com/Donny87/autosub-bootstrapbill
 #
 # The OpenSubtitles method specific module
 #
@@ -57,7 +57,7 @@ def OpenSubtitlesLogin(opensubtitlesusername=None,opensubtitlespasswd=None):
         TimeOut()
         RequestResult = autosub.OPENSUBTTITLESSESSION.get(autosub.OPENSUBTITLESURL + '/xml',timeout=10)         
     except:
-        log.debug('OpenSubtitlesLogin: Could not get a page from Opensubtitles.')
+        log.debug('OpenSubtitlesLogin: Could not get a page from OpenSubtitles.')
         return False
     root = ET.fromstring(RequestResult.content)
     try:
@@ -128,12 +128,12 @@ def GetEpisodeId(OsShowId, Season, Episode):
         log.debug('GetEpisodeImdb: Could not connect to Opensubtitles.')
         return None
     if 'text/xml' not in RequestResult.headers['Content-Type']:
-        log.error('GetEpisodeImdb: Opensubtitle responded with an error')
+        log.error('GetEpisodeImdb: OpenSubtitles responded with an error')
         return None
     try:
         root = ET.fromstring(RequestResult.content)
     except:
-        log.debug('GetEpisodeImdb: Serie with Opensubtitles Id  %s could not be found on Opensubtitles.' %OsShowId)
+        log.debug('GetEpisodeImdb: Serie with OpenSubtitles ID %s could not be found on OpenSubtitles.' %OsShowId)
         return None
     try:
         SubTitles = root.find('.//search/results')
@@ -175,10 +175,10 @@ def GetOpensubtitlesId(ImdbId, ShowName):
             RequestResult = autosub.OPENSUBTTITLESSESSION.get(SearchUrl, timeout=10)
             Referer = SearchUrl.replace('/xml','')
         except:
-            log.error('GetEpisodeImdb: Could not connect to Opensubtitles.')
+            log.error('GetEpisodeImdb: Could not connect to OpenSubtitles.')
             return None
         if 'text/xml' not in RequestResult.headers['Content-Type']:
-            log.error('GetEpisodeImdb: Opensubtitle responded with an error')
+            log.error('GetEpisodeImdb: OpenSubtitles responded with an error')
             contine
         try:
             root = ET.fromstring(RequestResult.content)
@@ -202,7 +202,7 @@ def GetOpensubtitlesId(ImdbId, ShowName):
             break
     autosub.OPENSUBTTITLESSESSION.headers.update({'referer': Referer})
     if not OpenSubTitlesId:
-        log.debug('GetEpisodeImdb: Serie %s Imdb Id = %s could not be found on Opensubtitles.' %(ShowName,ImdbId))
+        log.debug('GetEpisodeImdb: Serie %s - IMDB ID %s could not be found on OpenSubtitles.' %(ShowName,ImdbId))
         return None
     else:
         return OpenSubTitlesId

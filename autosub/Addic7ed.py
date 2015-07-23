@@ -544,7 +544,7 @@ class Addic7edAPI():
         if r.status_code != 200:
             log.error('Addic7edAPI: Request failed with status code %d' % r.status_code)
         else:
-            log.debug('Addic7edAPI: Request succesful with status code %d' % r.status_code)
+            log.debug('Addic7edAPI: Request successful with status code %d' % r.status_code)
         
         if r.headers['Content-Type'] == 'text/html':
             log.error('Addic7edAPI: Expected srt file but got HTML; report this!')
@@ -619,7 +619,7 @@ class Addic7edAPI():
                     log.debug("geta7IDApi: Skipping %s because we found a just a partial match for %s" %(show,TvdbShowName))
                     continue
                 a7_id = Id
-                log.debug("geta7IDApi: a7 ID %s found using the official show name %s" %(a7_id, TvdbShowName))
+                log.debug("geta7IDApi: Addic7ed ID %s found using the official show name %s" %(a7_id, TvdbShowName))
                 return a7_id
             # If the official show name is different try also the one from the episode file
             if localShowName != TvdbShowName:
@@ -630,10 +630,10 @@ class Addic7edAPI():
                     if not re.search('UK', suffix_local, re.I) and re.search('UK', n.group(1), re.I):
                         continue
                     if len(searchName_local) < len(show):
-                        log.debug("geta7IDApi Skipping %s because we found a just a partial match for %s" %(show,localShowName))
+                        log.debug("geta7IDApi: Skipping %s because we found a just a partial match for %s" %(show,localShowName))
                         continue
                     a7_id = Id
-                    log.debug("geta7IDApi: a7 ID %s found using filename show name %s" % (a7_id, localShowName))
+                    log.debug("geta7IDApi: Addic7ed ID %s found using filename show name %s" % (a7_id, localShowName))
                     return a7_id
 
         return None

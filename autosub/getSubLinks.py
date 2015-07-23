@@ -1,5 +1,5 @@
 #
-# Autosub getSubLinks.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub getSubLinks.py - https://github.com/Donny87/autosub-bootstrapbill
 #
 # The getSubLinks module
 #
@@ -33,7 +33,7 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
 
     # this is the API search 
     getSubLinkUrl = "%s&imdb=%s&season=%s&episode=%s&language=%s" % (api, showid, season, episode, lang)
-    log.info('Subtitleseeker: Request url = %s' % getSubLinkUrl)
+    log.info('SubtitleSeeker: Request URL: %s' % getSubLinkUrl)
     if autosub.Helpers.checkAPICallsSubSeeker(use=True):
         try:
             subseekerapi = autosub.Helpers.API(getSubLinkUrl)
@@ -81,7 +81,7 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
         try:
             url = sub.getElementsByTagName('url')[0].firstChild.data
         except AttributeError:
-            log.debug("getSubLink: Invalid url tag in API response, skipping this item.")
+            log.debug("getSubLink: Invalid URL tag in API response, skipping this item.")
             continue
         
         tmpDict = ProcessFilename(release, '')
@@ -168,21 +168,21 @@ def Opensubtitles(EpisodeId, language, releaseDetails):
         Referer = SearchUrl.replace('/xml','')
         autosub.OPENSUBTTITLESSESSION.headers.update({'referer': Referer})
     except:
-        log.debug('Opensubtitles: Could not connect to Opensubtitles.')
+        log.debug('Opensubtitles: Could not connect to OpenSubtitles.')
         return None
     if 'text/xml' not in RequestResult.headers['Content-Type']:
-        log.error('Opensubtitles: Opensubtitle responded with an error')
+        log.error('Opensubtitles: OpenSubtitles responded with an error')
         return None
     try:
         root = ET.fromstring(RequestResult.content)
     except:
-        log.debug('Opensubtitles: Serie with Imdb Id = %s could not be found on Opensubtitles.' %SerieImdb)
+        log.debug('Opensubtitles: Serie with IMDB ID %s could not be found on OpenSubtitles.' %SerieImdb)
         return None    
 
     try:
         SubTitles = root.find('.//search/results')
     except:
-        log.debug('Opensubtitles: Serie with Imdb Id = %s could not be found on Opensubtitles.' %SerieImdb)
+        log.debug('Opensubtitles: Serie with IMDB ID %s could not be found on OpenSubtitles.' %SerieImdb)
         return None
     # We fetch the show overview page and search voor the Id's of the epiode we want
     # Because as we have this whole page, we put the other Episode Id's in the cache
@@ -245,7 +245,7 @@ def getSubLinks(showid, a7_id, episodeId, lang, releaseDetails):
 
     # Use Addic7ed if selected
     if (autosub.ADDIC7EDLANG == lang or autosub.ADDIC7EDLANG == 'Both') and a7_id:
-        log.debug("getSubLinks: goto Addic7ed function with Id = %s" %a7_id)
+        log.debug("getSubLinks: goto Addic7ed function with ID %s" %a7_id)
         scoreListAddic7ed = Addic7ed(a7_id, lang, releaseDetails)
 
     # Use Opensubtitles if selected

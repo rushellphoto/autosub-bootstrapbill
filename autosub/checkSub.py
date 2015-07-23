@@ -52,7 +52,7 @@ class checkSub():
                 UseAddic= autosub.ADDIC7EDAPI.checkCurrentDownloads(logout=False)
             except:
                 log.debug("checkSub: Couldn't connect with Addic7ed.com")
-        # Initiate a Session to opensubtitles and log in if opensubtitles is choosen
+        # Initiate a session to OpenSubtitles and log in if OpenSubtitles is choosen
         if autosub.OPENSUBTITLESLANG != 'None' and autosub.OPENSUBTITLESUSER and autosub.OPENSUBTITLESPASSWD:
             UseOpensubtitles = OpenSubtitlesLogin()
         else:
@@ -92,7 +92,7 @@ class checkSub():
                 EpisodeId = GetEpisodeId(OsId, season, episode)
             else:
                 EpisodeId = None
-            log.debug('checkSub: Imdb Id = %s Addic7Ed Id = %s OsId = %s' %(showid,a7_id, OsId))
+            log.debug("checkSub: ID's - IMDB: %s, Addic7ed: %s, OpenSubtitles: %s" %(showid,a7_id, OsId))
             if not showid:
                 continue
             

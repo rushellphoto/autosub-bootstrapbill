@@ -1,4 +1,4 @@
-# Autosub downloadSubs.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub downloadSubs.py - https://github.com/Donny87/autosub-bootstrapbill
 #
 # The Autosub downloadSubs module
 # Scrapers are used for websites:
@@ -70,27 +70,27 @@ def unzip(url):
 
 def openSubtitles(DownloadPage):
 
-    log.debug("OpenSubtitles: DownloadPage =  %s" % DownloadPage)
+    log.debug("OpenSubtitles: DownloadPage: %s" % DownloadPage)
 
     try:
         TimeOut()
         RequestResult = autosub.OPENSUBTTITLESSESSION.get(DownloadPage, timeout=10)
         autosub.OPENSUBTTITLESSESSION.headers.update({'referer': DownloadPage})
     except:
-        log.debug('openSubtitles: Could not connect to Opensubtitles.')
+        log.debug('openSubtitles: Could not connect to OpenSubtitles.')
         return None
     if 'text/xml' not in RequestResult.headers['Content-Type']:
-        log.error('openSubtitles: Opensubtitle responded with an error')
+        log.error('openSubtitles: OpenSubtitles responded with an error')
         return None
     try:
         root = ET.fromstring(RequestResult.content)
     except:
-        log.debug('openSubtitles: Serie with Imdb Id = %s could not be found on Opensubtitles.' %ImdbId)
+        log.debug('openSubtitles: Serie with IMDB ID %s could not be found on OpenSubtitles.' %ImdbId)
         return None
     try:
         DownloadId = root.find('.//SubBrowse/Subtitle/SubtitleFile/File').get('ID')
     except:
-        log.debug('openSubtitles: Could not get the downloadlink from opensubtitles')
+        log.debug('openSubtitles: Could not get the download link from OpenSubtitles')
         return None
     try:
         DownloadUrl = autosub.OPENSUBTITLESDL + DownloadId
@@ -183,7 +183,7 @@ def DownloadSub(allResults, a7Response, downloadItem):
         log.error("downloadSub: No locationOnDisk found at downloadItem, skipping")
         return False
     
-    log.debug("downloadSubs: Download dict seems ook. Dumping it for debug: %r" % downloadItem) 
+    log.debug("downloadSubs: Download dict seems OK. Dumping it for debug: %r" % downloadItem) 
     destsrt = downloadItem['destinationFileLocationOnDisk']
     destdir = os.path.split(destsrt)[0]
     if not os.path.exists(destdir):
