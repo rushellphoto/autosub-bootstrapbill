@@ -7,12 +7,13 @@
 import logging
 
 from xml.dom import minidom
+import xml.etree.cElementTree as ET
 from operator import itemgetter
-
+from bs4 import BeautifulSoup
 import autosub.Helpers
 from autosub.ProcessFilename import ProcessFilename
 import autosub.Addic7ed
-
+from autosub.OpenSubtitles import TimeOut
 # Settings
 log = logging.getLogger('thelogger')
 
@@ -21,17 +22,18 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
     # Get the scored list for all SubtitleSeeker hits
     api = autosub.API
 
-    if showid == -1:
-        return None
-    quality = None
-    releasegrp = None
-    source = None
-    season = releaseDetails['season']
-    episode = releaseDetails['episode']
+
+    season     = releaseDetails['season']     if 'season'     in releaseDetails.keys() else None
+    episode    = releaseDetails['episode']    if 'episode'    in releaseDetails.keys() else None
+    quality    = releaseDetails['quality']    if 'quality'    in releaseDetails.keys() else None
+    releasegrp = releaseDetails['releasegrp'] if 'releasegrp' in releaseDetails.keys() else None
+    source     = releaseDetails['source']     if 'source'     in releaseDetails.keys() else None
+    codec      = releaseDetails['codec']      if 'codec'      in releaseDetails.keys() else None
+
 
     # this is the API search 
     getSubLinkUrl = "%s&imdb=%s&season=%s&episode=%s&language=%s" % (api, showid, season, episode, lang)
-    log.info('Subtitleseeker: This is the subseeker API request %s' % getSubLinkUrl)
+    log.info('Subtitleseeker: Request url = %s' % getSubLinkUrl)
     if autosub.Helpers.checkAPICallsSubSeeker(use=True):
         try:
             subseekerapi = autosub.Helpers.API(getSubLinkUrl)
@@ -43,11 +45,6 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
     else:
         log.error("API: out of api calls for SubtitleSeeker.com")
         return None
-
-    if 'quality' in releaseDetails.keys(): quality = releaseDetails['quality']
-    if 'releasegrp' in releaseDetails.keys(): releasegrp = releaseDetails['releasegrp']
-    if 'source' in releaseDetails.keys(): source = releaseDetails['source']
-    if 'codec' in releaseDetails.keys(): codec = releaseDetails['codec']
     
     if not len(dom.getElementsByTagName('error')) == 0:
         for error in dom.getElementsByTagName('error'):
@@ -98,30 +95,21 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
 
         scoreList.append(releaseDict)
 
-    return scoreList
 
-def Addic7ed(imdb_id, language, releaseDetails):
+def Addic7ed(a7ID , language, releaseDetails):
 
-    # Info about episode file
-    if imdb_id == -1:
-        return None
-
-    title = releaseDetails['title']
-    season = releaseDetails['season']
-    episode = releaseDetails['episode']
-    if 'quality' in releaseDetails.keys(): quality = releaseDetails['quality']
-    if 'releasegrp' in releaseDetails.keys(): releasegrp = releaseDetails['releasegrp']
-    if 'source' in releaseDetails.keys(): source = releaseDetails['source']
-    if 'codec' in releaseDetails.keys(): codec = releaseDetails['codec']
-    #rlsgrp = downloadDict['releasegrp']
-
-    a7ID = autosub.Helpers.geta7id(title, imdb_id)
-    if not a7ID:
-        return None
+    title      = releaseDetails['title']      if 'title'      in releaseDetails.keys() else None
+    season     = releaseDetails['season']     if 'season'     in releaseDetails.keys() else None
+    episode    = releaseDetails['episode']    if 'episode'    in releaseDetails.keys() else None
+    quality    = releaseDetails['quality']    if 'quality'    in releaseDetails.keys() else None
+    releasegrp = releaseDetails['releasegrp'] if 'releasegrp' in releaseDetails.keys() else None
+    source     = releaseDetails['source']     if 'source'     in releaseDetails.keys() else None
+    codec      = releaseDetails['codec']      if 'codec'      in releaseDetails.keys() else None
 
     params = {'show_id': a7ID, 'season': season}
-    soup = autosub.ADDIC7EDAPI.get('/show/{show_id}&season={season}'.format(**params))
+    soup = BeautifulSoup(autosub.ADDIC7EDAPI.get('/show/{show_id}&season={season}'.format(**params)))
     if not soup:
+        log.debug("Addic7ed: No Soup")
         return None
 
     scoreList = []
@@ -138,11 +126,10 @@ def Addic7ed(imdb_id, language, releaseDetails):
             continue
         if not unicode(cells[1].string) == episode and not unicode(cells[1].string) == unicode(int(episode)):
             continue
-
         # use ASCII codec and put in lower case
         details = unicode(cells[4].string).encode('utf-8')
         details = details.lower()
-        HD = True if bool(cells[8].string) != None else False
+        HD = True if cells[8].string != None else False
         downloadUrl = cells[9].a['href'].encode('utf-8')
         hearingImpaired = True if bool(cells[6].string) else False
         if hearingImpaired:
@@ -154,16 +141,83 @@ def Addic7ed(imdb_id, language, releaseDetails):
         versionDicts = autosub.Addic7ed.ReconstructRelease(details, HD)
         if not versionDicts:
             continue
-
         for version in versionDicts:
             releaseDict = {'score':None , 'releasename':releasename, 'website':'addic7ed.com' , 'url':downloadUrl , 'HI':hearingImpaired}
             releaseDict['score'] = autosub.Helpers.scoreMatch(version, details, quality, releasegrp, source, codec)
+            log.debug("Addic7ed: releaseDict= %s" %releaseDict)
             scoreList.append(releaseDict)
-
     return scoreList
 
 
-def getSubLinks(showid, lang, releaseDetails, a7Response):
+def Opensubtitles(EpisodeId, language, releaseDetails):
+
+    title      = releaseDetails['title']      if 'title'      in releaseDetails.keys() else None
+    season     = releaseDetails['season']     if 'season'     in releaseDetails.keys() else None
+    episode    = releaseDetails['episode']    if 'episode'    in releaseDetails.keys() else None
+    quality    = releaseDetails['quality']    if 'quality'    in releaseDetails.keys() else None
+    releasegrp = releaseDetails['releasegrp'] if 'releasegrp' in releaseDetails.keys() else None
+    source     = releaseDetails['source']     if 'source'     in releaseDetails.keys() else None
+    codec      = releaseDetails['codec']      if 'codec'      in releaseDetails.keys() else None
+
+
+    LangId = 'dut' if language == 'Dutch' else 'eng'
+    SearchUrl = '/xml/search/sublanguageid-' + str(LangId) + '/imdbid-' + str(EpisodeId)
+    try:
+        TimeOut()
+        RequestResult = autosub.OPENSUBTTITLESSESSION.get(autosub.OPENSUBTITLESURL + SearchUrl, timeout=10)
+        Referer = SearchUrl.replace('/xml','')
+        autosub.OPENSUBTTITLESSESSION.headers.update({'referer': Referer})
+    except:
+        log.debug('Opensubtitles: Could not connect to Opensubtitles.')
+        return None
+    if 'text/xml' not in RequestResult.headers['Content-Type']:
+        log.error('Opensubtitles: Opensubtitle responded with an error')
+        return None
+    try:
+        root = ET.fromstring(RequestResult.content)
+    except:
+        log.debug('Opensubtitles: Serie with Imdb Id = %s could not be found on Opensubtitles.' %SerieImdb)
+        return None    
+
+    try:
+        SubTitles = root.find('.//search/results')
+    except:
+        log.debug('Opensubtitles: Serie with Imdb Id = %s could not be found on Opensubtitles.' %SerieImdb)
+        return None
+    # We fetch the show overview page and search voor the Id's of the epiode we want
+    # Because as we have this whole page, we put the other Episode Id's in the cache
+    scoreList = []
+    for Sub in SubTitles:
+        try:
+            if Sub.tag != 'subtitle':
+                continue
+            try:
+                if int(Sub.find ('SubBad').text) > 0:
+                    continue
+            except:
+                pass
+            Link = Sub.find('IDSubtitle').attrib['Link']
+            release = Sub.find('MovieReleaseName').text.split('[]')[0].lower()
+        except:
+            continue
+        url = autosub.OPENSUBTITLESURL[:-3] + Link +'/xml'
+        tmpDict = ProcessFilename(release, '')
+        
+        if not tmpDict:
+            continue
+
+        # ReleaseDict is a dictionary with the score, releasename and source website for the subtitle release
+        releaseDict = {'score':None , 'releasename':release , 'url':url , 'website':'opensubtitles.org'}
+        releaseDict['score'] = autosub.Helpers.scoreMatch(tmpDict, release, quality, releasegrp, source, codec)
+
+        scoreList.append(releaseDict)
+    return scoreList
+
+
+
+
+
+def getSubLinks(showid, a7_id, episodeId, lang, releaseDetails):
     """
     Return all the hits that reach minmatchscore, sorted with the best at the top of the list
     Each element had the downloadlink, score, releasename, and source website)
@@ -171,27 +225,35 @@ def getSubLinks(showid, lang, releaseDetails, a7Response):
 
     Keyword arguments:
     showid -- The IMDB id of the show
+    a7_id  -- The Addic7ed id of the show
     lang -- Language of the wanted subtitle, Dutch or English
     releaseDetails -- Dict containing the quality, releasegrp, source season and episode.
     """
-
-    sourceWebsites, scoreListSubSeeker, scoreListAddic7ed, fullScoreList  = [],[],[],[]
+    log.debug("getSubLinks: showid = %s a7_id = %s lang = %s detaildict= %s" % (showid,a7_id,lang,releaseDetails))
+    sourceWebsites, scoreListSubSeeker, scoreListAddic7ed, scoreListOpensubtitles, fullScoreList  = [],[],[],[],[]
     if autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
         sourceWebsites.append('podnapisi.net')
     if autosub.SUBSCENELANG == lang or autosub.SUBSCENELANG == 'Both':
         sourceWebsites.append('subscene.com')
     if autosub.UNDERTEXTERLANG == lang or autosub.UNDERTEXTERLANG == 'Both':
         sourceWebsites.append('undertexter.se')
-    if autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both':
-        sourceWebsites.append('opensubtitles.org')
+
+    # If one of his websites choosen call subtitleseeker
     if len(sourceWebsites) > 0:
         scoreListSubSeeker = SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites)
+        log.debug("getSubLinks: dump scorelist= %s" % scoreListSubSeeker)
 
-    if (autosub.ADDIC7EDLANG == lang or autosub.ADDIC7EDLANG == 'Both') and a7Response:
-        scoreListAddic7ed = Addic7ed(showid, lang, releaseDetails)
-        pass
+    # Use Addic7ed if selected
+    if (autosub.ADDIC7EDLANG == lang or autosub.ADDIC7EDLANG == 'Both') and a7_id:
+        log.debug("getSubLinks: goto Addic7ed function with Id = %s" %a7_id)
+        scoreListAddic7ed = Addic7ed(a7_id, lang, releaseDetails)
 
-    for list in [scoreListSubSeeker, scoreListAddic7ed]:
+    # Use Opensubtitles if selected
+    if (autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both'):
+        log.debug("getSubLinks: goto Opensubtitles function")
+        scoreListOpensubtitles = Opensubtitles(episodeId, lang, releaseDetails)
+
+    for list in [scoreListSubSeeker, scoreListAddic7ed, scoreListOpensubtitles]:
         if list: fullScoreList.extend(list)
 
     # Done comparing all the results, lets sort them and return the highest result

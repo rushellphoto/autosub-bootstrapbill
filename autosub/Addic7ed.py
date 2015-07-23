@@ -1,5 +1,5 @@
 #
-# Autosub Addic7ed.py - https://code.google.com/p/autosub-bootstrapbill/
+# Autosub Addic7ed.py -https://github.com/Donny87/autosub-bootstrapbill
 #
 # The Addic7ed method specific module
 #
@@ -32,12 +32,11 @@ _show = [re.compile('(.+)\s+\(?(\d{4})\)?', re.IGNORECASE),
 
 
 _source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|blu[. _-]*ray|dvdrip|web[-]*rip|hddvd)", re.IGNORECASE),
-          re.compile("(tv|dvd|bdrip|web)", re.IGNORECASE)]
+          re.compile("(dvd|bdrip|web)", re.IGNORECASE)]
 
 #A dictionary containing as keys, the nonstandard naming. Followed by there standard naming.
 #Very important!!! Should be unicode and all LOWERCASE!!!
-_source_syn = {u'tv' : u'hdtv',
-              u'ahdtv' : u'hdtv',
+_source_syn = {u'ahdtv' : u'hdtv',
               u'dvd' : u'dvdrip',
               u'bdrip': u'bluray',
               u'blu-ray': u'bluray',
@@ -64,6 +63,7 @@ _codec_syn = {u'x264' : u'h264',
 #The following 2 variables create the regex used for guessing the releasegrp. Functions should not call them!
 _rlsgrps_rest = ['0TV',
                  'aAF',
+                 'BATV',
                  'BTN',
                  'BWB',
                  'CLUE',
@@ -91,6 +91,7 @@ _rlsgrps_rest = ['0TV',
                  'P0W4HD',
                  'playXD',
                  'RANDi',
+                 'RARBG',
                  'REWARD',
                  'ROVERS',
                  'RRH',
@@ -191,7 +192,6 @@ def _getSource(file_info):
 def _getQuality(file_info, HD):
     results = _checkSynonyms(_quality_syn,
                             _returnHits(_quality, file_info))
-
     return results
 
 def _getCodec(file_info):
@@ -261,11 +261,6 @@ def _checkConflicts(versionDicts):
         
         # The following combinations are inconsistent
         
-        # Based on quality
-        if quality == u'1080p':
-            if source == u'hdtv':
-                toDelete.append(index)
-                continue
     
         # Based on source
         if source == u'web-dl':
@@ -273,10 +268,6 @@ def _checkConflicts(versionDicts):
                 toDelete.append(index)
                 continue
         
-        elif source == u'hdtv':
-            if quality == u'1080p':
-                toDelete.append(index)
-                continue
 
         # Based on releasegroup
         if releasegroup:
@@ -310,7 +301,7 @@ def _checkConflicts(versionDicts):
         i=i-1
     return versionDicts   
 
-def _addInfo(versionDicts):
+def _addInfo(versionDicts,HD):
     # assume missing codec is x264, error prone!
     for index, versionDict in enumerate(versionDicts):
         source = versionDict['source']
@@ -321,7 +312,8 @@ def _addInfo(versionDicts):
         # Based on quality
         if quality == u'1080p':
             if not source:
-                versionDicts[index]['source'] = u'web-dl'    
+                versionDicts[index]['source'] = u'web-dl'
+
     
         # Based on source
         if any(source == x for x in (u'web-dl', u'hdtv', u'bluray')):
@@ -346,6 +338,10 @@ def _addInfo(versionDicts):
             if re.match(_regexRls(_rlsgrps_webdl), releasegroup):
                 if not source:
                     versionDicts[index]['source'] = u'web-dl'
+            else:
+                if quality == u'1080p' or quality == u'720p' or HD:
+                    if not source:
+                        versionDicts[index]['source'] = u'hdtv'
             if re.match(_regexRls(_rlsgrps_HD), releasegroup):
                 if not quality:
                     versionDicts[index]['quality'] = u'720p'
@@ -433,7 +429,7 @@ def ReconstructRelease(version_info, HD):
         return False
 
     # Fill in the gaps
-    versionDicts = _addInfo(versionDicts)
+    versionDicts = _addInfo(versionDicts, HD)
 
     twinDicts = []
     for originalDict in versionDicts:
@@ -511,7 +507,6 @@ class Addic7edAPI():
         :param string url: part of the URL to reach with the leading slash
         :rtype: :class:`bs4.BeautifulSoup`
         """
-        
         if not self.logged_in and login:
             log.error("Addic7edAPI: You are not properly logged in. Check your credentials!")
             return None
@@ -529,7 +524,8 @@ class Addic7edAPI():
 
         log.debug("Addic7edAPI: Resting for 60 seconds to prevent errors")
         time.sleep(60)
-        return BeautifulSoup(r.content)
+        r.encoding = 'utf-8'
+        return r.text
 
     def download(self, downloadlink):
         if not self.logged_in:
@@ -562,7 +558,7 @@ class Addic7edAPI():
         self.login()
             
         try:
-            soup = self.get('/panel.php')
+            soup = BeautifulSoup(self.get('/panel.php'))
             # Get Download Count
             countTag = soup.select('a[href^="mydownloads.php"]')
             pattern = re.compile('(\d*).*of.*\d*', re.IGNORECASE)
@@ -584,28 +580,25 @@ class Addic7edAPI():
         
         return True    
     
-    def geta7ID(self, imdbID, localShowName):
+    def geta7ID(self,TvdbShowName, localShowName):
         # Last resort: lookup official name and try to match with a7 show list
-        # Get the official show name
-        if autosub.Helpers.checkAPICallsTvdb(use=False): 
-            offShowName = autosub.Tvdb.getShowName(imdbID)
-        else:
-            log.warning("geta7IDApi: Out of TvDB API calls")
-            return None
 
-        if isinstance(offShowName, bool):
-            log.debug("geta7IDApi: IMDb ID %s returned %s as showname" (imdbID, offShowName))
-            return None
-        
         show_ids={}
-        try:
-            soup = self.get('/shows.php', login=False)
-            for html_show in soup.select('td.version > h3 > a[href^="/show/"]'):
-                show_ids[html_show.string.lower()] = int(html_show['href'][6:])
-            print 
-        except:
-            log.error('geta7IDApi: failed to retrieve a7 show list')
-            return None
+        html = self.get('/shows.php', login=False)
+        show_ids = dict(url.split("\">") for url in re.findall(r'<a href=[\'"]/show/?([^<]+)', html))
+
+        #----------------------------------------------------------------#
+        # changed the beautifull soup call to a simpel regex             #
+        # beautifull soup takes alsmost 20 seconds to process this page. #
+        #----------------------------------------------------------------#
+
+        #try:
+        #    soup = self.get('/shows.php', login=False)
+        #    for html_show in soup.select('td.version > h3 > a[href^="/show/"]'):
+        #        show_ids[html_show.string.lower()] = int(html_show['href'][6:]) 
+        #except:
+        #    log.error('geta7IDApi: failed to retrieve a7 show list')
+        #    return None
         
         
         # First clip of year or US, UK from the name
@@ -614,26 +607,33 @@ class Addic7edAPI():
                       re.compile('(.+)\s+\(?(uk)\)?', re.IGNORECASE)]
 
 
-        searchName_off, suffix_off = _getShow(offShowName)
-        searchName_local, suffix_local = _getShow(localShowName)
-        for show in show_ids:
+        searchName_off, suffix_off = _getShow(TvdbShowName)
+        for Id, show in show_ids.iteritems():
             # First try it with the official show name from TvDB
             m = re.match('%s(.*)' % searchName_off, show, re.I)
             if m:
                 # Get False-Positive UK titles out; assumes UK is always indicated
                 if not re.search('UK', suffix_off, re.I) and re.search('UK', m.group(1), re.I):
                     continue
-                a7_id = show_ids[show]
-                log.debug("geta7IDApi: a7 ID %s found using the official show name %s" % (a7_id, offShowName))
-                return a7_id
-            # Else try it with the show name from the episode file
-            n = re.match('%s(.*)' % searchName_local, show, re.I)
-            if n:
-                # Get False-Positive UK titles out; assumes UK is always indicated
-                if not re.search('UK', suffix_local, re.I) and re.search('UK', n.group(1), re.I):
+                if len(searchName_off) < len(show):
+                    log.debug("geta7IDApi: Skipping %s because we found a just a partial match for %s" %(show,TvdbShowName))
                     continue
-                a7_id = show_ids[show]
-                log.debug("geta7IDApi: a7 ID %s found using filename show name %s" % (a7_id, localShowName))
+                a7_id = Id
+                log.debug("geta7IDApi: a7 ID %s found using the official show name %s" %(a7_id, TvdbShowName))
                 return a7_id
+            # If the official show name is different try also the one from the episode file
+            if localShowName != TvdbShowName:
+                searchName_local, suffix_local = _getShow(localShowName)
+                n = re.match('%s(.*)' % searchName_local, show, re.I)
+                if n:
+                    # Get False-Positive UK titles out; assumes UK is always indicated
+                    if not re.search('UK', suffix_local, re.I) and re.search('UK', n.group(1), re.I):
+                        continue
+                    if len(searchName_local) < len(show):
+                        log.debug("geta7IDApi Skipping %s because we found a just a partial match for %s" %(show,localShowName))
+                        continue
+                    a7_id = Id
+                    log.debug("geta7IDApi: a7 ID %s found using filename show name %s" % (a7_id, localShowName))
+                    return a7_id
 
         return None

@@ -1,3 +1,3 @@
 autosubversion='Beta 0.6.2'
 configversion=3
-dbversion=7
+dbversion=8

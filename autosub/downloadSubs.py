@@ -20,12 +20,12 @@ import tempfile
 import autosub
 
 from autosub.Db import lastDown
+from autosub.OpenSubtitles import TimeOut
 import autosub.notify as notify
 import autosub.Helpers
 
 import xml.etree.cElementTree as ET
 import library.requests as requests
-from autosub.OpenSubtitles import OpenSubtitlesLogin
 
 # Settings
 log = logging.getLogger('thelogger')
@@ -68,56 +68,43 @@ def unzip(url):
             log.debug("unzip: Subtitle with different extention than .srt?")
             return None  
 
-def openSubtitles(subSeekerLink):
-    if autosub.OPENSUBTITLESLOGGED_IN == False and autosub.OPENSUBTITLESUSER and autosub.OPENSUBTITLESPASSWD:
-        log.debug('openSubtitles: Now call login')
-        Result = OpenSubtitlesLogin()
-        if Result:
-            log.debug("OpenSubtitles: Logged in")
-        else:
-            log.debug("OpenSubtitles: login failed")
-    log.debug("OpenSubtitles: Subseekerlink =  %s" % subSeekerLink)
-    soup = getSoup(subSeekerLink)
-    if not soup:
-        log.debug("openSubtitles: Could not get a soup root")
-        return None
+def openSubtitles(DownloadPage):
 
-    linkToOpensubtitles = soup.select('p > a[href]')[0]['href'].strip('/')
-    if autosub.OPENSUBTITLESURL in linkToOpensubtitles:
-        log.debug("openSubtitles: SubSeek link to opensubtitles =  %s" % linkToOpensubtitles )
-    else:
-        log.error("openSubtitles: Failed to extract download link using SubtitleSeeker's link")        
-        return None
+    log.debug("OpenSubtitles: DownloadPage =  %s" % DownloadPage)
+
     try:
-        RequestResult = autosub.OPENSUBTTITLESSESSION.get(linkToOpensubtitles + '/xml',timeout=10)
+        TimeOut()
+        RequestResult = autosub.OPENSUBTTITLESSESSION.get(DownloadPage, timeout=10)
+        autosub.OPENSUBTTITLESSESSION.headers.update({'referer': DownloadPage})
     except:
-        log.error("openSubtitles: Failed to get the download link from Opensubtitles.org!")        
+        log.debug('openSubtitles: Could not connect to Opensubtitles.')
+        return None
+    if 'text/xml' not in RequestResult.headers['Content-Type']:
+        log.error('openSubtitles: Opensubtitle responded with an error')
         return None
     try:
         root = ET.fromstring(RequestResult.content)
     except:
-        log.error("openSubtitles: Failed to get the root from string from the Opensubtitles page!") 
+        log.debug('openSubtitles: Serie with Imdb Id = %s could not be found on Opensubtitles.' %ImdbId)
         return None
     try:
-        FileId = root.find('.//SubBrowse/Subtitle/SubtitleFile/File').get('ID')
+        DownloadId = root.find('.//SubBrowse/Subtitle/SubtitleFile/File').get('ID')
     except:
-        log.debug('openSubtitles: SubTitleSeeker link does not exist on Opensubtitles, skipping it')
+        log.debug('openSubtitles: Could not get the downloadlink from opensubtitles')
         return None
     try:
-        SubBad = root.find('.//SubBrowse/Subtitle/SubBad').text
-        log.debug('openSubtitles: Subtitle is marked as bad, ignoring download.')
+        DownloadUrl = autosub.OPENSUBTITLESDL + DownloadId
+        TimeOut()
+        RequestResult = autosub.OPENSUBTTITLESSESSION.get( DownloadUrl, timeout=10)
+        autosub.OPENSUBTTITLESSESSION.headers.update({'referer': DownloadUrl})
+    except:
+        log.debug('openSubtitles: Could not connect to Opensubtitles.org.')
         return None
-    except:
-        log.debug('openSubtitles: Subtitle is not marked as bad, proceeding with download.')
-
-    downloadLink = autosub.OPENSUBTITLESURL + '/en/download/file/' + FileId
-    log.debug("openSubtitles: OpenSubtitles sub downloadlink = %s" % downloadLink )
-    try:
-        RequestResult = autosub.OPENSUBTTITLESSESSION.get(downloadLink, timeout=10)
-    except:
-        log.error("openSubtitles: Failed to get the download link from OpenSubtitles.org")
-        return None           
-    return StringIO(RequestResult.content)    
+    if RequestResult.headers['Content-Type'] == 'text/html':
+        log.error('openSubtitles: Expected srt file but got HTML; report this!')
+        log.debug("openSubtitles: Response content: %s" % r.content)
+        return None
+    return StringIO(RequestResult.content)
 
 def undertexter(subSeekerLink):
     engSub = 'http://www.engsub.net/getsub.php?id='    
@@ -278,19 +265,15 @@ def DownloadSub(allResults, a7Response, downloadItem):
         return False
         
     log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
-        
-    if website == 'bierdopje.eu':
-        website = 'subtitleseekers mirror of bierdopje'
-
+    log.debug("downloadsubs: release= %s" % release)
+    log.debug("downloadsubs: website= %s" % website)
         
     downloadItem['subtitle'] = "%s downloaded from %s" % (release,website)
     downloadItem['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
     
     lastDown().setlastDown(dict = downloadItem)
-    
     # Send notification        
     notify.notify(downloadItem['downlang'], destsrt, downloadItem["originalFileLocationOnDisk"], website)
-
     if autosub.POSTPROCESSCMD:
         postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + downloadItem["destinationFileLocationOnDisk"] + '" "' + downloadItem["originalFileLocationOnDisk"] + '" "' + downloadItem["downlang"] + '" "' + downloadItem["title"] + '" "' + downloadItem["season"] + '" "' + downloadItem["episode"] + '" '
         log.debug("downloadSubs: Postprocess: running %s" % postprocesscmdconstructed)
