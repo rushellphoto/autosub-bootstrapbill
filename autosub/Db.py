@@ -202,14 +202,14 @@ def upgradeDb(from_version, to_version):
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'destination')
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (7,6))
         if from_version == 7 and to_version == 8:
-            # Add Episode tabel to as cache to store the Episode IMDB number
-            cursor.execute("CREATE TABLE episode_cache (episode_imdb_id TEXT UNIQUE PRIMARY KEY, serie_os_id TEXT, season TEXT, episode TEXT);")
-            cursor.execute("CREATE INDEX ep_index ON episode_cache(serie_os_id, season, episode);")
-            cursor.execute("CREATE TABLE show_id_cache (imdb_id TEXT UNIQUE PRIMARY KEY, a7_id TEXT, os_id TEXT, show_name TEXT);")
-            cursor.execute("INSERT INTO  show_id_cache (imdb_id,a7_id,show_name) SELECT id_cache.imdb_id, a7id_cache.a7_id, id_cache.show_name FROM id_cache LEFT JOIN a7id_cache ON id_cache.imdb_id = a7id_cache.imdb_id")
-            cursor.execute("DROP   TABLE id_cache;")
-            cursor.execute("DROP   TABLE a7id_cache;")
-            cursor.execute("DROP TABLE info;")
+            # Add episode cache table to store the episode IMDB ID
+            cursor.execute("CREATE TABLE IF NOT EXISTS episode_cache (episode_imdb_id TEXT UNIQUE PRIMARY KEY, serie_os_id TEXT, season TEXT, episode TEXT);")
+            cursor.execute("CREATE INDEX IF NOT EXISTS ep_index ON episode_cache(serie_os_id, season, episode);")
+            cursor.execute("CREATE TABLE IF NOT EXISTS show_id_cache (imdb_id TEXT UNIQUE PRIMARY KEY, a7_id TEXT, os_id TEXT, show_name TEXT);")
+            cursor.execute("INSERT OR IGNORE INTO show_id_cache (imdb_id,a7_id,show_name) SELECT id_cache.imdb_id, a7id_cache.a7_id, id_cache.show_name FROM id_cache LEFT JOIN a7id_cache ON id_cache.imdb_id = a7id_cache.imdb_id")
+            cursor.execute("DROP TABLE IF EXISTS id_cache;")
+            cursor.execute("DROP TABLE IF EXISTS a7id_cache;")
+            cursor.execute("DROP TABLE IF EXISTS info;")
             cursor.execute("PRAGMA user_version = 8")
         connection.commit()
         connection.close()
