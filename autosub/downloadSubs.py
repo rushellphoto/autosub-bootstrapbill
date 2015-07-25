@@ -265,8 +265,6 @@ def DownloadSub(allResults, a7Response, downloadItem):
         return False
         
     log.info("downloadSubs: DOWNLOADED: %s" % destsrt)
-    log.debug("downloadsubs: release= %s" % release)
-    log.debug("downloadsubs: website= %s" % website)
         
     downloadItem['subtitle'] = "%s downloaded from %s" % (release,website)
     downloadItem['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')

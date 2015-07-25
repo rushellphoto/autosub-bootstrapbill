@@ -33,7 +33,7 @@ def SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites):
 
     # this is the API search 
     getSubLinkUrl = "%s&imdb=%s&season=%s&episode=%s&language=%s" % (api, showid, season, episode, lang)
-    log.info('SubtitleSeeker: Request URL: %s' % getSubLinkUrl)
+    log.info('getSubLinks: SubtitleSeeker request URL: %s' % getSubLinkUrl)
     if autosub.Helpers.checkAPICallsSubSeeker(use=True):
         try:
             subseekerapi = autosub.Helpers.API(getSubLinkUrl)
@@ -109,7 +109,7 @@ def Addic7ed(a7ID , language, releaseDetails):
     params = {'show_id': a7ID, 'season': season}
     soup = BeautifulSoup(autosub.ADDIC7EDAPI.get('/show/{show_id}&season={season}'.format(**params)))
     if not soup:
-        log.debug("Addic7ed: No Soup")
+        log.debug("getSubLinks: Addic7ed no soup.")
         return None
 
     scoreList = []
@@ -137,14 +137,13 @@ def Addic7ed(a7ID , language, releaseDetails):
         else:
             releasename = autosub.Addic7ed.makeReleaseName(details, title, season, episode)
 
-        # Retun is a list of possible releases that match
+        # Return is a list of possible releases that match
         versionDicts = autosub.Addic7ed.ReconstructRelease(details, HD)
         if not versionDicts:
             continue
         for version in versionDicts:
             releaseDict = {'score':None , 'releasename':releasename, 'website':'addic7ed.com' , 'url':downloadUrl , 'HI':hearingImpaired}
             releaseDict['score'] = autosub.Helpers.scoreMatch(version, details, quality, releasegrp, source, codec)
-            log.debug("Addic7ed: releaseDict= %s" %releaseDict)
             scoreList.append(releaseDict)
     return scoreList
 
@@ -168,21 +167,21 @@ def Opensubtitles(EpisodeId, language, releaseDetails):
         Referer = SearchUrl.replace('/xml','')
         autosub.OPENSUBTTITLESSESSION.headers.update({'referer': Referer})
     except:
-        log.debug('Opensubtitles: Could not connect to OpenSubtitles.')
+        log.debug('getSubLinks: Could not connect to OpenSubtitles.')
         return None
     if 'text/xml' not in RequestResult.headers['Content-Type']:
-        log.error('Opensubtitles: OpenSubtitles responded with an error')
+        log.error('getSubLinks: OpenSubtitles responded with an error')
         return None
     try:
         root = ET.fromstring(RequestResult.content)
     except:
-        log.debug('Opensubtitles: Serie with IMDB ID %s could not be found on OpenSubtitles.' %SerieImdb)
+        log.debug('getSubLinks: Serie with IMDB ID %s could not be found on OpenSubtitles.' %SerieImdb)
         return None    
 
     try:
         SubTitles = root.find('.//search/results')
     except:
-        log.debug('Opensubtitles: Serie with IMDB ID %s could not be found on OpenSubtitles.' %SerieImdb)
+        log.debug('getSubLinks: Serie with IMDB ID %s could not be found on OpenSubtitles.' %SerieImdb)
         return None
     # We fetch the show overview page and search voor the Id's of the epiode we want
     # Because as we have this whole page, we put the other Episode Id's in the cache
@@ -192,8 +191,12 @@ def Opensubtitles(EpisodeId, language, releaseDetails):
             if Sub.tag != 'subtitle':
                 continue
             try:
-                if int(Sub.find ('SubBad').text) > 0:
+                SubBad = int(Sub.find('SubBad').text)
+                if SubBad > 0:
+                    log.debug("getSubLinks: OpenSubtitles has %d bad reports for this subtitle, skipping." %SubBad)
                     continue
+                else:
+                    log.debug("getSubLinks: OpenSubtitles has %d bad reports for this subtitle." %SubBad)
             except:
                 pass
             Link = Sub.find('IDSubtitle').attrib['Link']
@@ -214,9 +217,6 @@ def Opensubtitles(EpisodeId, language, releaseDetails):
     return scoreList
 
 
-
-
-
 def getSubLinks(showid, a7_id, episodeId, lang, releaseDetails):
     """
     Return all the hits that reach minmatchscore, sorted with the best at the top of the list
@@ -229,7 +229,7 @@ def getSubLinks(showid, a7_id, episodeId, lang, releaseDetails):
     lang -- Language of the wanted subtitle, Dutch or English
     releaseDetails -- Dict containing the quality, releasegrp, source season and episode.
     """
-    log.debug("getSubLinks: showid = %s a7_id = %s lang = %s detaildict= %s" % (showid,a7_id,lang,releaseDetails))
+    log.debug("getSubLinks: Show ID: %s - Addic7ed ID: %s - Language: %s - Release Details: %s" % (showid,a7_id,lang,releaseDetails))
     sourceWebsites, scoreListSubSeeker, scoreListAddic7ed, scoreListOpensubtitles, fullScoreList  = [],[],[],[],[]
     if autosub.PODNAPISILANG == lang or autosub.PODNAPISILANG == 'Both':
         sourceWebsites.append('podnapisi.net')
@@ -241,16 +241,16 @@ def getSubLinks(showid, a7_id, episodeId, lang, releaseDetails):
     # If one of his websites choosen call subtitleseeker
     if len(sourceWebsites) > 0:
         scoreListSubSeeker = SubtitleSeeker(showid, lang, releaseDetails, sourceWebsites)
-        log.debug("getSubLinks: dump scorelist= %s" % scoreListSubSeeker)
+        log.debug("getSubLinks: dump scorelist: %s" % scoreListSubSeeker)
 
     # Use Addic7ed if selected
     if (autosub.ADDIC7EDLANG == lang or autosub.ADDIC7EDLANG == 'Both') and a7_id:
         log.debug("getSubLinks: goto Addic7ed function with ID %s" %a7_id)
         scoreListAddic7ed = Addic7ed(a7_id, lang, releaseDetails)
 
-    # Use Opensubtitles if selected
-    if (autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both'):
-        log.debug("getSubLinks: goto Opensubtitles function")
+    # Use OpenSubtitles if selected
+    if (autosub.OPENSUBTITLESLANG == lang or autosub.OPENSUBTITLESLANG == 'Both') and episodeId:
+        log.debug("getSubLinks: goto OpenSubtitles function with ID %s" %episodeId)
         scoreListOpensubtitles = Opensubtitles(episodeId, lang, releaseDetails)
 
     for list in [scoreListSubSeeker, scoreListAddic7ed, scoreListOpensubtitles]:
