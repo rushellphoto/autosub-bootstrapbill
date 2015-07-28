@@ -19,7 +19,7 @@ except:
 import threading
 import time
 import autosub.Config
-from autosub.Db import idCache, lastDown
+from autosub.Db import lastDown, flushcache
 
 import autosub.notify as notify
 
@@ -241,8 +241,7 @@ class Config:
 
     @cherrypy.expose
     def flushCache(self):
-        idCache().flushCache()
-        EpisodeIdCache.flushCache()
+        flushcache()
         message = 'Cache flushed'
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
         tmpl.message = message
