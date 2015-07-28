@@ -325,9 +325,9 @@ def getShowid(ShowName, UseAddic, UseOs):
                 TvdbShowName = Tvdb.getShowName(ImdbNameMappingId)
                 if TvdbShowName:
                     ImdbId = ImdbNameMappingId
-                return None, None
+                    UpdateCache = True
             else:
-                return None, None
+                return None, None, None
 
     if UseAddic and not AddicId:
         #Try to find the Addice7ed Id on the show page of the Addic7ed website

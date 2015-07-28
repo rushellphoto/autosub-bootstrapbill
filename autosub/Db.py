@@ -24,7 +24,6 @@ class idCache():
         self.query_checkId  = "SELECT * FROM show_id_cache WHERE imdb_id = ?"
         self.query_updateId = "UPDATE show_id_cache SET  a7_id = ?, os_id = ? WHERE imdb_id = ?"
         self.query_setId    = "INSERT INTO show_id_cache VALUES (?,?,?,?)"
-        self.query_flush    = "DELETE FROM show_id_cache"
         self.cursor         = autosub.DBCONNECTION.cursor()
 
     def getId(self, ShowName):
@@ -52,19 +51,10 @@ class idCache():
             log.error('setId: Database error: %s' % error)
         return
 
-    def flushCache(self):
-        try:
-            self.cursor.execute(self.query_flush)
-            autosub.DBCONNECTION.commit()
-        except Exception as error: 
-            log.error('idCache.flushCache: Database error: %s' % error)
-        return       
-
 class EpisodeIdCache():
     def __init__(self):
         self.query_getId    = "SELECT episode_imdb_id FROM episode_cache WHERE serie_os_id =? AND season = ? AND episode =?"
         self.query_setId    = "INSERT INTO episode_cache values (?,?,?,?)"
-        self.query_flush    = "DELETE FROM episode_cache"
         self.cursor         = autosub.DBCONNECTION.cursor()
 
     def getId(self, SerieId, Season, Episode):
@@ -87,13 +77,14 @@ class EpisodeIdCache():
     def commit(self):
         autosub.DBCONNECTION.commit()
 
-    def flushCache(self):
-        try:
-            self.cursor.execute(self.query_flush)
-            autosub.DBCONNECTION.commit()
-        except Exception as error: 
-            log.error('EpisodeIdCache.flushCache: Database error: %s' % error)
-        return
+def flushcache():
+    connection=sqlite3.connect(autosub.DBFILE)
+    cursor=connection.cursor()
+    cursor.execute("DELETE FROM show_id_cache")
+    connection.commit()
+    cursor.execute("DELETE FROM episode_cache")
+    connection.commit()
+    connection.close()
 
 class lastDown():
     def __init__(self):
