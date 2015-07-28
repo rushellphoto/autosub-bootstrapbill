@@ -107,10 +107,15 @@ def Addic7ed(a7ID , language, releaseDetails):
     codec      = releaseDetails['codec']      if 'codec'      in releaseDetails.keys() else None
 
     params = {'show_id': a7ID, 'season': season}
-    soup = BeautifulSoup(autosub.ADDIC7EDAPI.get('/show/{show_id}&season={season}'.format(**params)))
-    if not soup:
-        log.debug("getSubLinks: Addic7ed no soup.")
-        return None
+    Result = autosub.ADDIC7EDAPI.get('/show/{show_id}&season={season}'.format(**params))
+    if Result:
+        try:
+            soup = BeautifulSoup(Result)
+        except:
+            log.debug("getSubLinks: Addic7ed no soup exception.")
+            return None
+    else:
+       return None
 
     scoreList = []
 
