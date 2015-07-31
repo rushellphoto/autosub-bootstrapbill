@@ -585,6 +585,8 @@ class Addic7edAPI():
 
         show_ids={}
         html = self.get('/shows.php', login=False)
+        if not html:
+            return None
         show_ids = dict(url.split("\">") for url in re.findall(r'<a href=[\'"]/show/?([^<]+)', html))
 
         #----------------------------------------------------------------#
