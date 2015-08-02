@@ -36,23 +36,23 @@ _source = [re.compile("(ahdtv|hdtv|web[. _-]*dl|blu[. _-]*ray|dvdrip|web[-]*rip|
 
 #A dictionary containing as keys, the nonstandard naming. Followed by there standard naming.
 #Very important!!! Should be unicode and all LOWERCASE!!!
-_source_syn = {u'ahdtv' : u'hdtv',
-              u'dvd' : u'dvdrip',
-              u'bdrip': u'bluray',
-              u'blu-ray': u'bluray',
-              u'webdl' : u'web-dl',
-              u'web' : u'web-dl',
-              u'web-rip' : u'webrip'}
+_source_syn = {u'ahdtv'  : u'hdtv',
+               u'dvd'    : u'dvdrip',
+               u'bdrip'  : u'bluray',
+               u'blu-ray': u'bluray',
+               u'webdl'  : u'web-dl',
+               u'web'    : u'web-dl',
+               u'web-rip': u'webrip'}
 
 
 _quality = [re.compile("(1080p|720p|480p)" , re.IGNORECASE), 
            re.compile("(1080[i]*|720|480)", re.IGNORECASE)]
 
-_quality_syn = {u'1080' : u'1080p',
-               u'1080i' : u'1080p',
-               u'720' : u'720p',
-               u'480p' : u'sd',
-               u'480' : u'sd'}
+_quality_syn = {u'1080'  : u'1080p',
+                u'1080i' : u'1080p',
+                u'720'   : u'720p',
+                u'480p'  : u'sd',
+                u'480'   : u'sd'}
 
 _codec = [re.compile("([xh]*264|xvid|dvix)" , re.IGNORECASE)]
 
@@ -62,95 +62,103 @@ _codec_syn = {u'x264' : u'h264',
 
 #The following 2 variables create the regex used for guessing the releasegrp. Functions should not call them!
 _rlsgrps_rest = ['0TV',
-                 'aAF',
-                 'BATV',
-                 'BTN',
-                 'BWB',
-                 'CLUE',
-                 'CP',
-                 'DEMAND',
-                 'DNR',
-                 'EbP',
-                 'GFY',
-                 'GreenBlade',
-                 'HoodBag',
-                 'HAGGiS',
-                 'hV',
-                 'KYER',
-                 'LFF',
-                 'LP',
-                 'MMI',
-                 'mSD',
-                 'NBS',
-                 'NFT',
-                 'NIN',
-                 'nodlabs',
-                 'OOO',
-                 'ORPHEUS',
-                 'P0W4',
-                 'P0W4HD',
-                 'playXD',
-                 'RANDi',
-                 'RARBG',
-                 'REWARD',
-                 'ROVERS',
-                 'RRH',
-                 'SAiNTS',
-                 'SAPHiRE',
-                 'SCT',
-                 'SiNNERS',
-                 'SkyM',
-                 'SLOMO',
-                 'sozin',
-                 'sundox',
-                 'TjHD',
-                 'TOPAZ',
-                 'TOKUS',
-                 'T00NG0D',
-                 'VASKITTU',
-                 'UP',
-                 'XS']
+                'aAF',
+                'BATV',
+                'BTN',
+                'BWB',
+                'ChameE',
+                'CLUE',
+                'CP',
+                'DEMAND',
+                'DNR',
+                'EbP',
+                'FUSiON',
+                'GFY',
+                'GreenBlade',
+                'HAGGiS',
+                'HoodBag',
+                'hV',
+                'LFF',
+                'LP',
+                'Micromkv',
+                'MMI',
+                'mSD',
+                'NBS',
+                'NFT',
+                'NIN',
+                'nodlabs',
+                'OOO',
+                'ORPHEUS',
+                'P0W4',
+                'P0W4HD',
+                'playXD',
+                'RANDi',
+                'RARBG',
+                'REWARD',
+                'ROVERS',
+                'RRH',
+                'SAiNTS',
+                'SAPHiRE',
+                'SCT',
+                'SiNNERS',
+                'SkyM',
+                'SLOMO',
+                'SNEAkY',
+                'sozin',
+                'sundox',
+                'T00NG0D',
+                'TASTETV',
+                'TjHD',
+                'TOKUS',
+                'TOPAZ',
+                'UP',
+                'VASKITTU',
+                'XS']
 
-_rlsgrps_HD = ['DIMENSION',
-               'IMMERSE',
-               'ORENJi',
-               'EVOLVE',
-               'CTU',
-               'KILLERS',
-               '2HD',
-               'MOMENTUM',
-               'REMARKABLE',
-               'EXCELLENCE']
+_rlsgrps_HD =  ['0SEC',
+                '2HD',
+                'CTU',
+                'DIMENSION',
+                'EVOLVE',
+                'EXCELLENCE',
+                'IMMERSE',
+                'KILLERS',
+                'KYR',
+                'MOMENTUM',
+                'ORENJi',
+                'PublicHD',
+                'REMARKABLE']
 
-_rlsgrps_SD = ['LOL',
-               'ASAP',
-               'BiA',
-               'FoV',
-               'FQM',
-               'XOR',
-               'NoTV',
-               'FoV',
-               'FEVER',
-               'AVS',
-               'COMPULSiON']
+_rlsgrps_SD =  ['ASAP',
+                'AVS',
+                'BiA',
+                'COMPULSiON',
+                'FEVER',
+                'FoV',
+                'FoV',
+                'FQM',
+                'LOL',
+                'NoTV',
+                'XOR']
 
-_rlsgrps_xvid = ['AFG']
+_rlsgrps_xvid = ['AFG',
+                 'Hype']
 
 _rlsgrps_h264 = ['TLA',
                  'BAJSKOR']
 
-_rlsgrps_webdl = ['YFN',
-                  'FUM',
-                  'BS',
-                  'ECI',
-                  'NTb',
-                  'CtrlHD',
-                  'NFHD',
-                  'KiNGS',
-                  'POD',
-                  'TVSmash',
-                  'HWD',
-                  'PCSYNDICATE']
+_rlsgrps_webdl=['BS',
+                'CtrlHD',
+                'ECI',
+                'FUM',
+                'HWD',
+                'KiNGS',
+                'NFHD',
+                'NTb',
+                'PCSYNDICATE',
+                'POD',
+                'TVSmash',
+                'YFN']
 
 
 def _regexRls(releaseGroupList, list=False):
@@ -505,15 +513,15 @@ class Addic7edAPI():
         """
         Make a GET request on `url`
         :param string url: part of the URL to reach with the leading slash
-        :rtype: :class:`bs4.BeautifulSoup`
+        :rtype: text
         """
         if not self.logged_in and login:
             log.error("Addic7edAPI: You are not properly logged in. Check your credentials!")
             return None
         try:
-            r = self.session.get(self.server + url, timeout=10)
+            r = self.session.get(self.server + url, timeout=15)
         except requests.Timeout:
-            log.error('Addic7edAPI: Timeout after 10 seconds')
+            log.error('Addic7edAPI: Timeout after 15 seconds')
             return None
         except:
             log.error('Addic7edAPI: Unexpected error: %s' % sys.exc_info()[0])

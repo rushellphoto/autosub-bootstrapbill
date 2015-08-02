@@ -59,14 +59,23 @@ def OpenSubtitlesLogin(opensubtitlesusername=None,opensubtitlespasswd=None):
     except:
         log.debug('OpenSubtitlesLogin: Could not get a page from OpenSubtitles.')
         return False
-    root = ET.fromstring(RequestResult.content)
+
+    if 'text/xml' not in RequestResult.headers['Content-Type']:
+         log.info('OpenSubtitlesLogin: Could not login on OpenSubtitles.')
+         return False
+    try:
+        root = ET.fromstring(RequestResult.content)
+    except:
+        log.info('OpenSubtitlesLogin: Could not login on OpenSubtitles.')
+        return False
+
     try:
         if root.find('.//logged_as').text == data['user']:
             autosub.OPENSUBTITLESLOGGED_IN = True
             return True
     except:
         pass
-    log.error('OpenSubtitlesLogin: Login of |User %s failed' % data['user'])
+    log.error('OpenSubtitlesLogin: Login of User %s failed' % data['user'])
     autosub.OPENSUBTITLESLOGGED_IN = False
     return False
 
@@ -160,7 +169,6 @@ def GetEpisodeId(OsShowId, Season, Episode):
     return FoundEpisodeId
 
 def GetOpensubtitlesId(ImdbId, ShowName):
-    #http://www.opensubtitles.org/nl/search2/sublanguageid-dut/searchonlytvseries-on/moviename-dark+matter
     # First we try to find the Opensubtitles Id via the Imdb Id
     SearchUrls=[]
     SearchUrls.append(autosub.OPENSUBTITLESURL + '/xml/search/sublanguageid-all/searchonlytvseries-on/imdbid-tt' + str(ImdbId))
@@ -175,16 +183,15 @@ def GetOpensubtitlesId(ImdbId, ShowName):
             RequestResult = autosub.OPENSUBTTITLESSESSION.get(SearchUrl, timeout=10)
             Referer = SearchUrl.replace('/xml','')
         except:
-            log.error('GetEpisodeImdb: Could not connect to OpenSubtitles.')
+            log.error('GetOpensubtitlesId: Could not connect to OpenSubtitles.')
             return None
         if 'text/xml' not in RequestResult.headers['Content-Type']:
-            log.error('GetEpisodeImdb: OpenSubtitles responded with an error')
-            contine
+            continue
         try:
             root = ET.fromstring(RequestResult.content)
             SubTitles = root.find('.//search/results')
         except:
-            continu
+            continue
         for Sub in SubTitles:
             if Sub.tag != 'subtitle':
                 continue
@@ -202,7 +209,7 @@ def GetOpensubtitlesId(ImdbId, ShowName):
             break
     autosub.OPENSUBTTITLESSESSION.headers.update({'referer': Referer})
     if not OpenSubTitlesId:
-        log.debug('GetEpisodeImdb: Serie %s - IMDB ID %s could not be found on OpenSubtitles.' %(ShowName,ImdbId))
+        log.debug('GetOpensubtitlesId: Serie %s - IMDB ID %s could not be found on OpenSubtitles.' %(ShowName,ImdbId))
         return None
     else:
         return OpenSubTitlesId
