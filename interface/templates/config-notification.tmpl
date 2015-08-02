@@ -146,6 +146,32 @@
 				<input type="button" class="btn btn-default" value="Test Pushalot" id="testPushalot" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
 			</div>
 		</div>
+
+		<hr>
+		<div class="form-group">
+			<label for="Pushbullet" class="col-sm-2 control-label"><img src="$autosub.WEBROOT/images/notifiers/pushbullet.png" width="25px" height="24px" alt="" /> <b><a href="https://www.pushbullet.com" target="_blank">Pushbullet</a></b></label>
+			<div class="col-sm-10">
+			<select name="notifypushbullet" id="notifypushbullet" class="form-control enabler">
+				<option value="True" #if $autosub.NOTIFYPUSHBULLET == True then 'selected="selected"' else ""#>Enabled</option>
+				<option value="False" #if $autosub.NOTIFYPUSHBULLET == False then 'selected="selected"' else ""#>Disabled</option>
+			</select>
+			<br>Notification system.
+			</div>
+		</div>
+
+		<div id="content_notifypushbullet">
+			<div class="form-group">
+				<label for="PushbulletAPI" class="col-sm-2 control-label">API <a data-placement="bottom" data-toggle="tooltip" data-original-title="What is the API key for Pushbullet?"><span class="glyphicon glyphicon-info-sign"></span></a></label>
+				<div class="col-sm-10">
+				<input type="text" class="form-control" name="pushbulletapi" id="pushbulletapi" value="$autosub.PUSHBULLETAPI" placeholder="">
+				</div>
+			</div>
+			
+			<div align="right">
+				<span id="testPushbullet-result">Click below to test Pushbullet.</span><br>
+				<input type="button" class="btn btn-default" value="Test Pushbullet" id="testPushbullet" /> <input type="submit" value="Save Changes" class="btn btn-primary" />
+			</div>
+		</div>
 		
 		<hr>
 		<div class="form-group">

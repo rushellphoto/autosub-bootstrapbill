@@ -74,6 +74,13 @@ $(document).ready(function () {
 		$.get(autosubRoot + "/config/testPushalot", {'pushalotapi': pushalotapi},
 			function (data) { $('#testPushalot-result').html(data); });
     });
+
+    $('#testPushbullet').click(function () {
+        $('#testPushbullet-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Pushbullet...</span>');
+        var pushbulletapi = $("#pushbulletapi").val();
+		$.get(autosubRoot + "/config/testPushbullet", {'pushbulletapi': pushbulletapi},
+			function (data) { $('#testPushbullet-result').html(data); });
+    });
 	
 	$('#testNotifyMyAndroid').click(function () {
         $('#testNotifyMyAndroid-result').html('<span><img src="' + autosubRoot + '/images/loading16.gif"> Testing Notify My Android...</span>');

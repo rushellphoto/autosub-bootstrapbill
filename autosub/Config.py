@@ -466,6 +466,17 @@ def ReadConfig(configfile):
                 autosub.PUSHALOTAPI = cfg.get('notify', 'pushalotapi')
             else:
                 autosub.PUSHALOTAPI = u"API key"
+
+            #Pushbullet.
+            if cfg.has_option('notify', 'notifypushbullet'):
+                autosub.NOTIFYPUSHBULLET = cfg.getboolean('notify', 'notifypushbullet')
+            else:
+                autosub.NOTIFYPUSHBULLET = False
+
+            if cfg.has_option('notify', 'pushbulletapi'):
+                autosub.PUSHBULLETAPI = cfg.get('notify', 'pushbulletapi')
+            else:
+                autosub.PUSHBULLETAPI = u"API key"
             
             #Pushover.
             if cfg.has_option('notify', 'notifypushover'):
@@ -530,6 +541,8 @@ def ReadConfig(configfile):
         autosub.PROWLPRIORITY = 0
         autosub.NOTIFYPUSHALOT = False
         autosub.PUSHALOTAPI = u"API key"
+        autosub.NOTIFYPUSHBULLET = False
+        autosub.PUSHBULLETAPI = u"API key"
         autosub.NOTIFYPUSHOVER = False
         autosub.PUSHOVERAPI = u"API key"
         autosub.NOTIFYBOXCAR2 = False
@@ -1143,6 +1156,8 @@ def saveNotifySection():
     cfg.set(section, "prowlpriority", str(autosub.PROWLPRIORITY))
     cfg.set(section, "notifypushalot", str(autosub.NOTIFYPUSHALOT))
     cfg.set(section, "pushalotapi", autosub.PUSHALOTAPI)
+    cfg.set(section, "notifypushbullet", str(autosub.NOTIFYPUSHBULLET))
+    cfg.set(section, "pushbulletapi", autosub.PUSHBULLETAPI)
     cfg.set(section, "notifypushover", str(autosub.NOTIFYPUSHOVER))
     cfg.set(section, "pushoverapi", autosub.PUSHOVERAPI)
     cfg.set(section, "notifyboxcar2", str(autosub.NOTIFYBOXCAR2))

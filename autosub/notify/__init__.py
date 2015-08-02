@@ -15,6 +15,7 @@ from autosub.notify import nma
 from autosub.notify import growl
 from autosub.notify import prowl
 from autosub.notify import pushalot
+from autosub.notify import pushbullet
 from autosub.notify import pushover
 from autosub.notify import boxcar2
 from autosub.notify import plexmediaserver
@@ -56,6 +57,10 @@ def notifySend(lang, subtitlefile, videofile, website):
     if autosub.NOTIFYPUSHALOT:
         log.debug("Notification: Pushalot is enabled")
         pushalot.send_notify(lang, subtitlefile, videofile, website)
+
+    if autosub.NOTIFYPUSHBULLET:
+        log.debug("Notification: Pushbullet is enabled")
+        pushbullet.send_notify(lang, subtitlefile, videofile, website)
     
     if autosub.NOTIFYPUSHOVER:
         log.debug("Notification: Pushover is enabled")
