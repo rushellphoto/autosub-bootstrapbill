@@ -219,6 +219,9 @@ def Addic7edMapping(imdb_id):
     if imdb_id in autosub.USERADDIC7EDMAPPINGUPPER.keys():
         log.debug("nameMapping: found match in user's addic7edmapping for %s" % imdb_id)
         return autosub.USERADDIC7EDMAPPINGUPPER[imdb_id]
+    elif imdb_id in a7IdDict.keys():
+        log.debug('geta7ID: showid from lookup table %s' % a7IdDict[imdb_id])
+        return a7IdDict[imdb_id]
 
 def nameMapping(showName):
     if showName.upper() in autosub.USERNAMEMAPPINGUPPER.keys():
@@ -303,43 +306,39 @@ def checkAPICallsTvdb(use=False):
         return False
 
 def getShowid(ShowName, UseAddic, UseOs):
-    AddicId = ImdbId = OsId = AddicIdMapping = None
+    if not ShowName:
+        return None,None,None
+    AddicId = ImdbId = OsId = None
     UpdateCache = False
     log.debug('getShowid: Trying to get IMDB, Addic7ed and OpenSubtitles ID for %s' %ShowName)
 
-    # First we try the cache
-    ImdbId, AddicId, OsId = idCache().getId(ShowName)
-    if ImdbId:
-        TvdbShowName = ShowName
-    else:
-        # Now we try Tvdb
-        log.debug('getShowid: Trying TvdbID to find info')
-        ImdbId, TvdbShowName = Tvdb.getShowidApi(ShowName)
-        if ImdbId:
+    ImdbNameMappingId = nameMapping(ShowName)
+    if ImdbNameMappingId:
+        # Check whether the Namemapping is an existing Imdb Id and if so find the official showname
+        TvdbShowName = Tvdb.getShowName(ImdbNameMappingId)
+        if TvdbShowName:
+            ImdbId = ImdbNameMappingId
             UpdateCache = True
+    else:
+        # No mapping we try the cache
+        ImdbId, AddicId, OsId = idCache().getId(ShowName)
+        if ImdbId:
+            TvdbShowName = ShowName
         else:
-            # Last resort the name mapping from the config page
-            ImdbNameMappingId = nameMapping(ShowName)
-            if ImdbNameMappingId:
-            # Check whether the Namemapping is an existing Imdb Id and if so find the official showname
-                TvdbShowName = Tvdb.getShowName(ImdbNameMappingId)
-                if TvdbShowName:
-                    ImdbId = ImdbNameMappingId
-                    UpdateCache = True
-            else:
-                return None, None, None
+            # No chache hit we try the Tvdb website
+            log.debug('getShowid: Trying TvdbID to find info')
+            ImdbId, TvdbShowName = Tvdb.getShowidApi(ShowName)
+            if ImdbId and TvdbShowName:
+                UpdateCache = True
 
     if UseAddic and not AddicId:
-        #Try to find the Addice7ed Id on the show page of the Addic7ed website
-        AddicId = Addic7edAPI().geta7ID(TvdbShowName, ShowName)
-        if AddicId:
-            log.debug('getShowid: Addic7ed ID found on website: %s' %AddicId)
-            UpdateCache = True
-        else:
-            # Try the Addic7ed ID mapping from the config
-            AddicIdMapping = Addic7edMapping(ImdbId)
-            #if Addic7edIdMapping:
-            #    Addic7edId = Addic7edIdMapping
+        #First we try the namemapping from the config
+        AddicIdMapping = Addic7edMapping(ImdbId)
+        if not AddicIdMapping:
+            #No mapping en no cache hit then try to find the Addice7ed Id on the show page of the Addic7ed website
+            AddicId = Addic7edAPI().geta7ID(TvdbShowName, ShowName)
+            if AddicId:
+                UpdateCache = True
 
     if UseOs and not OsId:
         #Try to find the OpenSubtitles ID on the OpenSubtitles website
@@ -347,9 +346,10 @@ def getShowid(ShowName, UseAddic, UseOs):
         if OsId:
             UpdateCache = True
 
-    if UpdateCache:
+    if UpdateCache and ImdbId and TvdbShowName:
         idCache().setId(ImdbId, AddicId, OsId, TvdbShowName)
-    AddicId = AddicIdMapping if AddicIdMapping else AddicId
+    AddicId = AddicIdMapping    if AddicIdMapping    else AddicId
+    ImdbId  = ImdbNameMappingId if ImdbNameMappingId else ImdbId
     log.debug("getShowid: Returned ID's - IMDB: %s, Addic7ed: %s, OpenSubtitles: %s" %(ImdbId,AddicId,OsId))
     return ImdbId, AddicId, OsId
 
