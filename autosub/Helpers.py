@@ -308,7 +308,7 @@ def checkAPICallsTvdb(use=False):
 def getShowid(ShowName, UseAddic, UseOs):
     if not ShowName:
         return None,None,None
-    AddicId = ImdbId = OsId = None
+    AddicId = ImdbId = OsId = AddicIdMapping = None
     UpdateCache = False
     log.debug('getShowid: Trying to get IMDB, Addic7ed and OpenSubtitles ID for %s' %ShowName)
 
