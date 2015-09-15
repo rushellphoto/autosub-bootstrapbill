@@ -183,6 +183,7 @@ class scanDisk():
                 walkDir(seriespath)
             except:
                 log.error("scanDir: Something went wrong when traversing directory %s" % seriespath)
+                autosub.WANTEDQUEUELOCK = False
                 return False
 
         log.debug("scanDir: Finished round of local disk checking")
